@@ -15,7 +15,7 @@ public class AutenticacaoController {
     @Autowired
     private AutenticacaoService autenticacaoService;
 
-    @PostMapping("/signin")
+    @PostMapping("/login")
     public ResponseEntity<?> autenticarUsuario(@RequestBody LoginRequest loginRequest) {
         return ResponseEntity.ok(autenticacaoService.autenticarUsuario(loginRequest));
     }

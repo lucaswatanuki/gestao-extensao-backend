@@ -1,9 +1,14 @@
 package com.ftunicamp.tcc.entities;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import javax.persistence.*;
 import java.time.LocalDate;
 import java.util.List;
 
+@Getter
+@Setter
 @Entity
 @Table(name = "Docente")
 public class DocenteEntity {

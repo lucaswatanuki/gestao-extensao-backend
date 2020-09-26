@@ -13,7 +13,7 @@ public class AutorizacaoEntity {
 
     private StatusAutorizacao status;
 
-    private LocalDate date;
+    private LocalDate data;
 
     @ManyToOne
     private AtividadeEntity idAtividade;

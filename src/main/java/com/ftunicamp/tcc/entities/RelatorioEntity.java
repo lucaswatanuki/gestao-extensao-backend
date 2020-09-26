@@ -9,4 +9,10 @@ public class RelatorioEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
+
+    @ManyToOne
+    private AtividadeEntity idAtividade;
+
+    @ManyToOne
+    private DocenteEntity idDocente;
 }

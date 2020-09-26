@@ -9,4 +9,14 @@ public class AtividadeEntity {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
+    private String nome;
+
+    private Double valorBruto;
+
+    @ManyToOne
+    private DocenteEntity idDocente;
+
+    private Integer horaMensal;
+
+    private Integer horaSemanal;
 }

@@ -2,6 +2,7 @@ package com.ftunicamp.tcc.controllers;
 
 import com.ftunicamp.tcc.controllers.request.LoginRequest;
 import com.ftunicamp.tcc.controllers.request.SignUpRequest;
+import com.ftunicamp.tcc.controllers.response.JwtResponse;
 import com.ftunicamp.tcc.service.AutenticacaoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -16,7 +17,7 @@ public class AutenticacaoController {
     private AutenticacaoService autenticacaoService;
 
     @PostMapping("/login")
-    public ResponseEntity<?> autenticarUsuario(@RequestBody LoginRequest loginRequest) {
+    public ResponseEntity<JwtResponse> autenticarUsuario(@RequestBody LoginRequest loginRequest) {
         return ResponseEntity.ok(autenticacaoService.autenticarUsuario(loginRequest));
     }
 

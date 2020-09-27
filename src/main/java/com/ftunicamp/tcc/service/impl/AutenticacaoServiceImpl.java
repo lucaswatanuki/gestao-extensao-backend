@@ -3,6 +3,7 @@ package com.ftunicamp.tcc.service.impl;
 import com.ftunicamp.tcc.controllers.request.LoginRequest;
 import com.ftunicamp.tcc.controllers.request.SignUpRequest;
 import com.ftunicamp.tcc.controllers.response.JwtResponse;
+import com.ftunicamp.tcc.entities.DocenteEntity;
 import com.ftunicamp.tcc.entities.Profiles;
 import com.ftunicamp.tcc.entities.ProfilesEntity;
 import com.ftunicamp.tcc.entities.UserEntity;
@@ -12,6 +13,7 @@ import com.ftunicamp.tcc.repositories.UserRepository;
 import com.ftunicamp.tcc.security.jwt.JwtUtils;
 import com.ftunicamp.tcc.security.services.UserDetailsImpl;
 import com.ftunicamp.tcc.service.AutenticacaoService;
+import com.ftunicamp.tcc.utils.DocenteFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -103,12 +105,14 @@ public class AutenticacaoServiceImpl implements AutenticacaoService {
         }
 
         user.setProfiles(roles);
-        salvarDocente(userRepository.save(user));
+        userRepository.save(user);
+
+        salvarDocente(DocenteFactory.criarDocente(signUpRequest));
 
         return "Usuário registrado com sucesso!";
     }
 
-    private void salvarDocente(UserEntity usuario) {
-        //implementar
+    private void salvarDocente(DocenteEntity docenteEntity) {
+        docenteRepository.save(docenteEntity);
     }
 }

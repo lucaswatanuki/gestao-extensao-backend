@@ -17,8 +17,8 @@ public class AutorizacaoServiceImpl implements AutorizacaoService {
     }
 
     @Override
-    public void incluirAutorizacao(Long idAtividade) {
-
+    public AutorizacaoResponse incluirAutorizacao(Long idAtividade) {
+        return null;
     }
 
     @Override

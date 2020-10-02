@@ -10,9 +10,9 @@ public class RelatorioEntity {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @ManyToOne
-    private AtividadeEntity idAtividade;
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private AtividadeEntity atividade;
 
-    @ManyToOne
-    private DocenteEntity idDocente;
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private DocenteEntity docente;
 }

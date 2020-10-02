@@ -13,8 +13,8 @@ public class AtividadeEntity {
 
     private Double valorBruto;
 
-    @ManyToOne
-    private DocenteEntity idDocente;
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private DocenteEntity docente;
 
     private Integer horaMensal;
 

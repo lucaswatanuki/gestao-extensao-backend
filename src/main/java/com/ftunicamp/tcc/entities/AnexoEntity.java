@@ -11,6 +11,9 @@ public class AnexoEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private AtividadeEntity atividade;
+
     private String path;
 
     private String nomeArquivo;

@@ -15,10 +15,10 @@ public class AutorizacaoEntity {
 
     private LocalDate data;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private AtividadeEntity idAtividade;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private DocenteEntity aprovador;
 
 }

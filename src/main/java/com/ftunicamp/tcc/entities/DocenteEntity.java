@@ -25,7 +25,7 @@ public class DocenteEntity {
 
     private String endereco;
 
-    @OneToMany
+    @OneToMany(mappedBy = "docente", fetch = FetchType.LAZY)
     private List<AtividadeEntity> atividades;
 
     private String email;

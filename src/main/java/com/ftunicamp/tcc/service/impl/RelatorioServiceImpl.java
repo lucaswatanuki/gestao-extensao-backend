@@ -33,4 +33,9 @@ public class RelatorioServiceImpl implements RelatorioService {
     public RelatorioResponse gerarRelatorio(Long idAtividade, Long idDocente) {
         return null;
     }
+
+    @Override
+    public void excluirRelatorio(Long id) {
+
+    }
 }

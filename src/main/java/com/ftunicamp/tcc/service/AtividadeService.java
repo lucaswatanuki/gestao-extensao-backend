@@ -7,7 +7,7 @@ public interface AtividadeService {
 
     AtividadeResponse cadastrarAtividade(AtividadeRequest request);
 
-    AtividadeResponse buscarAtividade(Long id);
+    AtividadeResponse buscarAtividade(String jwt, Long id);
 
     void excluirAtividade(Long id);
 

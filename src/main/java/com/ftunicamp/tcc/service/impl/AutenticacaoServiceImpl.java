@@ -23,9 +23,11 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 @Service
@@ -55,9 +57,10 @@ public class AutenticacaoServiceImpl implements AutenticacaoService {
                 new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
-        String jwt = jwtUtils.generateJwtToken(authentication);
-
         UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
+
+        String jwt = jwtUtils.generateJwtToken(authentication, userDetails);
+
         List<String> profiles = userDetails.getAuthorities().stream()
                 .map(GrantedAuthority::getAuthority)
                 .collect(Collectors.toList());
@@ -87,17 +90,17 @@ public class AutenticacaoServiceImpl implements AutenticacaoService {
         Set<ProfilesEntity> roles = new HashSet<>();
 
         if (strProfiles == null) {
-            ProfilesEntity userRole = profilesRepository.findByName(Profiles.ROLE_USER)
+            var userRole = profilesRepository.findByName(Profiles.ROLE_USER)
                     .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
             roles.add(userRole);
         } else {
             strProfiles.forEach(profile -> {
                 if (profile.equalsIgnoreCase("admin")) {
-                    ProfilesEntity adminRole = profilesRepository.findByName(Profiles.ROLE_ADMIN)
+                    var adminRole = profilesRepository.findByName(Profiles.ROLE_ADMIN)
                             .orElseThrow(() -> new RuntimeException("Perfil não encontrado"));
                     roles.add(adminRole);
                 } else {
-                    ProfilesEntity userRole = profilesRepository.findByName(Profiles.ROLE_USER)
+                    var userRole = profilesRepository.findByName(Profiles.ROLE_USER)
                             .orElseThrow(() -> new RuntimeException("Perfil não encontrado"));
                     roles.add(userRole);
                 }
@@ -110,6 +113,27 @@ public class AutenticacaoServiceImpl implements AutenticacaoService {
         salvarDocente(DocenteFactory.criarDocente(signUpRequest));
 
         return "Usuário registrado com sucesso!";
+    }
+
+    @Override
+    public List<ProfilesEntity> registrarPerfilAcesso() {
+        List<ProfilesEntity> profilesEntities = new ArrayList<>();
+
+        if (profilesRepository.findAll().isEmpty()) {
+            var adminProfiles = new ProfilesEntity();
+            adminProfiles.setName(Profiles.ROLE_ADMIN);
+            var userProfile = new ProfilesEntity();
+            userProfile.setName(Profiles.ROLE_USER);
+
+            profilesEntities.add(profilesRepository.save(adminProfiles));
+            profilesEntities.add(profilesRepository.save(userProfile));
+            Logger.getAnonymousLogger().info("Perfis de acesso criados com sucesso.");
+
+        } else {
+            Logger.getAnonymousLogger().info("Perfis de acesso já foram criados.");
+        }
+
+        return profilesEntities;
     }
 
     private void salvarDocente(DocenteEntity docenteEntity) {

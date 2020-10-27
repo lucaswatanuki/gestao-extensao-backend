@@ -14,7 +14,6 @@ public class DocenteFactory {
         var docente = new DocenteEntity();
         docente.setNome(request.getNomeCompleto());
         docente.setCpf(request.getCpf());
-        docente.setDtNascimento(request.getDtNascimento());
         docente.setEmail(request.getEmail());
         docente.setEndereco(request.getEndereco());
         docente.setRf(request.getRf());

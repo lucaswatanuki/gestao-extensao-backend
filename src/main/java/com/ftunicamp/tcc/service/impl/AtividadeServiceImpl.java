@@ -28,8 +28,8 @@ public class AtividadeServiceImpl implements AtividadeService {
     }
 
     @Override
-    public AtividadeResponse buscarAtividade(String jwt, Long id) {
-        var teste = jwtUtils.getSessao(jwt);
+    public AtividadeResponse buscarAtividade(Long id) {
+        var teste = jwtUtils.getSessao();
         return null;
     }
 

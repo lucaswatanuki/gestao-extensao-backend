@@ -29,8 +29,8 @@ public class AtividadeController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<AtividadeResponse> buscarAtividade(@RequestHeader("jwt") String jwt, @PathVariable("id") Long id) {
-        return ResponseEntity.ok(atividadeService.buscarAtividade(jwt, id));
+    public ResponseEntity<AtividadeResponse> buscarAtividade(@PathVariable("id") Long id) {
+        return ResponseEntity.ok(atividadeService.buscarAtividade(id));
     }
 
     @ResponseStatus(HttpStatus.NO_CONTENT)

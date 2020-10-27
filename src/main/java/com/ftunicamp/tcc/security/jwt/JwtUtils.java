@@ -1,20 +1,20 @@
 package com.ftunicamp.tcc.security.jwt;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ftunicamp.tcc.dto.Sessao;
 import com.ftunicamp.tcc.security.services.UserDetailsImpl;
 import io.jsonwebtoken.*;
+import lombok.Getter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 import java.util.stream.Collectors;
 
 @Component
@@ -28,15 +28,21 @@ public class JwtUtils {
     @Value("${gestao.extensao.tempoExpiracaoJwt}")
     private int jwtExpirationMs;
 
-    public String generateJwtToken(Authentication authentication) {
+    @Getter
+    private Sessao sessao;
 
-        UserDetailsImpl userPrincipal = (UserDetailsImpl) authentication.getPrincipal();
+    @Autowired
+    private UserDetailsService userDetailsService;
 
-        var profiles = userPrincipal.getAuthorities().stream()
+    public String generateJwtToken(Authentication authentication, UserDetailsImpl userPrincipal) {
+
+        var profiles = authentication.getAuthorities().stream()
                 .map(GrantedAuthority::getAuthority).collect(Collectors.toList());
 
+        var userDetails = userDetailsService.loadUserByUsername(userPrincipal.getUsername());
+
         return Jwts.builder()
-                .setSubject((userPrincipal.getUsername()))
+                .setSubject(userDetails.getUsername())
                 .setIssuedAt(new Date())
                 .setExpiration(new Date((new Date()).getTime() + jwtExpirationMs))
                 .signWith(SignatureAlgorithm.HS512, jwtSecret)
@@ -48,11 +54,15 @@ public class JwtUtils {
         return Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(token).getBody().getSubject();
     }
 
-    public Sessao getSessao(String token) {
+    public Sessao obterSessao(String token) {
         var claims = Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(token).getBody();
+
         var sessao = new Sessao();
         sessao.setUsername(claims.getSubject());
         sessao.setProfiles(claims.get("profiles", ArrayList.class));
+
+        this.sessao = sessao;
+
         return sessao;
     }
 

@@ -33,4 +33,6 @@ public class DocenteEntity {
 
     private boolean autorizado;
 
+    private int totalHoras;
+
 }

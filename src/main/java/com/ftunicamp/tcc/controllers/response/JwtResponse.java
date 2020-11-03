@@ -1,8 +1,5 @@
 package com.ftunicamp.tcc.controllers.response;
 
-import lombok.Getter;
-import lombok.Setter;
-
 import java.util.List;
 
 public class JwtResponse {

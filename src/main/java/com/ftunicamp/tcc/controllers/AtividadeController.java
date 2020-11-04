@@ -1,9 +1,13 @@
 package com.ftunicamp.tcc.controllers;
 
 
-import com.ftunicamp.tcc.controllers.request.AtividadeRequest;
+import com.ftunicamp.tcc.controllers.request.ConvenioRequest;
+import com.ftunicamp.tcc.controllers.request.CursoExtensaoRequest;
+import com.ftunicamp.tcc.controllers.request.RegenciaRequest;
+import com.ftunicamp.tcc.controllers.request.UnivespRequest;
 import com.ftunicamp.tcc.controllers.response.AtividadeResponse;
 import com.ftunicamp.tcc.controllers.response.AutorizacaoResponse;
+import com.ftunicamp.tcc.controllers.response.Response;
 import com.ftunicamp.tcc.service.AtividadeService;
 import com.ftunicamp.tcc.service.AutorizacaoService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,9 +27,27 @@ public class AtividadeController {
     private AutorizacaoService autorizacaoService;
 
     @ResponseStatus(HttpStatus.CREATED)
-    @PostMapping(value = "/incluir")
-    public ResponseEntity<AtividadeResponse> incluirAtividade(@RequestBody AtividadeRequest request) {
-        return ResponseEntity.ok(atividadeService.cadastrarAtividade(request));
+    @PostMapping(value = "/convenio")
+    public ResponseEntity<Response<String>> incluirAtividadeConvenio(@RequestBody ConvenioRequest request) {
+        return ResponseEntity.ok(atividadeService.cadastrarConvenio(request));
+    }
+
+    @ResponseStatus(HttpStatus.CREATED)
+    @PostMapping(value = "/curso")
+    public ResponseEntity<Response<String>> incluirCursoExtensao(@RequestBody CursoExtensaoRequest request) {
+        return ResponseEntity.ok(atividadeService.cadastrarCursoExtensao(request));
+    }
+
+    @ResponseStatus(HttpStatus.CREATED)
+    @PostMapping(value = "/regencia")
+    public ResponseEntity<Response<String>> incluirRegenciaConcomitante(@RequestBody RegenciaRequest request) {
+        return ResponseEntity.ok(atividadeService.cadastrarRegencia(request));
+    }
+
+    @ResponseStatus(HttpStatus.CREATED)
+    @PostMapping(value = "/univesp")
+    public ResponseEntity<Response<String>> incluirAtividadeUnivesp(@RequestBody UnivespRequest request) {
+        return ResponseEntity.ok(atividadeService.cadastrarAtividadeUnivesp(request));
     }
 
     @GetMapping("/{id}")

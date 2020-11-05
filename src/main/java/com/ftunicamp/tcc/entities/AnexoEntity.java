@@ -12,7 +12,7 @@ public class AnexoEntity {
     private Integer id;
 
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private AtividadeEntity atividade;
+    private Atividade atividade;
 
     private String path;
 

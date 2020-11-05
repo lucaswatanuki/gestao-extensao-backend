@@ -110,7 +110,7 @@ public class AutenticacaoServiceImpl implements AutenticacaoService {
         user.setProfiles(roles);
         userRepository.save(user);
 
-        salvarDocente(DocenteFactory.criarDocente(signUpRequest));
+        salvarDocente(DocenteFactory.criarDocente(signUpRequest, user));
 
         return "Usuário registrado com sucesso!";
     }

@@ -11,7 +11,7 @@ public class RelatorioEntity {
     private Long id;
 
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private AtividadeEntity atividade;
+    private Atividade atividade;
 
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private DocenteEntity docente;

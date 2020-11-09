@@ -1,6 +1,6 @@
 package com.ftunicamp.tcc.security.services;
 
-import com.ftunicamp.tcc.entities.UserEntity;
+import com.ftunicamp.tcc.entities.UsuarioEntity;
 import com.ftunicamp.tcc.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -19,7 +19,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     @Override
     @Transactional
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        UserEntity user = userRepository.findByUsername(username)
+        UsuarioEntity user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("Usuario não encontrado: " + username));
 
         return UserDetailsImpl.build(user);

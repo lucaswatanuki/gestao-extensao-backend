@@ -6,6 +6,9 @@ import com.ftunicamp.tcc.service.AutorizacaoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Service
 public class AutorizacaoServiceImpl implements AutorizacaoService {
 
@@ -29,6 +32,23 @@ public class AutorizacaoServiceImpl implements AutorizacaoService {
     @Override
     public AutorizacaoResponse editarAutorizacao(Long idAutorizacao) {
         return null;
+    }
+
+    @Override
+    public List<AutorizacaoResponse> listarAutorizacoes() {
+        List<AutorizacaoResponse> autorizacaoResponse = new ArrayList<>();
+        autorizacaoRepository.findAll().forEach(autorizacao -> {
+            var response = new AutorizacaoResponse();
+            response.setDataCriacao(autorizacao.getData().toString());
+            response.setDocente(autorizacao.getAtividade().getDocente().getNome());
+            response.setHoras(autorizacao.getAtividade().getHoraMensal() * autorizacao.getAtividade().getPrazo());
+            response.setStatus(autorizacao.getStatus().getStatus());
+            response.setId(autorizacao.getId());
+            response.setUrgente(autorizacao.getAtividade().isUrgente());
+
+            autorizacaoResponse.add(response);
+        });
+        return autorizacaoResponse;
     }
 
     @Override

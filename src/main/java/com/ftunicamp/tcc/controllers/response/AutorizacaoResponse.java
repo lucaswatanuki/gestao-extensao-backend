@@ -9,5 +9,16 @@ import java.io.Serializable;
 @Setter
 public class AutorizacaoResponse implements Serializable {
 
+    private long id;
+
+    private String status;
+
+    private String dataCriacao;
+
+    private String docente;
+
+    private int horas;
+
+    private boolean urgente;
 
 }

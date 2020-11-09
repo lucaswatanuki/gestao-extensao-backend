@@ -6,13 +6,19 @@ import com.ftunicamp.tcc.controllers.request.RegenciaRequest;
 import com.ftunicamp.tcc.controllers.request.UnivespRequest;
 import com.ftunicamp.tcc.controllers.response.AtividadeResponse;
 import com.ftunicamp.tcc.controllers.response.Response;
+import com.ftunicamp.tcc.entities.Atividade;
+import com.ftunicamp.tcc.entities.AutorizacaoEntity;
+import com.ftunicamp.tcc.entities.StatusAutorizacao;
 import com.ftunicamp.tcc.repositories.AtividadeRepository;
+import com.ftunicamp.tcc.repositories.AutorizacaoRepository;
 import com.ftunicamp.tcc.repositories.DocenteRepository;
 import com.ftunicamp.tcc.security.jwt.JwtUtils;
 import com.ftunicamp.tcc.service.AtividadeService;
 import com.ftunicamp.tcc.utils.AtividadeFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.time.LocalDate;
 
 @Service
 public class AtividadeServiceImpl implements AtividadeService {
@@ -22,23 +28,34 @@ public class AtividadeServiceImpl implements AtividadeService {
 
     private final AtividadeRepository atividadeRepository;
     private final DocenteRepository docenteRepository;
+    private final AutorizacaoRepository autorizacaoRepository;
 
     @Autowired
     private JwtUtils jwtUtils;
 
 
     @Autowired
-    public AtividadeServiceImpl(AtividadeRepository atividadeRepository, DocenteRepository docenteRepository) {
+    public AtividadeServiceImpl(AtividadeRepository atividadeRepository,
+                                DocenteRepository docenteRepository,
+                                AutorizacaoRepository autorizacaoRepository) {
         this.atividadeRepository = atividadeRepository;
         this.docenteRepository = docenteRepository;
+        this.autorizacaoRepository = autorizacaoRepository;
     }
 
     @Override
     public Response<String> cadastrarConvenio(ConvenioRequest request) {
         var docente = (docenteRepository.findByUser_Username(jwtUtils.getSessao().getUsername()));
-        var atividade = AtividadeFactory.criarConvenio(request, docente);
+        Atividade atividade = AtividadeFactory.criarConvenio(request, docente);
 
-        atividadeRepository.save(atividade);
+        atividade = atividadeRepository.save(atividade);
+
+        var autorizacao = new AutorizacaoEntity();
+        autorizacao.setStatus(StatusAutorizacao.PENDENTE);
+        autorizacao.setAtividade(atividade);
+        autorizacao.setData(LocalDate.now());
+
+        autorizacaoRepository.save(autorizacao);
 
         var response = new Response<String>();
         response.setMensagem(MENSAGEM_SUCESSO);

@@ -9,9 +9,7 @@ import java.io.Serializable;
 @Setter
 public class ConvenioRequest implements Serializable {
 
-    private String nome;
-    private String matricula;
-    private String titulo;
+    private String projeto;
     private String coordenador;
     private String instituicao;
     private int horaSemanal;
@@ -19,7 +17,4 @@ public class ConvenioRequest implements Serializable {
     private String descricao;
     private int prazo;
     private Double valorBruto;
-    private int parcelas;
-    private String dataRecebimento;
-
 }

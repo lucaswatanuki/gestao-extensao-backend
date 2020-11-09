@@ -13,7 +13,7 @@ import java.util.List;
 public class DocenteEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private String nome;
@@ -28,7 +28,7 @@ public class DocenteEntity {
     private List<Atividade> atividades;
 
     @OneToOne
-    private UserEntity user;
+    private UsuarioEntity user;
 
     private String email;
 

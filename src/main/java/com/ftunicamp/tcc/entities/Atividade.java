@@ -9,13 +9,14 @@ import java.time.LocalDate;
 @Getter
 @Setter
 @Entity
-@Table(name = "Atividade")
+@Inheritance(strategy=InheritanceType.JOINED)
+@DiscriminatorColumn(name="TIPO_ATIVIDADE")
 public abstract class Atividade {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String nome;
+    private String projeto;
 
     private Double valorBruto;
 
@@ -33,4 +34,6 @@ public abstract class Atividade {
     private LocalDate dataCriacao;
 
     private LocalDate dataModificacao;
+
+    private boolean urgente;
 }

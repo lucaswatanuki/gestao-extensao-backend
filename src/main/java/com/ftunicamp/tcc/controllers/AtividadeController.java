@@ -15,6 +15,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
 @RequestMapping("/atividade")
@@ -69,5 +71,10 @@ public class AtividadeController {
     @GetMapping("/autorizacao/{id}")
     public ResponseEntity<AutorizacaoResponse> buscarAutorizacao(@RequestHeader("id") Long id) {
         return ResponseEntity.ok(autorizacaoService.buscarAutorizacao(id));
+    }
+
+    @GetMapping("/autorizacao")
+    public ResponseEntity<List<AutorizacaoResponse>> getAutorizacoes() {
+        return ResponseEntity.ok(autorizacaoService.listarAutorizacoes());
     }
 }

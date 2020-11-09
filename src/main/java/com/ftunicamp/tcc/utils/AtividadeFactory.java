@@ -15,11 +15,10 @@ public class AtividadeFactory {
     private AtividadeFactory() {
     }
 
-    public static ConvenioEntity criarConvenio(ConvenioRequest request, DocenteEntity docente) {
+    public static Atividade criarConvenio(ConvenioRequest request, DocenteEntity docente) {
         var convenio = new ConvenioEntity();
         convenio.setDocente(docente);
 
-        convenio.setNome(request.getNome());
         convenio.setHoraMensal(request.getHoraMensal());
         convenio.setHoraSemanal(request.getHoraSemanal());
         convenio.setValorBruto(request.getValorBruto());
@@ -27,7 +26,7 @@ public class AtividadeFactory {
         convenio.setCoordenador(request.getCoordenador());
         convenio.setDescricao(request.getDescricao());
         convenio.setInstituicao(request.getInstituicao());
-        convenio.setDataRecebimento(request.getDataRecebimento());
+        convenio.setProjeto(request.getProjeto());
 
         convenio.setDataCriacao(LocalDate.now());
         convenio.setDataModificacao(LocalDate.now());

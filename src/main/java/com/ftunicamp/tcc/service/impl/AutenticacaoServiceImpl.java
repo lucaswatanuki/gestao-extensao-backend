@@ -6,7 +6,7 @@ import com.ftunicamp.tcc.controllers.response.JwtResponse;
 import com.ftunicamp.tcc.entities.DocenteEntity;
 import com.ftunicamp.tcc.entities.Profiles;
 import com.ftunicamp.tcc.entities.ProfilesEntity;
-import com.ftunicamp.tcc.entities.UserEntity;
+import com.ftunicamp.tcc.entities.UsuarioEntity;
 import com.ftunicamp.tcc.repositories.DocenteRepository;
 import com.ftunicamp.tcc.repositories.ProfilesRepository;
 import com.ftunicamp.tcc.repositories.UserRepository;
@@ -82,7 +82,7 @@ public class AutenticacaoServiceImpl implements AutenticacaoService {
             return "Email já está em uso.";
         }
 
-        UserEntity user = new UserEntity(signUpRequest.getUsername(),
+        UsuarioEntity user = new UsuarioEntity(signUpRequest.getUsername(),
                 signUpRequest.getEmail(),
                 encoder.encode(signUpRequest.getPassword()));
 

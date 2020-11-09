@@ -18,7 +18,7 @@ import java.util.Set;
 })
 @AllArgsConstructor
 @NoArgsConstructor
-public class UserEntity {
+public class UsuarioEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -37,7 +37,7 @@ public class UserEntity {
     private Set<ProfilesEntity> profiles = new HashSet<>();
 
 
-    public UserEntity(String username, String email, String password) {
+    public UsuarioEntity(String username, String email, String password) {
         this.username = username;
         this.email = email;
         this.password = password;

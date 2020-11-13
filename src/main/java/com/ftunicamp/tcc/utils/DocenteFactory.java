@@ -14,7 +14,7 @@ public class DocenteFactory {
     public static DocenteEntity criarDocente(SignUpRequest request, UsuarioEntity user) {
 
         var docente = new DocenteEntity();
-        docente.setNome(request.getNomeCompleto());
+        docente.setNome(request.getNome());
         docente.setCpf(request.getCpf());
         docente.setEmail(request.getEmail());
         docente.setEndereco(request.getEndereco());

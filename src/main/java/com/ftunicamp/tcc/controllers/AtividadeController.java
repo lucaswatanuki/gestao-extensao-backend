@@ -57,6 +57,11 @@ public class AtividadeController {
         return ResponseEntity.ok(atividadeService.buscarAtividade(id));
     }
 
+    @GetMapping("/listar")
+    public ResponseEntity<List<AtividadeResponse>> listarAtividades() {
+        return ResponseEntity.ok(atividadeService.listarAtividades());
+    }
+
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @DeleteMapping("/{id}")
     public void excluirAtividade(@PathVariable("id") Long id) {

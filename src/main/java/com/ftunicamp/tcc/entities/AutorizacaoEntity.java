@@ -24,4 +24,6 @@ public class AutorizacaoEntity {
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Atividade atividade;
 
+    private String docente;
+
 }

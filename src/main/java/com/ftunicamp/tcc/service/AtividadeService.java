@@ -7,6 +7,8 @@ import com.ftunicamp.tcc.controllers.request.UnivespRequest;
 import com.ftunicamp.tcc.controllers.response.AtividadeResponse;
 import com.ftunicamp.tcc.controllers.response.Response;
 
+import java.util.List;
+
 public interface AtividadeService {
 
     Response<String> cadastrarConvenio(ConvenioRequest request);
@@ -22,4 +24,6 @@ public interface AtividadeService {
     void excluirAtividade(Long id);
 
     AtividadeResponse editarAtividade(Long id);
+
+    List<AtividadeResponse> listarAtividades();
 }

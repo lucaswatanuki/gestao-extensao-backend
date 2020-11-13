@@ -19,6 +19,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class AtividadeServiceImpl implements AtividadeService {
@@ -47,29 +49,24 @@ public class AtividadeServiceImpl implements AtividadeService {
     public Response<String> cadastrarConvenio(ConvenioRequest request) {
         var docente = (docenteRepository.findByUser_Username(jwtUtils.getSessao().getUsername()));
         Atividade atividade = AtividadeFactory.criarConvenio(request, docente);
-
         atividade = atividadeRepository.save(atividade);
 
-        var autorizacao = new AutorizacaoEntity();
-        autorizacao.setStatus(StatusAutorizacao.PENDENTE);
-        autorizacao.setAtividade(atividade);
-        autorizacao.setData(LocalDate.now());
-
-        autorizacaoRepository.save(autorizacao);
+        salvarAutorizacao(atividade);
 
         var response = new Response<String>();
         response.setMensagem(MENSAGEM_SUCESSO);
         return response;
     }
 
+
     @Override
     public Response<String> cadastrarCursoExtensao(CursoExtensaoRequest request) {
         var docente = (docenteRepository.findByUser_Username(jwtUtils.getSessao().getUsername()));
         var atividade = AtividadeFactory.criarCurso(request, docente);
 
-        //Mapear request para entidade - mapper struct
-
         atividadeRepository.save(atividade);
+
+        salvarAutorizacao(atividade);
 
         var response = new Response<String>();
         response.setMensagem(MENSAGEM_SUCESSO);
@@ -118,5 +115,30 @@ public class AtividadeServiceImpl implements AtividadeService {
     @Override
     public AtividadeResponse editarAtividade(Long id) {
         return null;
+    }
+
+    @Override
+    public List<AtividadeResponse> listarAtividades() {
+        List<AtividadeResponse> atividadesResponse = new ArrayList<>();
+        var docente = docenteRepository.findByUser_Username(jwtUtils.getSessao().getUsername());
+        atividadeRepository.findAllByDocente(docente).forEach(atividade -> {
+            var response = new AtividadeResponse();
+            response.setId(atividade.getId());
+            response.setDataCriacao(atividade.getDataCriacao());
+            response.setPrazo(atividade.getPrazo());
+            response.setProjeto(atividade.getProjeto());
+            atividadesResponse.add(response);
+        });
+
+        return atividadesResponse;
+    }
+
+    private void salvarAutorizacao(Atividade atividade) {
+        var autorizacao = new AutorizacaoEntity();
+        autorizacao.setStatus(StatusAutorizacao.PENDENTE);
+        autorizacao.setAtividade(atividade);
+        autorizacao.setData(LocalDate.now());
+        autorizacao.setDocente(atividade.getDocente().getUser().getUsername());
+        autorizacaoRepository.save(autorizacao);
     }
 }

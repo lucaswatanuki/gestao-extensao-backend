@@ -12,11 +12,9 @@ import java.util.Set;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class SignUpRequest {
 
-    @JsonProperty("usuario")
     private String username;
 
-    @JsonProperty("nome_completo")
-    private String nomeCompleto;
+    private String nome;
 
     private String cpf;
 

@@ -79,13 +79,13 @@ public class AutenticacaoServiceImpl implements AutenticacaoService {
                 .map(GrantedAuthority::getAuthority)
                 .collect(Collectors.toList());
 
-        var user = userRepository.findByUsername(userDetails.getUsername());
-
-        user.ifPresent(usuarioEntity -> {
-            if (!usuarioEntity.isVerificado()) {
-                throw new NegocioException("Usuário não verificado.");
-            }
-        });
+//        var user = userRepository.findByUsername(userDetails.getUsername());
+//
+//        user.ifPresent(usuarioEntity -> {
+//            if (!usuarioEntity.isVerificado()) {
+//                throw new NegocioException("Usuário não verificado.");
+//            }
+//        });
 
 
         return new JwtResponse(jwt,

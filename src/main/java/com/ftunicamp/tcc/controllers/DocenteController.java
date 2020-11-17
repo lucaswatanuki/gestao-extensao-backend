@@ -4,10 +4,7 @@ import com.ftunicamp.tcc.controllers.response.DocenteResponse;
 import com.ftunicamp.tcc.service.DocenteService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -22,6 +19,12 @@ public class DocenteController {
     @GetMapping("/todos")
     public ResponseEntity<List<DocenteResponse>> listarDocentes() {
         return ResponseEntity.ok(docenteService.listarDocentes());
+    }
+
+    @DeleteMapping("/delete/{username}")
+    public ResponseEntity<String> deletarDocente(@PathVariable("username") String username) {
+         docenteService.deletarDocente(username);
+         return ResponseEntity.ok("Usuário deletado.");
     }
 
 }

@@ -3,6 +3,7 @@ package com.ftunicamp.tcc.service.impl;
 import com.ftunicamp.tcc.controllers.response.DocenteResponse;
 import com.ftunicamp.tcc.entities.DocenteEntity;
 import com.ftunicamp.tcc.repositories.DocenteRepository;
+import com.ftunicamp.tcc.repositories.UserRepository;
 import com.ftunicamp.tcc.service.DocenteService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -14,10 +15,12 @@ import java.util.List;
 public class DocenteServiceImpl implements DocenteService {
 
     private final DocenteRepository docenteRepository;
+    private final UserRepository userRepository;
 
     @Autowired
-    public DocenteServiceImpl(DocenteRepository docenteRepository) {
+    public DocenteServiceImpl(DocenteRepository docenteRepository, UserRepository userRepository) {
         this.docenteRepository = docenteRepository;
+        this.userRepository = userRepository;
     }
 
     @Override
@@ -40,4 +43,14 @@ public class DocenteServiceImpl implements DocenteService {
 
         return response;
     }
+
+    @Override
+    public void deletarDocente(String username) {
+       var docente = docenteRepository.findByUser_Username(username);
+       docenteRepository.delete(docente);
+       var user = userRepository.findByUsername(username);
+       user.ifPresent(userRepository::delete);
+    }
+
+
 }

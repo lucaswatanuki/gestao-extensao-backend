@@ -30,6 +30,11 @@ public class UsuarioEntity {
 
     private String password;
 
+    private boolean verificado;
+
+    private String codigoVerificacao;
+
+
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "user_profiles",
             joinColumns = @JoinColumn(name = "user_id"),

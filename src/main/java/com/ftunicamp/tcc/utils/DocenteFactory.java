@@ -15,11 +15,11 @@ public class DocenteFactory {
 
         var docente = new DocenteEntity();
         docente.setNome(request.getNome());
-        docente.setCpf(request.getCpf());
+        docente.setCpf(request.getCpf().replaceAll("[^0-9]",""));
         docente.setEmail(request.getEmail());
         docente.setEndereco(request.getEndereco());
         docente.setRf(request.getRf());
-        docente.setTelefone(request.getTelefone());
+        docente.setTelefone(request.getTelefone().replaceAll("[^0-9]",""));
         docente.setUser(user);
 
         return docente;

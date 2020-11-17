@@ -7,4 +7,6 @@ import java.util.List;
 public interface DocenteService {
 
     List<DocenteResponse> listarDocentes();
+
+    void deletarDocente(String username);
 }

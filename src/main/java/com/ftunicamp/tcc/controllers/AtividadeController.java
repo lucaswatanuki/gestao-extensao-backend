@@ -5,6 +5,7 @@ import com.ftunicamp.tcc.controllers.request.ConvenioRequest;
 import com.ftunicamp.tcc.controllers.request.CursoExtensaoRequest;
 import com.ftunicamp.tcc.controllers.request.RegenciaRequest;
 import com.ftunicamp.tcc.controllers.request.UnivespRequest;
+import com.ftunicamp.tcc.controllers.response.AtividadeDetalheResponse;
 import com.ftunicamp.tcc.controllers.response.AtividadeResponse;
 import com.ftunicamp.tcc.controllers.response.AutorizacaoResponse;
 import com.ftunicamp.tcc.controllers.response.Response;
@@ -53,7 +54,7 @@ public class AtividadeController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<AtividadeResponse> buscarAtividade(@PathVariable("id") Long id) {
+    public ResponseEntity<AtividadeDetalheResponse> buscarAtividadeDetalhada(@PathVariable("id") Long id) {
         return ResponseEntity.ok(atividadeService.buscarAtividade(id));
     }
 

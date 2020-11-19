@@ -4,11 +4,13 @@ import com.ftunicamp.tcc.controllers.request.ConvenioRequest;
 import com.ftunicamp.tcc.controllers.request.CursoExtensaoRequest;
 import com.ftunicamp.tcc.controllers.request.RegenciaRequest;
 import com.ftunicamp.tcc.controllers.request.UnivespRequest;
+import com.ftunicamp.tcc.controllers.response.AtividadeDetalheResponse;
 import com.ftunicamp.tcc.controllers.response.AtividadeResponse;
 import com.ftunicamp.tcc.controllers.response.Response;
 import com.ftunicamp.tcc.entities.Atividade;
 import com.ftunicamp.tcc.entities.AutorizacaoEntity;
 import com.ftunicamp.tcc.entities.StatusAutorizacao;
+import com.ftunicamp.tcc.exceptions.NegocioException;
 import com.ftunicamp.tcc.repositories.AtividadeRepository;
 import com.ftunicamp.tcc.repositories.AutorizacaoRepository;
 import com.ftunicamp.tcc.repositories.DocenteRepository;
@@ -102,9 +104,24 @@ public class AtividadeServiceImpl implements AtividadeService {
     }
 
     @Override
-    public AtividadeResponse buscarAtividade(Long id) {
-        var teste = jwtUtils.getSessao();
-        return null;
+    public AtividadeDetalheResponse buscarAtividade(Long id) {
+        var response = new AtividadeDetalheResponse();
+
+        var atividade = atividadeRepository.findById(id);
+
+        atividade.ifPresentOrElse(atividadeEntity -> {
+            response.setId(atividadeEntity.getId());
+            response.setDocente(atividadeEntity.getDocente().getNome());
+            response.setProjeto(atividadeEntity.getProjeto());
+            response.setValorBruto(atividadeEntity.getValorBruto());
+            response.setPrazo(atividadeEntity.getPrazo());
+            response.setHoraMensal(atividadeEntity.getHoraMensal());
+            response.setHoraSemanal(atividadeEntity.getHoraSemanal());
+        }, () -> {
+            throw new NegocioException("Não foi encontrada nenhuma atividade");
+        });
+
+        return response;
     }
 
     @Override

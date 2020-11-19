@@ -20,6 +20,7 @@ public class DocenteEntity {
 
     private String cpf;
 
+    @Column(unique = true, nullable = false)
     private String rf;
 
     private String endereco;

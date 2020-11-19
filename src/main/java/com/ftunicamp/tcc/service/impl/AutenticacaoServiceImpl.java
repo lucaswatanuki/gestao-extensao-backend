@@ -87,7 +87,6 @@ public class AutenticacaoServiceImpl implements AutenticacaoService {
             }
         });
 
-
         return new JwtResponse(jwt,
                 userDetails.getId(),
                 userDetails.getUsername(),

@@ -1,15 +1,25 @@
 package com.ftunicamp.tcc.service.impl;
 
 import com.ftunicamp.tcc.controllers.response.AutorizacaoResponse;
+import com.ftunicamp.tcc.entities.StatusAutorizacao;
+import com.ftunicamp.tcc.exceptions.NegocioException;
+import com.ftunicamp.tcc.repositories.AtividadeRepository;
 import com.ftunicamp.tcc.repositories.AutorizacaoRepository;
 import com.ftunicamp.tcc.repositories.DocenteRepository;
 import com.ftunicamp.tcc.security.jwt.JwtUtils;
 import com.ftunicamp.tcc.service.AutorizacaoService;
+import com.ftunicamp.tcc.service.EmailService;
+import com.ftunicamp.tcc.utils.TipoEmail;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 
+import javax.mail.MessagingException;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
+import java.util.logging.Logger;
 
 @Service
 public class AutorizacaoServiceImpl implements AutorizacaoService {
@@ -17,16 +27,42 @@ public class AutorizacaoServiceImpl implements AutorizacaoService {
     private final AutorizacaoRepository autorizacaoRepository;
     private final JwtUtils jwtUtils;
     private final DocenteRepository docenteRepository;
+    private final AtividadeRepository atividadeRepository;
+    private final EmailService emailService;
 
     @Autowired
-    public AutorizacaoServiceImpl(AutorizacaoRepository autorizacaoRepository, JwtUtils jwtUtils, DocenteRepository docenteRepository) {
+    public AutorizacaoServiceImpl(AutorizacaoRepository autorizacaoRepository,
+                                  JwtUtils jwtUtils,
+                                  DocenteRepository docenteRepository,
+                                  AtividadeRepository atividadeRepository,
+                                  JavaMailSender javaMailSender, EmailService emailService) {
         this.autorizacaoRepository = autorizacaoRepository;
         this.jwtUtils = jwtUtils;
         this.docenteRepository = docenteRepository;
+        this.atividadeRepository = atividadeRepository;
+        this.emailService = emailService;
     }
 
     @Override
     public AutorizacaoResponse incluirAutorizacao(Long idAtividade) {
+        var autorizacao = autorizacaoRepository.findById(idAtividade);
+
+        autorizacao.ifPresentOrElse(autorizacaoEntity -> {
+                    autorizacaoEntity.setStatus(StatusAutorizacao.APROVADO);
+                    CompletableFuture.runAsync(() -> {
+                        try {
+                            emailService.enviarEmailAtividade(autorizacaoEntity.getAtividade().getDocente(), TipoEmail.STATUS_ATIVIDADE);
+                        } catch (MessagingException | UnsupportedEncodingException e) {
+                            Logger.getAnonymousLogger().warning(e.getMessage());
+                            e.printStackTrace();
+                        }
+                    });
+
+                },
+                () -> {
+                    throw new NegocioException("Autorização não encontrada!");
+                });
+
         return null;
     }
 
@@ -36,8 +72,25 @@ public class AutorizacaoServiceImpl implements AutorizacaoService {
     }
 
     @Override
-    public AutorizacaoResponse editarAutorizacao(Long idAutorizacao) {
-        return null;
+    public AutorizacaoResponse editarAutorizacao(Long idAutorizacao, StatusAutorizacao status) {
+        var autorizacao = autorizacaoRepository.findById(idAutorizacao);
+
+        var response = new AutorizacaoResponse();
+
+        autorizacao.ifPresentOrElse(autorizacaoEntity -> {
+                    autorizacaoEntity.setStatus(status);
+                    autorizacaoRepository.save(autorizacaoEntity);
+
+                    response.setStatus(autorizacaoEntity.getStatus().getStatus());
+                    response.setId(autorizacaoEntity.getId());
+                    response.setDocente(autorizacaoEntity.getDocente());
+                },
+                () -> {
+                    throw new NegocioException("Autorização não encontrada!");
+                });
+
+
+        return response;
     }
 
     @Override

@@ -16,6 +16,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.mail.MessagingException;
+import java.io.UnsupportedEncodingException;
 import java.util.List;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
@@ -31,7 +33,7 @@ public class AtividadeController {
 
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping(value = "/convenio")
-    public ResponseEntity<Response<String>> incluirAtividadeConvenio(@RequestBody ConvenioRequest request) {
+    public ResponseEntity<Response<String>> incluirAtividadeConvenio(@RequestBody ConvenioRequest request) throws UnsupportedEncodingException, MessagingException {
         return ResponseEntity.ok(atividadeService.cadastrarConvenio(request));
     }
 

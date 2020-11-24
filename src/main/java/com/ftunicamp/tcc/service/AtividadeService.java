@@ -8,11 +8,13 @@ import com.ftunicamp.tcc.controllers.response.AtividadeDetalheResponse;
 import com.ftunicamp.tcc.controllers.response.AtividadeResponse;
 import com.ftunicamp.tcc.controllers.response.Response;
 
+import javax.mail.MessagingException;
+import java.io.UnsupportedEncodingException;
 import java.util.List;
 
 public interface AtividadeService {
 
-    Response<String> cadastrarConvenio(ConvenioRequest request);
+    Response<String> cadastrarConvenio(ConvenioRequest request) throws UnsupportedEncodingException, MessagingException;
 
     Response<String> cadastrarCursoExtensao(CursoExtensaoRequest request);
 

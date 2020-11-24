@@ -14,13 +14,10 @@ import com.ftunicamp.tcc.repositories.UserRepository;
 import com.ftunicamp.tcc.security.jwt.JwtUtils;
 import com.ftunicamp.tcc.security.services.UserDetailsImpl;
 import com.ftunicamp.tcc.service.AutenticacaoService;
+import com.ftunicamp.tcc.service.EmailService;
 import com.ftunicamp.tcc.utils.DocenteFactory;
 import com.ftunicamp.tcc.utils.Utilities;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.mail.javamail.MimeMessageHelper;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -30,7 +27,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.mail.MessagingException;
-import javax.mail.internet.MimeMessage;
 import javax.servlet.http.HttpServletRequest;
 import java.io.UnsupportedEncodingException;
 import java.util.*;
@@ -54,16 +50,13 @@ public class AutenticacaoServiceImpl implements AutenticacaoService {
     private DocenteRepository docenteRepository;
 
     @Autowired
-    private JavaMailSender javaMailSender;
-
-    @Autowired
     PasswordEncoder encoder;
 
     @Autowired
     JwtUtils jwtUtils;
 
-    @Value("${spring.mail.username}")
-    String email;
+    @Autowired
+    private EmailService emailService;
 
     @Override
     public JwtResponse autenticarUsuario(LoginRequest loginRequest) {
@@ -139,7 +132,7 @@ public class AutenticacaoServiceImpl implements AutenticacaoService {
         var baseUrl = Utilities.getBaseUrl(request);
         CompletableFuture.runAsync(() -> {
             try {
-                enviarEmailVerificacao(user, docente, baseUrl);
+                emailService.enviarEmailVerificacao(docente, baseUrl);
             } catch (UnsupportedEncodingException | MessagingException e) {
                 e.printStackTrace();
             }
@@ -159,27 +152,6 @@ public class AutenticacaoServiceImpl implements AutenticacaoService {
             userRepository.save(usuario);
             return true;
         }
-    }
-
-    @Async
-    private void enviarEmailVerificacao(UsuarioEntity user, DocenteEntity docente, String baseUrl) throws UnsupportedEncodingException, MessagingException {
-            String assunto = "Confirmação de cadastro";
-            String remetente = "Comissão de Extensão FT";
-            String body = "<p>Prezado(a) " + docente.getNome() + ",</p>";
-            body += "<p>Por favor, clique no link abaixo para confirmar seu cadastro</p>";
-            String urlVerificada = baseUrl + "/auth/confirmacao?codigo=" + user.getCodigoVerificacao();
-            body += "<h3><a href=\"" + urlVerificada + "\">VERIFICAR</a></h3>";
-            body += "<p>Atenciosamente,<br>Comissão de Extensão FT</p>";
-
-            MimeMessage message = javaMailSender.createMimeMessage();
-            MimeMessageHelper helper = new MimeMessageHelper(message);
-
-            helper.setFrom(email ,remetente);
-            helper.setTo(docente.getEmail());
-            helper.setSubject(assunto);
-            helper.setText(body, true);
-
-            javaMailSender.send(message);
     }
 
     @Override

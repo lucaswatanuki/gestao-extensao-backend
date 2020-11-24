@@ -4,23 +4,30 @@ import com.ftunicamp.tcc.controllers.request.ConvenioRequest;
 import com.ftunicamp.tcc.controllers.request.CursoExtensaoRequest;
 import com.ftunicamp.tcc.controllers.request.RegenciaRequest;
 import com.ftunicamp.tcc.controllers.request.UnivespRequest;
+import com.ftunicamp.tcc.controllers.response.AtividadeDetalheResponse;
 import com.ftunicamp.tcc.controllers.response.AtividadeResponse;
 import com.ftunicamp.tcc.controllers.response.Response;
 import com.ftunicamp.tcc.entities.Atividade;
 import com.ftunicamp.tcc.entities.AutorizacaoEntity;
 import com.ftunicamp.tcc.entities.StatusAutorizacao;
+import com.ftunicamp.tcc.exceptions.NegocioException;
 import com.ftunicamp.tcc.repositories.AtividadeRepository;
 import com.ftunicamp.tcc.repositories.AutorizacaoRepository;
 import com.ftunicamp.tcc.repositories.DocenteRepository;
 import com.ftunicamp.tcc.security.jwt.JwtUtils;
 import com.ftunicamp.tcc.service.AtividadeService;
+import com.ftunicamp.tcc.service.EmailService;
 import com.ftunicamp.tcc.utils.AtividadeFactory;
+import com.ftunicamp.tcc.utils.TipoEmail;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.mail.MessagingException;
+import java.io.UnsupportedEncodingException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 @Service
 public class AtividadeServiceImpl implements AtividadeService {
@@ -31,6 +38,7 @@ public class AtividadeServiceImpl implements AtividadeService {
     private final AtividadeRepository atividadeRepository;
     private final DocenteRepository docenteRepository;
     private final AutorizacaoRepository autorizacaoRepository;
+    private final EmailService emailService;
 
     @Autowired
     private JwtUtils jwtUtils;
@@ -39,19 +47,29 @@ public class AtividadeServiceImpl implements AtividadeService {
     @Autowired
     public AtividadeServiceImpl(AtividadeRepository atividadeRepository,
                                 DocenteRepository docenteRepository,
-                                AutorizacaoRepository autorizacaoRepository) {
+                                AutorizacaoRepository autorizacaoRepository,
+                                EmailService emailService) {
         this.atividadeRepository = atividadeRepository;
         this.docenteRepository = docenteRepository;
         this.autorizacaoRepository = autorizacaoRepository;
+        this.emailService = emailService;
     }
 
     @Override
-    public Response<String> cadastrarConvenio(ConvenioRequest request) {
+    public Response<String> cadastrarConvenio(ConvenioRequest request) throws UnsupportedEncodingException, MessagingException {
         var docente = (docenteRepository.findByUser_Username(jwtUtils.getSessao().getUsername()));
         Atividade atividade = AtividadeFactory.criarConvenio(request, docente);
         atividade = atividadeRepository.save(atividade);
 
         salvarAutorizacao(atividade);
+
+        CompletableFuture.runAsync(() -> {
+            try {
+                emailService.enviarEmailAtividade(docente, TipoEmail.NOVA_ATIVIDADE);
+            } catch (MessagingException | UnsupportedEncodingException e) {
+                e.printStackTrace();
+            }
+        });
 
         var response = new Response<String>();
         response.setMensagem(MENSAGEM_SUCESSO);
@@ -102,14 +120,31 @@ public class AtividadeServiceImpl implements AtividadeService {
     }
 
     @Override
-    public AtividadeResponse buscarAtividade(Long id) {
-        var teste = jwtUtils.getSessao();
-        return null;
+    public AtividadeDetalheResponse buscarAtividade(Long id) {
+        var response = new AtividadeDetalheResponse();
+
+        var atividade = atividadeRepository.findById(id);
+
+        atividade.ifPresentOrElse(atividadeEntity -> {
+            response.setId(atividadeEntity.getId());
+            response.setDocente(atividadeEntity.getDocente().getNome());
+            response.setProjeto(atividadeEntity.getProjeto());
+            response.setValorBruto(atividadeEntity.getValorBruto());
+            response.setPrazo(atividadeEntity.getPrazo());
+            response.setHoraMensal(atividadeEntity.getHoraMensal());
+            response.setHoraSemanal(atividadeEntity.getHoraSemanal());
+        }, () -> {
+            throw new NegocioException("Não foi encontrada nenhuma atividade");
+        });
+
+        return response;
     }
 
     @Override
     public void excluirAtividade(Long id) {
-
+        atividadeRepository.findById(id).ifPresentOrElse(atividadeRepository::delete, () -> {
+            throw new NegocioException("Atividade não encontrada");
+        });
     }
 
     @Override

@@ -5,6 +5,7 @@ import com.ftunicamp.tcc.controllers.request.ConvenioRequest;
 import com.ftunicamp.tcc.controllers.request.CursoExtensaoRequest;
 import com.ftunicamp.tcc.controllers.request.RegenciaRequest;
 import com.ftunicamp.tcc.controllers.request.UnivespRequest;
+import com.ftunicamp.tcc.controllers.response.AtividadeDetalheResponse;
 import com.ftunicamp.tcc.controllers.response.AtividadeResponse;
 import com.ftunicamp.tcc.controllers.response.AutorizacaoResponse;
 import com.ftunicamp.tcc.controllers.response.Response;
@@ -15,6 +16,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.mail.MessagingException;
+import java.io.UnsupportedEncodingException;
 import java.util.List;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
@@ -30,7 +33,7 @@ public class AtividadeController {
 
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping(value = "/convenio")
-    public ResponseEntity<Response<String>> incluirAtividadeConvenio(@RequestBody ConvenioRequest request) {
+    public ResponseEntity<Response<String>> incluirAtividadeConvenio(@RequestBody ConvenioRequest request) throws UnsupportedEncodingException, MessagingException {
         return ResponseEntity.ok(atividadeService.cadastrarConvenio(request));
     }
 
@@ -53,7 +56,7 @@ public class AtividadeController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<AtividadeResponse> buscarAtividade(@PathVariable("id") Long id) {
+    public ResponseEntity<AtividadeDetalheResponse> buscarAtividadeDetalhada(@PathVariable("id") Long id) {
         return ResponseEntity.ok(atividadeService.buscarAtividade(id));
     }
 

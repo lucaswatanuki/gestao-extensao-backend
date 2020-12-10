@@ -32,8 +32,8 @@ import java.util.concurrent.CompletableFuture;
 @Service
 public class AtividadeServiceImpl implements AtividadeService {
 
-    private final String MENSAGEM_SUCESSO = "Atividade Convêncio cadastrada com sucesso.";
-    private final String MENSAGEM_ERRO = "Erro ao criar atividade";
+    private static final String MENSAGEM_SUCESSO = "Atividade cadastrada com sucesso.";
+    private static final String MENSAGEM_ERRO = "Erro ao criar atividade";
 
     private final AtividadeRepository atividadeRepository;
     private final DocenteRepository docenteRepository;
@@ -162,6 +162,11 @@ public class AtividadeServiceImpl implements AtividadeService {
             response.setDataCriacao(atividade.getDataCriacao());
             response.setPrazo(atividade.getPrazo());
             response.setProjeto(atividade.getProjeto());
+            var statusAtividade = AtividadeFactory.verificaStatusAtividade(atividade);
+            if (!atividade.getStatus().equals(statusAtividade)) {
+                atividade.setStatus(statusAtividade);
+                atividadeRepository.save(atividade);
+            }
             atividadesResponse.add(response);
         });
 

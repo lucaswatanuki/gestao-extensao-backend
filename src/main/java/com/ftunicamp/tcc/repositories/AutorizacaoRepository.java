@@ -11,5 +11,6 @@ import java.util.List;
 public interface AutorizacaoRepository extends JpaRepository<AutorizacaoEntity, Long> {
 
     List<AutorizacaoEntity> findAllByDocente(String docenteUsername);
+
     List<AutorizacaoEntity> findAllByStatus(StatusAutorizacao status);
 }

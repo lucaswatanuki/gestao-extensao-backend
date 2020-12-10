@@ -18,7 +18,7 @@ public class DocenteFactory {
         docente.setCpf(request.getCpf().replaceAll("[^0-9]",""));
         docente.setEmail(request.getEmail());
         docente.setEndereco(request.getEndereco());
-        docente.setRf(request.getRf());
+        docente.setMatricula(request.getRf());
         docente.setTelefone(request.getTelefone().replaceAll("[^0-9]",""));
         docente.setUser(user);
 

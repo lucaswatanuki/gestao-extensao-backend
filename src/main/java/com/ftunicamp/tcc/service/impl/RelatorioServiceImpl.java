@@ -21,12 +21,7 @@ public class RelatorioServiceImpl implements RelatorioService {
     }
 
     @Override
-    public RelatorioResponse buscarRelatorio(Long id) {
-        return null;
-    }
-
-    @Override
-    public RelatorioResponse gerarRelatorio(Long idAtividade, Long idDocente) {
+    public RelatorioResponse gerarRelatorio(Long idDocente) {
         return null;
     }
 

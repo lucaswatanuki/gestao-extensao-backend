@@ -4,18 +4,22 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.io.Serializable;
-import java.util.List;
+import java.time.LocalDateTime;
 
 @Getter
 @Setter
 public class CursoExtensaoRequest implements Serializable {
 
+    private String nomeCurso;
     private Participacao participacao;
-    private List<String> disciplinas;
-    private int cargaHoraTotal;
+    private String disciplina;
+    private int cargaHoraTotalMinistrada;
     private Double valorBrutoHoraAula;
     private Double valorBrutoTotalAula;
-    private Double valorBrutoOutrasAtividades;
-    private int periodo;
+    private Double valorBrutoOutraAtividade;
+    private LocalDateTime dataInicio;
+    private LocalDateTime dataFim;
+    private int horaSemanal;
+    private int horaMensal;
 
 }

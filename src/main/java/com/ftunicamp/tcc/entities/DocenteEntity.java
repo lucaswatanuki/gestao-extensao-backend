@@ -18,10 +18,11 @@ public class DocenteEntity {
 
     private String nome;
 
+    @Column(unique = true, nullable = false)
     private String cpf;
 
     @Column(unique = true, nullable = false)
-    private String rf;
+    private String matricula;
 
     private String endereco;
 

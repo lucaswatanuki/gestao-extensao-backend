@@ -5,6 +5,7 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Getter
 @Setter
@@ -31,9 +32,18 @@ public abstract class Atividade {
 
     private int prazo;
 
+    @Column(nullable = false)
+    private LocalDateTime dataInicio;
+
+    @Column(nullable = false)
+    private LocalDateTime dataFim;
+
     private LocalDate dataCriacao;
 
     private LocalDate dataModificacao;
 
     private boolean urgente;
+
+    @Enumerated(EnumType.STRING)
+    private StatusAtividade status;
 }

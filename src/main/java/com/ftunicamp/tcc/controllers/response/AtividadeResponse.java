@@ -12,7 +12,7 @@ public class AtividadeResponse implements Serializable {
 
     private Long id;
     private LocalDate dataCriacao;
-    private int prazo;
+    private long prazo;
     private String projeto;
 
 }

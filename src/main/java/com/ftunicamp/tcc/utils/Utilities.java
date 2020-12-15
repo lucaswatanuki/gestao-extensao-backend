@@ -1,6 +1,7 @@
 package com.ftunicamp.tcc.utils;
 
 import javax.servlet.http.HttpServletRequest;
+import java.time.format.DateTimeFormatter;
 
 public class Utilities {
 
@@ -10,4 +11,8 @@ public class Utilities {
         String baseUrl = request.getRequestURL().toString();
         return baseUrl.replace(request.getServletPath(), "");
     }
+
+   public static DateTimeFormatter formatarData() {
+       return DateTimeFormatter.ofPattern("dd/MM/yyyy");
+   }
 }

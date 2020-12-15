@@ -30,7 +30,7 @@ public abstract class Atividade {
 
     private Integer horaSemanal;
 
-    private int prazo;
+    private long prazo;
 
     @Column(nullable = false)
     private LocalDateTime dataInicio;

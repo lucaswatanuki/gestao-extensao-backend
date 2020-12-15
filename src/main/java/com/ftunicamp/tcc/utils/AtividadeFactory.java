@@ -10,6 +10,8 @@ import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.YearMonth;
+import java.time.temporal.ChronoUnit;
 
 @Component
 public class AtividadeFactory {
@@ -27,7 +29,7 @@ public class AtividadeFactory {
         convenio.setHoraMensal(request.getHoraMensal());
         convenio.setHoraSemanal(request.getHoraSemanal());
         convenio.setValorBruto(request.getValorBruto());
-        convenio.setPrazo(request.getPrazo());
+        convenio.setPrazo(ChronoUnit.MONTHS.between(YearMonth.from(request.getDataInicio()), YearMonth.from(request.getDataFim())));
         convenio.setCoordenador(request.getCoordenador());
         convenio.setDescricao(request.getDescricao());
         convenio.setInstituicao(request.getInstituicao());

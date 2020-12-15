@@ -60,8 +60,14 @@ public class AutenticacaoServiceImpl implements AutenticacaoService {
 
     @Override
     public JwtResponse autenticarUsuario(LoginRequest loginRequest) {
+        var docente = docenteRepository.findByMatricula(loginRequest.getMatricula());
+
+        if (docente.isEmpty()) {
+            throw new NegocioException("Matricula inválida.");
+        }
+
         Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
+                new UsernamePasswordAuthenticationToken(docente.get().getUser().getUsername(), loginRequest.getPassword()));
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
         UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
@@ -72,13 +78,9 @@ public class AutenticacaoServiceImpl implements AutenticacaoService {
                 .map(GrantedAuthority::getAuthority)
                 .collect(Collectors.toList());
 
-        var user = userRepository.findByUsername(userDetails.getUsername());
-
-        user.ifPresent(usuarioEntity -> {
-            if (!usuarioEntity.isVerificado()) {
-                throw new NegocioException("Usuário não verificado.");
-            }
-        });
+        if (!docente.get().getUser().isVerificado()) {
+            throw new NegocioException("Usuário não verificado.");
+        }
 
         return new JwtResponse(jwt,
                 userDetails.getId(),

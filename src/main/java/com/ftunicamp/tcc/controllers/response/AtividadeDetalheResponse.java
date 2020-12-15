@@ -13,6 +13,8 @@ public class AtividadeDetalheResponse {
     private String docente;
     private int horaMensal;
     private int horaSemanal;
-    private int prazo;
+    private long prazo;
+    private String dataInicio;
+    private String dataFim;
 
 }

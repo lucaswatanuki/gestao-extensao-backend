@@ -8,5 +8,7 @@ public interface DocenteService {
 
     List<DocenteResponse> listarDocentes();
 
+    DocenteResponse consultarDocente(Long id);
+
     void deletarDocente(String username);
 }

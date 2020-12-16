@@ -9,6 +9,7 @@ import com.ftunicamp.tcc.controllers.response.AtividadeResponse;
 import com.ftunicamp.tcc.controllers.response.Response;
 import com.ftunicamp.tcc.entities.Atividade;
 import com.ftunicamp.tcc.entities.AutorizacaoEntity;
+import com.ftunicamp.tcc.entities.StatusAtividade;
 import com.ftunicamp.tcc.entities.StatusAutorizacao;
 import com.ftunicamp.tcc.exceptions.NegocioException;
 import com.ftunicamp.tcc.repositories.AtividadeRepository;
@@ -19,12 +20,15 @@ import com.ftunicamp.tcc.service.AtividadeService;
 import com.ftunicamp.tcc.service.EmailService;
 import com.ftunicamp.tcc.utils.AtividadeFactory;
 import com.ftunicamp.tcc.utils.TipoEmail;
+import com.ftunicamp.tcc.utils.Utilities;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.mail.MessagingException;
 import java.io.UnsupportedEncodingException;
 import java.time.LocalDate;
+import java.time.YearMonth;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
@@ -60,6 +64,19 @@ public class AtividadeServiceImpl implements AtividadeService {
         var docente = (docenteRepository.findByUser_Username(jwtUtils.getSessao().getUsername()));
         Atividade atividade = AtividadeFactory.criarConvenio(request, docente);
         atividade = atividadeRepository.save(atividade);
+
+        if (atividade.getStatus().equals(StatusAtividade.EM_ANDAMENTO)) {
+            var horasEmAndamentoAtualizada = docente.getTotalHorasEmAndamento()  + (atividade.getPrazo() * atividade.getHoraMensal());
+            docente.setTotalHorasEmAndamento(horasEmAndamentoAtualizada);
+            docenteRepository.save(docente);
+
+        }
+
+        if (atividade.getStatus().equals(StatusAtividade.FUTURA)) {
+            var horasFuturasAtualizada = docente.getTotalHorasFuturas()  + (atividade.getPrazo() * atividade.getHoraMensal());
+            docente.setTotalHorasFuturas(horasFuturasAtualizada);
+            docenteRepository.save(docente);
+        }
 
         salvarAutorizacao(atividade);
 
@@ -123,16 +140,20 @@ public class AtividadeServiceImpl implements AtividadeService {
     public AtividadeDetalheResponse buscarAtividade(Long id) {
         var response = new AtividadeDetalheResponse();
 
-        var atividade = atividadeRepository.findById(id);
+        var atividadeEntity = atividadeRepository.findById(id);
 
-        atividade.ifPresentOrElse(atividadeEntity -> {
-            response.setId(atividadeEntity.getId());
-            response.setDocente(atividadeEntity.getDocente().getNome());
-            response.setProjeto(atividadeEntity.getProjeto());
-            response.setValorBruto(atividadeEntity.getValorBruto());
-            response.setPrazo(atividadeEntity.getPrazo());
-            response.setHoraMensal(atividadeEntity.getHoraMensal());
-            response.setHoraSemanal(atividadeEntity.getHoraSemanal());
+        atividadeEntity.ifPresentOrElse(atividade -> {
+            var docente = atividade.getDocente();
+
+            response.setId(atividade.getId());
+            response.setDocente(docente.getNome());
+            response.setProjeto(atividade.getProjeto());
+            response.setValorBruto(atividade.getValorBruto());
+            response.setPrazo(atividade.getPrazo());
+            response.setHoraMensal(atividade.getHoraMensal());
+            response.setHoraSemanal(atividade.getHoraSemanal());
+            response.setDataInicio(LocalDate.from(atividade.getDataInicio()).format(Utilities.formatarData()));
+            response.setDataFim(LocalDate.from(atividade.getDataFim()).format(Utilities.formatarData()));
         }, () -> {
             throw new NegocioException("Não foi encontrada nenhuma atividade");
         });

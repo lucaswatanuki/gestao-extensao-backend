@@ -38,6 +38,13 @@ public class DocenteEntity {
 
     private boolean autorizado;
 
-    private int totalHoras;
+    private long totalHorasEmAndamento;
 
+    private long totalHorasFuturas;
+
+    private long totalHoras;
+
+    public long getTotalHoras() {
+        return tota;
+    }
 }

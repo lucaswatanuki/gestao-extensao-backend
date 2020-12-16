@@ -17,7 +17,7 @@ public class AutorizacaoResponse implements Serializable {
 
     private String docente;
 
-    private int horas;
+    private long horas;
 
     private boolean urgente;
 

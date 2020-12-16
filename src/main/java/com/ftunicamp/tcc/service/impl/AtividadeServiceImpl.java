@@ -65,19 +65,6 @@ public class AtividadeServiceImpl implements AtividadeService {
         Atividade atividade = AtividadeFactory.criarConvenio(request, docente);
         atividade = atividadeRepository.save(atividade);
 
-        if (atividade.getStatus().equals(StatusAtividade.EM_ANDAMENTO)) {
-            var horasEmAndamentoAtualizada = docente.getTotalHorasEmAndamento()  + (atividade.getPrazo() * atividade.getHoraMensal());
-            docente.setTotalHorasEmAndamento(horasEmAndamentoAtualizada);
-            docenteRepository.save(docente);
-
-        }
-
-        if (atividade.getStatus().equals(StatusAtividade.FUTURA)) {
-            var horasFuturasAtualizada = docente.getTotalHorasFuturas()  + (atividade.getPrazo() * atividade.getHoraMensal());
-            docente.setTotalHorasFuturas(horasFuturasAtualizada);
-            docenteRepository.save(docente);
-        }
-
         salvarAutorizacao(atividade);
 
         CompletableFuture.runAsync(() -> {
@@ -154,6 +141,8 @@ public class AtividadeServiceImpl implements AtividadeService {
             response.setHoraSemanal(atividade.getHoraSemanal());
             response.setDataInicio(LocalDate.from(atividade.getDataInicio()).format(Utilities.formatarData()));
             response.setDataFim(LocalDate.from(atividade.getDataFim()).format(Utilities.formatarData()));
+            response.setHorasEmAndamento(docente.getTotalHorasEmAndamento());
+            response.setHorasFuturas(docente.getTotalHorasFuturas());
         }, () -> {
             throw new NegocioException("Não foi encontrada nenhuma atividade");
         });

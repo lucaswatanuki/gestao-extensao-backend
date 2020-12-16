@@ -7,10 +7,11 @@ import lombok.Setter;
 @Setter
 public class DocenteResponse {
 
-    private String rf;
+    private String matricula;
     private String nome;
     private String email;
     private Boolean autorizado;
+    private long totalHoras;
     private long totalHorasEmAndamento;
     private long totalHorasFuturas;
 }

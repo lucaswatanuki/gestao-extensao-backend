@@ -39,10 +39,11 @@ public class DocenteServiceImpl implements DocenteService {
         docentes.forEach(docente -> {
             var docenteResponse = new DocenteResponse();
             docenteResponse.setNome(docente.getNome());
-            docenteResponse.setRf(docente.getMatricula());
+            docenteResponse.setMatricula(docente.getMatricula());
             docenteResponse.setEmail(docente.getEmail());
             docenteResponse.setAutorizado(docente.isAutorizado());
             docenteResponse.setTotalHorasEmAndamento(docente.getTotalHorasEmAndamento());
+            docenteResponse.setTotalHorasFuturas(docente.getTotalHorasFuturas());
             response.add(docenteResponse);
         });
 

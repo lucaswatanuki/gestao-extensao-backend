@@ -1,7 +1,6 @@
 package com.ftunicamp.tcc.controllers.response;
 
 import com.ftunicamp.tcc.entities.StatusAtividade;
-import com.ftunicamp.tcc.entities.TipoAtividade;
 import lombok.Getter;
 import lombok.Setter;
 

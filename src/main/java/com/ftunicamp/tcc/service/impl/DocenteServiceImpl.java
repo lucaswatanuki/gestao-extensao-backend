@@ -38,6 +38,7 @@ public class DocenteServiceImpl implements DocenteService {
 
         docentes.forEach(docente -> {
             var docenteResponse = new DocenteResponse();
+            docenteResponse.setId(docente.getId());
             docenteResponse.setNome(docente.getNome());
             docenteResponse.setMatricula(docente.getMatricula());
             docenteResponse.setEmail(docente.getEmail());

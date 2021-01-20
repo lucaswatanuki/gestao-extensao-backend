@@ -19,10 +19,10 @@ public class RelatorioController {
     private RelatorioService relatorioService;
 
     @GetMapping("/{id}")
-    public ResponseEntity<List<RelatorioResponse>> getRelatorio(@PathVariable("id") long id, @RequestHeader StatusAtividade status,
+    public ResponseEntity<List<RelatorioResponse>> getRelatorio(@PathVariable("id") long idDocente, @RequestHeader StatusAtividade status,
                                                                 @RequestParam String dataInicio,
                                                                 @RequestParam String dataFim) throws ParseException {
 
-        return ResponseEntity.ok(relatorioService.gerarRelatorioPorDocente(id, status, dataInicio, dataFim));
+        return ResponseEntity.ok(relatorioService.gerarRelatorioPorDocente(idDocente, status, dataInicio, dataFim));
     }
 }

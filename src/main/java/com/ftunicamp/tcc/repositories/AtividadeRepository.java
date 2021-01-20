@@ -16,8 +16,8 @@ public interface AtividadeRepository extends JpaRepository<Atividade, Long> {
     List<Atividade> findAllByDocente(DocenteEntity docente);
 
     @Query("from Atividade a where a.docente.id = ?1 and a.status = ?2 and a.dataCriacao between ?3 and ?4")
-    List<Atividade> gerarRelatorioAtividadesPorDocente(long id, StatusAtividade statusAtividade,
-                                                       LocalDate dataInicio, LocalDate dataFim);
+    List<Atividade> gerarRelatorioAtividadesPorStatusEDocente(long id, StatusAtividade statusAtividade,
+                                                              LocalDate dataInicio, LocalDate dataFim);
 
     @Query("from Atividade a where a.docente.id = ?1 and a.dataCriacao between ?2 and ?3")
     List<Atividade> gerarRelatorioTodasAtividadesPorDocente(long id, LocalDate dataInicio, LocalDate dataFim);

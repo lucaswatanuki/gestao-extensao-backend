@@ -9,12 +9,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 @Service
@@ -37,7 +34,7 @@ public class RelatorioServiceImpl implements RelatorioService {
         var inicio = LocalDate.parse(dataInicio);
         var fim = LocalDate.parse(dataFim);
 
-        var atividades = atividadeRepository.gerarRelatorioAtividadesPorDocente(idDocente, statusAtividade, inicio, fim);
+        var atividades = atividadeRepository.gerarRelatorioAtividadesPorStatusEDocente(idDocente, statusAtividade, inicio, fim);
 
         if (statusAtividade.equals(StatusAtividade.TODOS)) {
             atividades = atividadeRepository.gerarRelatorioTodasAtividadesPorDocente(idDocente, inicio, fim);

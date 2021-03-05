@@ -1,5 +1,14 @@
 package com.ftunicamp.tcc.entities;
 
+import lombok.Getter;
+
+@Getter
 public enum StatusAtividade {
-    CONCLUIDA, EM_ANDAMENTO, FUTURA, TODOS
+    CONCLUIDA("Concluida"), EM_ANDAMENTO("Em andamento"), FUTURA("Aguardando aceite"), TODOS("Todos");
+
+    private final String status;
+
+    StatusAtividade(String status) {
+        this.status = status;
+    }
 }

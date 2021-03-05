@@ -21,4 +21,6 @@ public interface AtividadeRepository extends JpaRepository<Atividade, Long> {
 
     @Query("from Atividade a where a.docente.id = ?1 and a.dataCriacao between ?2 and ?3")
     List<Atividade> gerarRelatorioTodasAtividadesPorDocente(long id, LocalDate dataInicio, LocalDate dataFim);
+
+    List<Atividade> findAllByStatus(StatusAtividade status);
 }

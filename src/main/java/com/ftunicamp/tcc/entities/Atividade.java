@@ -49,6 +49,6 @@ public abstract class Atividade {
 
     @Transient
     public String getTipoAtividade() {
-        return this.getClass().getAnnotation(DiscriminatorValue.class).value();
+        return this.getClass().getAnnotation(DiscriminatorValue.class).value().toUpperCase();
     }
 }

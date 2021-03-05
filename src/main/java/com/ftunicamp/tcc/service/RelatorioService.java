@@ -1,11 +1,15 @@
 package com.ftunicamp.tcc.service;
 
+import com.ftunicamp.tcc.controllers.request.RelatorioRequest;
 import com.ftunicamp.tcc.controllers.response.RelatorioResponse;
+
+import java.text.ParseException;
+import java.util.List;
 
 public interface RelatorioService {
 
-    RelatorioResponse gerarRelatorio(Long idDocente);
+    List<RelatorioResponse> gerarRelatorioPorDocente(RelatorioRequest request) throws ParseException;
 
-    void excluirRelatorio(Long id);
+    List<RelatorioResponse> gerarRelatorioGeral(RelatorioRequest request);
 
 }

@@ -16,5 +16,7 @@ public class AtividadeDetalheResponse {
     private long prazo;
     private String dataInicio;
     private String dataFim;
+    private long horasEmAndamento;
+    private long horasFuturas;
 
 }

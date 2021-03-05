@@ -6,8 +6,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.List;
-
 @Getter
 @Setter
 @AllArgsConstructor
@@ -17,6 +15,5 @@ public class Response<T> {
 
     private String mensagem;
     private T objeto;
-    private List<T> listaObjetos;
 
 }

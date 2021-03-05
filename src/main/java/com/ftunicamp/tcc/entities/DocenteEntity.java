@@ -43,8 +43,5 @@ public class DocenteEntity {
     private long totalHorasFuturas;
 
     private long totalHoras;
-
-    public long getTotalHoras() {
-        return tota;
-    }
+    
 }

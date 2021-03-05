@@ -1,6 +1,7 @@
 package com.ftunicamp.tcc.service.impl;
 
 import com.ftunicamp.tcc.controllers.response.AutorizacaoResponse;
+import com.ftunicamp.tcc.entities.StatusAtividade;
 import com.ftunicamp.tcc.entities.StatusAutorizacao;
 import com.ftunicamp.tcc.exceptions.NegocioException;
 import com.ftunicamp.tcc.repositories.AtividadeRepository;
@@ -49,6 +50,21 @@ public class AutorizacaoServiceImpl implements AutorizacaoService {
 
         autorizacao.ifPresentOrElse(autorizacaoEntity -> {
                     autorizacaoEntity.setStatus(StatusAutorizacao.APROVADO);
+                    var atividade = autorizacaoEntity.getAtividade();
+                    var docente = atividade.getDocente();
+
+                    if (atividade.getStatus().equals(StatusAtividade.EM_ANDAMENTO)) {
+                        var horasEmAndamentoAtualizada = docente.getTotalHorasEmAndamento() + (atividade.getPrazo() * atividade.getHoraMensal());
+                        docente.setTotalHorasEmAndamento(horasEmAndamentoAtualizada);
+                        docenteRepository.save(docente);
+                    }
+
+                    if (atividade.getStatus().equals(StatusAtividade.FUTURA)) {
+                        var horasFuturasAtualizada = docente.getTotalHorasFuturas() + (atividade.getPrazo() * atividade.getHoraMensal());
+                        docente.setTotalHorasFuturas(horasFuturasAtualizada);
+                        docenteRepository.save(docente);
+                    }
+
                     CompletableFuture.runAsync(() -> {
                         try {
                             emailService.enviarEmailAtividade(autorizacaoEntity.getAtividade().getDocente(), TipoEmail.STATUS_ATIVIDADE);

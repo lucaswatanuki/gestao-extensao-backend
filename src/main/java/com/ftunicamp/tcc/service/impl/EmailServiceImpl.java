@@ -27,12 +27,12 @@ public class EmailServiceImpl implements EmailService {
     @Async
     public void enviarEmailVerificacao(DocenteEntity docente, String baseUrl) throws UnsupportedEncodingException, MessagingException {
         String assunto = "Confirmação de cadastro";
-        String remetente = "Comissão de Extensão FT";
+        String remetente = "Coordenadoria de Extensão FT";
         String body = "<p>Prezado(a) " + docente.getNome() + ",</p>";
         body += "<p>Por favor, clique no link abaixo para confirmar seu cadastro</p>";
         String urlVerificada = baseUrl + "/auth/confirmacao?codigo=" + docente.getUser().getCodigoVerificacao();
         body += "<h3><a href=\"" + urlVerificada + "\">VERIFICAR</a></h3>";
-        body += "<p>Atenciosamente,<br>Comissão de Extensão FT</p>";
+        body += "<p>Atenciosamente,<br>Coordenadoria de Extensão FT</p>";
 
         MimeMessage message = javaMailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(message);
@@ -49,20 +49,20 @@ public class EmailServiceImpl implements EmailService {
     @Override
     @Async
     public void enviarEmailAtividade(DocenteEntity docente, TipoEmail tipoEmail) throws MessagingException, UnsupportedEncodingException {
-        String remetente = "Comissão de Extensão FT";
+        String remetente = "Coordenadoria de Extensão FT";
         String body = "";
         String assunto = "";
 
         if (tipoEmail.equals(TipoEmail.NOVA_ATIVIDADE)) {
             assunto = "Atividade submetida";
             body = "<p>Prezado(a) " + docente.getNome() + ",</p>";
-            body += "<p>Sua solicitação de atividade foi submetida com sucesso e encaminhada para a Comissão de Extensão.</p>";
-            body += "<p>Atenciosamente,<br>Comissão de Extensão FT</p>";
+            body += "<p>Sua solicitação de atividade foi submetida com sucesso e encaminhada para a Coordenadoria de Extensão.</p>";
+            body += "<p>Atenciosamente,<br>Coordenadoria de Extensão FT</p>";
         } else if (tipoEmail.equals(TipoEmail.STATUS_ATIVIDADE)) {
             assunto = "Atualização de status da atividade";
             body = "<p>Prezado(a) " + docente.getNome() + ",</p>";
             body += "<p>O status da sua atividade foi alterado.</p>";
-            body += "<p>Atenciosamente,<br>Comissão de Extensão FT</p>";
+            body += "<p>Atenciosamente,<br>Coordenadoria de Extensão FT</p>";
         }
 
         MimeMessage message = javaMailSender.createMimeMessage();

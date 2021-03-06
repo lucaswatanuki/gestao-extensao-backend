@@ -73,9 +73,32 @@ public class RelatorioServiceImpl implements RelatorioService, PDFExportService 
     @Override
     public List<RelatorioResponse> gerarRelatorioGeral(RelatorioRequest request) {
 
-        //var atividades = atividadeRepository.findAllByStatus(request);
+        var inicio = request.getDataInicio();
+        var fim = request.getDataFim();
+        var statusAtividade = request.getStatusAtividade();
 
-        return null;
+        final List<Atividade> atividades;
+
+        if (statusAtividade.equals(StatusAtividade.TODOS)) {
+            atividades = atividadeRepository.gerarRelatorioTodasAtividades(inicio, fim);
+        } else {
+            atividades = atividadeRepository.gerarRelatorioTodasAtividadesPorStatus(inicio, fim, statusAtividade);
+        }
+
+        List<RelatorioResponse> response = new ArrayList<>();
+
+        atividades.forEach(atividade -> {
+            var responseItem = new RelatorioResponse();
+            responseItem.setNomeDocente(atividade.getDocente().getNome());
+            responseItem.setStatusAtividade(atividade.getStatus());
+            responseItem.setTipoAtividade(atividade.getTipoAtividade());
+            responseItem.setDataInicio(atividade.getDataInicio().toLocalDate());
+            responseItem.setDataFim(atividade.getDataFim().toLocalDate());
+            responseItem.setPrazo(atividade.getPrazo());
+            response.add(responseItem);
+        });
+
+        return response;
     }
 
     @Override
@@ -85,7 +108,6 @@ public class RelatorioServiceImpl implements RelatorioService, PDFExportService 
         cell.setPadding(5);
         cell.setVerticalAlignment(Element.ALIGN_CENTER);
         cell.setHorizontalAlignment(Element.ALIGN_CENTER);
-
 
         var font = FontFactory.getFont(FontFactory.HELVETICA);
         font.setColor(Color.WHITE);
@@ -147,6 +169,5 @@ public class RelatorioServiceImpl implements RelatorioService, PDFExportService 
 
         document.add(table);
         document.close();
-
     }
 }

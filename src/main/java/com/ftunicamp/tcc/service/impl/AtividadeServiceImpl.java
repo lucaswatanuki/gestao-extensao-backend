@@ -64,12 +64,13 @@ public class AtividadeServiceImpl implements AtividadeService {
         var docente = (docenteRepository.findByUser_Username(jwtUtils.getSessao().getUsername()));
         Atividade atividade = AtividadeFactory.criarConvenio(request, docente);
         atividade = atividadeRepository.save(atividade);
+        final long atividadeId = atividade.getId();
 
         salvarAutorizacao(atividade);
 
         CompletableFuture.runAsync(() -> {
             try {
-                emailService.enviarEmailAtividade(docente, TipoEmail.NOVA_ATIVIDADE);
+                emailService.enviarEmailAtividade(docente, TipoEmail.NOVA_ATIVIDADE, atividadeId);
             } catch (MessagingException | UnsupportedEncodingException e) {
                 e.printStackTrace();
             }

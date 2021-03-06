@@ -67,7 +67,7 @@ public class AutorizacaoServiceImpl implements AutorizacaoService {
 
                     CompletableFuture.runAsync(() -> {
                         try {
-                            emailService.enviarEmailAtividade(autorizacaoEntity.getAtividade().getDocente(), TipoEmail.STATUS_ATIVIDADE);
+                            emailService.enviarEmailAtividade(autorizacaoEntity.getAtividade().getDocente(), TipoEmail.STATUS_ATIVIDADE, idAtividade);
                         } catch (MessagingException | UnsupportedEncodingException e) {
                             Logger.getAnonymousLogger().warning(e.getMessage());
                             e.printStackTrace();

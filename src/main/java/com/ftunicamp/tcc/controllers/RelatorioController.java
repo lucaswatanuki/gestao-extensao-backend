@@ -2,20 +2,16 @@ package com.ftunicamp.tcc.controllers;
 
 import com.ftunicamp.tcc.controllers.request.RelatorioRequest;
 import com.ftunicamp.tcc.controllers.response.RelatorioResponse;
-import com.ftunicamp.tcc.service.PDFExportService;
 import com.ftunicamp.tcc.service.RelatorioService;
 import com.ftunicamp.tcc.service.impl.RelatorioServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -27,10 +23,16 @@ public class RelatorioController {
     @Autowired
     private RelatorioService relatorioService;
 
-     @PostMapping("/docente")
-    public ResponseEntity<List<RelatorioResponse>> getRelatorio(@RequestBody RelatorioRequest request) throws ParseException {
+    @PostMapping("/docente")
+    public ResponseEntity<List<RelatorioResponse>> getRelatorioDocente(@RequestBody RelatorioRequest request) throws ParseException {
 
         return ResponseEntity.ok(relatorioService.gerarRelatorioPorDocente(request));
+    }
+
+    @PostMapping("/todos")
+    public ResponseEntity<List<RelatorioResponse>> getRelatorioGeral(@RequestBody RelatorioRequest request) {
+
+        return ResponseEntity.ok(relatorioService.gerarRelatorioGeral(request));
     }
 
     @PostMapping("/export")
@@ -43,7 +45,15 @@ public class RelatorioController {
 
         response.setHeader(headerKey, headervalue);
 
-        var exporter = new RelatorioServiceImpl(relatorioService.gerarRelatorioPorDocente(request));
+        final List<RelatorioResponse> dadosRelatorio;
+
+        if (request.getIdDocente() != 0) {
+            dadosRelatorio = relatorioService.gerarRelatorioPorDocente(request);
+        } else {
+            dadosRelatorio = relatorioService.gerarRelatorioGeral(request);
+        }
+
+        var exporter = new RelatorioServiceImpl(dadosRelatorio);
 
         exporter.export(response);
 

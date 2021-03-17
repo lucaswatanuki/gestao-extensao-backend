@@ -1,9 +1,9 @@
 package com.ftunicamp.tcc.entities;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -26,7 +26,7 @@ public class DocenteEntity {
 
     private String endereco;
 
-    @OneToMany(mappedBy = "docente", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "docente", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<Atividade> atividades;
 
     @OneToOne
@@ -38,10 +38,33 @@ public class DocenteEntity {
 
     private boolean autorizado;
 
-    private long totalHorasEmAndamento;
+    @OneToMany(mappedBy = "docente", fetch = FetchType.LAZY)
+    private List<Alocacao> alocacao;
 
-    private long totalHorasFuturas;
+    @Entity
+    @Table(name = "Alocacao")
+    @Builder
+    @Getter
+    @Setter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class Alocacao {
+        @Id
+        @GeneratedValue
+        @Column(name = "id")
+        private Integer id;
 
-    private long totalHoras;
-    
+        @Column(name = "ano")
+        private int ano;
+
+        @Column(name = "semestre")
+        private int semestre;
+
+        @ManyToOne(fetch = FetchType.LAZY)
+        private DocenteEntity docente;
+
+        private long totalHorasAprovadas;
+
+        private long totalHorasSolicitadas;
+    }
 }

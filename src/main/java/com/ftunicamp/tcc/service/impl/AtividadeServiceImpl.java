@@ -7,11 +7,9 @@ import com.ftunicamp.tcc.controllers.request.UnivespRequest;
 import com.ftunicamp.tcc.controllers.response.AtividadeDetalheResponse;
 import com.ftunicamp.tcc.controllers.response.AtividadeResponse;
 import com.ftunicamp.tcc.controllers.response.Response;
-import com.ftunicamp.tcc.entities.Atividade;
-import com.ftunicamp.tcc.entities.AutorizacaoEntity;
-import com.ftunicamp.tcc.entities.StatusAtividade;
-import com.ftunicamp.tcc.entities.StatusAutorizacao;
+import com.ftunicamp.tcc.entities.*;
 import com.ftunicamp.tcc.exceptions.NegocioException;
+import com.ftunicamp.tcc.repositories.AlocacaoRepository;
 import com.ftunicamp.tcc.repositories.AtividadeRepository;
 import com.ftunicamp.tcc.repositories.AutorizacaoRepository;
 import com.ftunicamp.tcc.repositories.DocenteRepository;
@@ -27,11 +25,11 @@ import org.springframework.stereotype.Service;
 import javax.mail.MessagingException;
 import java.io.UnsupportedEncodingException;
 import java.time.LocalDate;
-import java.time.YearMonth;
-import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
+
+import static com.ftunicamp.tcc.utils.DateUtils.*;
 
 @Service
 public class AtividadeServiceImpl implements AtividadeService {
@@ -43,6 +41,7 @@ public class AtividadeServiceImpl implements AtividadeService {
     private final DocenteRepository docenteRepository;
     private final AutorizacaoRepository autorizacaoRepository;
     private final EmailService emailService;
+    private final AlocacaoRepository alocacaoRepository;
 
     @Autowired
     private JwtUtils jwtUtils;
@@ -52,25 +51,30 @@ public class AtividadeServiceImpl implements AtividadeService {
     public AtividadeServiceImpl(AtividadeRepository atividadeRepository,
                                 DocenteRepository docenteRepository,
                                 AutorizacaoRepository autorizacaoRepository,
-                                EmailService emailService) {
+                                EmailService emailService, AlocacaoRepository alocacaoRepository) {
         this.atividadeRepository = atividadeRepository;
         this.docenteRepository = docenteRepository;
         this.autorizacaoRepository = autorizacaoRepository;
         this.emailService = emailService;
+        this.alocacaoRepository = alocacaoRepository;
     }
+
 
     @Override
     public Response<String> cadastrarConvenio(ConvenioRequest request) throws UnsupportedEncodingException, MessagingException {
         var docente = (docenteRepository.findByUser_Username(jwtUtils.getSessao().getUsername()));
-        Atividade atividade = AtividadeFactory.criarConvenio(request, docente);
-        atividade = atividadeRepository.save(atividade);
-        final long atividadeId = atividade.getId();
+        var atividade = AtividadeFactory.criarConvenio(request, docente);
+        final long atividadeId = atividadeRepository.save(atividade).getId();
 
         salvarAutorizacao(atividade);
 
+        if (!atividade.getStatus().equals(StatusAtividade.CONCLUIDA)) {
+            verificaAlocacaoHoras(request, docente, atividade.getPrazo());
+        }
+
         CompletableFuture.runAsync(() -> {
             try {
-                emailService.enviarEmailAtividade(docente, TipoEmail.NOVA_ATIVIDADE, atividadeId);
+                emailService.enviarEmailAtividade(docente, TipoEmail.NOVA_ATIVIDADE, atividadeId, request.getObservacao());
             } catch (MessagingException | UnsupportedEncodingException e) {
                 e.printStackTrace();
             }
@@ -79,6 +83,30 @@ public class AtividadeServiceImpl implements AtividadeService {
         var response = new Response<String>();
         response.setMensagem(MENSAGEM_SUCESSO);
         return response;
+    }
+
+    private void verificaAlocacaoHoras(ConvenioRequest request, DocenteEntity docente, long prazo) {
+        var horasSolicitadas = prazo * request.getHoraMensal();
+        var alocacao = new DocenteEntity.Alocacao();
+        alocacao.setAno(getAnoAtual());
+        alocacao.setSemestre(getSemestreAtual(getMesAtual()));
+        alocacao.setTotalHorasSolicitadas(horasSolicitadas);
+        List<DocenteEntity.Alocacao> teste = new ArrayList<>();
+        teste.add(alocacao);
+        docente.setAlocacao(teste);
+
+//        docente.getAlocacao().add(DocenteEntity.Alocacao.builder()
+//                .ano(getAnoAtual())
+//                .semestre(getSemestreAtual(getMesAtual()))
+//                .totalHorasSolicitadas(horasSolicitadas)
+//                .docente(docente)
+//                .build());
+//        docente.setAlocacao(singletonList(DocenteEntity.Alocacao.builder()
+//                .ano(getAnoAtual())
+//                .semestre(getSemestreAtual(getMesAtual()))
+//                .totalHorasSolicitadas(horasSolicitadas)
+//                .build()));
+        docenteRepository.save(docente);
     }
 
 
@@ -126,29 +154,41 @@ public class AtividadeServiceImpl implements AtividadeService {
 
     @Override
     public AtividadeDetalheResponse buscarAtividade(Long id) {
-        var response = new AtividadeDetalheResponse();
+        var response = AtividadeDetalheResponse.builder();
 
         var atividadeEntity = atividadeRepository.findById(id);
 
         atividadeEntity.ifPresentOrElse(atividade -> {
             var docente = atividade.getDocente();
-
-            response.setId(atividade.getId());
-            response.setDocente(docente.getNome());
-            response.setProjeto(atividade.getProjeto());
-            response.setValorBruto(atividade.getValorBruto());
-            response.setPrazo(atividade.getPrazo());
-            response.setHoraMensal(atividade.getHoraMensal());
-            response.setHoraSemanal(atividade.getHoraSemanal());
-            response.setDataInicio(LocalDate.from(atividade.getDataInicio()).format(Utilities.formatarData()));
-            response.setDataFim(LocalDate.from(atividade.getDataFim()).format(Utilities.formatarData()));
-            response.setHorasEmAndamento(docente.getTotalHorasEmAndamento());
-            response.setHorasFuturas(docente.getTotalHorasFuturas());
+            mapToAtividadeDetalheResponse(response, atividade, docente);
         }, () -> {
             throw new NegocioException("Não foi encontrada nenhuma atividade");
         });
 
-        return response;
+        return response.build();
+    }
+
+    private void mapToAtividadeDetalheResponse(AtividadeDetalheResponse.AtividadeDetalheResponseBuilder response, Atividade atividade, DocenteEntity docente) {
+        response.id(atividade.getId())
+                .docente(docente.getNome())
+                .projeto(atividade.getProjeto())
+                .valorBruto(atividade.getValorBruto())
+                .prazo(atividade.getPrazo())
+                .horaMensal(atividade.getHoraMensal())
+                .horaSemanal(atividade.getHoraSemanal())
+                .dataInicio(LocalDate.from(atividade.getDataInicio()).format(Utilities.formatarData()))
+                .dataFim(LocalDate.from(atividade.getDataFim()).format(Utilities.formatarData()))
+                .horasAprovadas(docente.getAlocacao()
+                        .stream()
+                        .map(DocenteEntity.Alocacao::getTotalHorasAprovadas)
+                        .reduce(Long::sum)
+                        .orElse(0L))
+                .horasSolicitadas(docente.getAlocacao()
+                        .stream()
+                        .map(DocenteEntity.Alocacao::getTotalHorasSolicitadas)
+                        .reduce(Long::sum)
+                        .orElse(0L))
+                .observacao(atividade.getObservacao());
     }
 
     @Override
@@ -168,11 +208,12 @@ public class AtividadeServiceImpl implements AtividadeService {
         List<AtividadeResponse> atividadesResponse = new ArrayList<>();
         var docente = docenteRepository.findByUser_Username(jwtUtils.getSessao().getUsername());
         atividadeRepository.findAllByDocente(docente).forEach(atividade -> {
-            var response = new AtividadeResponse();
-            response.setId(atividade.getId());
-            response.setDataCriacao(atividade.getDataCriacao());
-            response.setPrazo(atividade.getPrazo());
-            response.setProjeto(atividade.getProjeto());
+            var response = AtividadeResponse.builder()
+                    .id(atividade.getId())
+                    .dataCriacao(atividade.getDataCriacao())
+                    .prazo(atividade.getPrazo())
+                    .projeto(atividade.getProjeto())
+                    .build();
             var statusAtividade = AtividadeFactory.verificaStatusAtividade(atividade);
             if (!atividade.getStatus().equals(statusAtividade)) {
                 atividade.setStatus(statusAtividade);
@@ -184,12 +225,12 @@ public class AtividadeServiceImpl implements AtividadeService {
         return atividadesResponse;
     }
 
-    private void salvarAutorizacao(Atividade atividade) {
+    private void salvarAutorizacao(Atividade atividadeEntity) {
         var autorizacao = new AutorizacaoEntity();
         autorizacao.setStatus(StatusAutorizacao.PENDENTE);
-        autorizacao.setAtividade(atividade);
+        autorizacao.setAtividade(atividadeEntity);
         autorizacao.setData(LocalDate.now());
-        autorizacao.setDocente(atividade.getDocente().getUser().getUsername());
+        autorizacao.setDocente(atividadeEntity.getDocente().getUser().getUsername());
         autorizacaoRepository.save(autorizacao);
     }
 }

@@ -63,7 +63,7 @@ public class EmailServiceImpl implements EmailService {
 
     @Override
     @Async
-    public void enviarEmailAtividade(DocenteEntity docente, TipoEmail tipoEmail, long atividadeId) throws MessagingException, UnsupportedEncodingException {
+    public void enviarEmailAtividade(DocenteEntity docente, TipoEmail tipoEmail, long atividadeId, String observacao) throws MessagingException, UnsupportedEncodingException {
         String remetente = "Coordenadoria de Extensão FT ";
         String body = "";
         String assunto = "";

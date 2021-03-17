@@ -5,7 +5,7 @@ import lombok.Getter;
 @Getter
 public enum StatusAutorizacao {
 
-    APROVADO("Aprovado"),
+    APROVADO("Aceito"),
     PENDENTE("Pendente"),
     REPROVADO("Reprovado");
 

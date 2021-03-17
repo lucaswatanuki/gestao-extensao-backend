@@ -13,6 +13,6 @@ public class DocenteResponse {
     private String email;
     private Boolean autorizado;
     private long totalHoras;
-    private long totalHorasEmAndamento;
-    private long totalHorasFuturas;
+    private long totalHorasAprovadas;
+    private long totalHorasSolicitadas;
 }

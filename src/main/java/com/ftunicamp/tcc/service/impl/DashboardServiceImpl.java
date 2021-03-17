@@ -26,16 +26,18 @@ public class DashboardServiceImpl implements DashboardService {
 
     @Override
     public DashboardResponse popularDashboard() {
-        var response = new DashboardResponse();
-
         var totalAtividades = atividadeRepository.findAll();
         var totalDocentes = docenteRepository.findAll();
         var autorizacoesPendentes = autorizacaoRepository.findAllByStatus(StatusAutorizacao.PENDENTE);
 
-        response.setAutorizacoesPendentes(autorizacoesPendentes.size());
-        response.setTotalAtividades(totalAtividades.size());
-        response.setTotalDocentes(totalDocentes.size());
+        return mapToDashboardResponse(totalAtividades, totalDocentes, autorizacoesPendentes);
+    }
 
-        return response;
+    private DashboardResponse mapToDashboardResponse(java.util.List<com.ftunicamp.tcc.entities.Atividade> totalAtividades, java.util.List<com.ftunicamp.tcc.entities.DocenteEntity> totalDocentes, java.util.List<com.ftunicamp.tcc.entities.AutorizacaoEntity> autorizacoesPendentes) {
+        return DashboardResponse.builder()
+                .totalAtividades(totalAtividades.size())
+                .autorizacoesPendentes(autorizacoesPendentes.size())
+                .totalDocentes(totalDocentes.size())
+                .build();
     }
 }

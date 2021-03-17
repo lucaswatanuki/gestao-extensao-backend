@@ -1,10 +1,12 @@
 package com.ftunicamp.tcc.controllers.response;
 
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
+@Builder
 public class AtividadeDetalheResponse {
 
     private long id;
@@ -16,7 +18,8 @@ public class AtividadeDetalheResponse {
     private long prazo;
     private String dataInicio;
     private String dataFim;
-    private long horasEmAndamento;
-    private long horasFuturas;
+    private long horasAprovadas;
+    private long horasSolicitadas;
+    private String observacao;
 
 }

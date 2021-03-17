@@ -15,6 +15,8 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.ftunicamp.tcc.utils.DateUtils.getAnoAtual;
+
 @Service
 public class DocenteServiceImpl implements DocenteService {
 
@@ -43,8 +45,17 @@ public class DocenteServiceImpl implements DocenteService {
             docenteResponse.setMatricula(docente.getMatricula());
             docenteResponse.setEmail(docente.getEmail());
             docenteResponse.setAutorizado(docente.isAutorizado());
-            docenteResponse.setTotalHorasEmAndamento(docente.getTotalHorasEmAndamento());
-            docenteResponse.setTotalHorasFuturas(docente.getTotalHorasFuturas());
+            docenteResponse.setTotalHorasAprovadas(docente.getAlocacao()
+                    .stream()
+                    .filter(alocacao -> alocacao.getAno() == getAnoAtual())
+                    .map(DocenteEntity.Alocacao::getTotalHorasAprovadas)
+                    .reduce(Long::sum).orElse(0L)
+            );
+            docenteResponse.setTotalHorasSolicitadas(docente.getAlocacao()
+                    .stream()
+                    .filter(alocacao -> alocacao.getAno() == getAnoAtual())
+                    .map(DocenteEntity.Alocacao::getTotalHorasSolicitadas)
+                    .reduce(Long::sum).orElse(0L));
             response.add(docenteResponse);
         });
 
@@ -61,38 +72,39 @@ public class DocenteServiceImpl implements DocenteService {
 
         var atividades = docente.get().getAtividades();
 
-        atividades.forEach(atividade -> {
-            var totalHorasAtividade = atividade.getHoraMensal() * atividade.getPrazo();
-            var statusAtividadeAtualizado = AtividadeFactory.verificaStatusAtividade(atividade);
-            if (!atividade.getStatus().equals(statusAtividadeAtualizado)) {
-                atividade.setStatus(statusAtividadeAtualizado);
-                atividadeRepository.save(atividade);
+//        atividades.forEach(atividade -> {
+//            var totalHorasAtividade = atividade.getHoraMensal() * atividade.getPrazo();
+//            var statusAtividadeAtualizado = AtividadeFactory.verificaStatusAtividade(atividade);
+//            if (!atividade.getStatus().equals(statusAtividadeAtualizado)) {
+//                atividade.setStatus(statusAtividadeAtualizado);
+//                atividadeRepository.save(atividade);
+//
+//                if (statusAtividadeAtualizado.equals(StatusAtividade.CONCLUIDA)) {
+//                    var alocacao = docente.get().getAlocacao();
+//                    docente.get().set(docente.get().getTotalHorasEmAndamento() - totalHorasAtividade);
+//                    docenteRepository.save(docente.get());
+//                }
+//                if (statusAtividadeAtualizado.equals(StatusAtividade.EM_ANDAMENTO)) {
+//                    docente.get().setTotalHorasEmAndamento(docente.get().getTotalHorasEmAndamento() + totalHorasAtividade);
+//                    docente.get().setTotalHorasFuturas(docente.get().getTotalHorasFuturas() - totalHorasAtividade);
+//                    docenteRepository.save(docente.get());
+//                }
+//            }
+//        });
+//
+//        var response = new DocenteResponse();
+//        response.setTotalHorasEmAndamento(docente.get().getTotalHorasEmAndamento());
+//        response.setTotalHorasFuturas(docente.get().getTotalHorasFuturas());
 
-                if (statusAtividadeAtualizado.equals(StatusAtividade.CONCLUIDA)) {
-                    docente.get().setTotalHorasEmAndamento(docente.get().getTotalHorasEmAndamento() - totalHorasAtividade);
-                    docenteRepository.save(docente.get());
-                }
-                if (statusAtividadeAtualizado.equals(StatusAtividade.EM_ANDAMENTO)) {
-                    docente.get().setTotalHorasEmAndamento(docente.get().getTotalHorasEmAndamento() + totalHorasAtividade);
-                    docente.get().setTotalHorasFuturas(docente.get().getTotalHorasFuturas() - totalHorasAtividade);
-                    docenteRepository.save(docente.get());
-                }
-            }
-        });
-
-        var response = new DocenteResponse();
-        response.setTotalHorasEmAndamento(docente.get().getTotalHorasEmAndamento());
-        response.setTotalHorasFuturas(docente.get().getTotalHorasFuturas());
-
-        return response;
+        return null;
     }
 
     @Override
     public void deletarDocente(String username) {
-       var docente = docenteRepository.findByUser_Username(username);
-       docenteRepository.delete(docente);
-       var user = userRepository.findByUsername(username);
-       user.ifPresent(userRepository::delete);
+        var docente = docenteRepository.findByUser_Username(username);
+        docenteRepository.delete(docente);
+        var user = userRepository.findByUsername(username);
+        user.ifPresent(userRepository::delete);
     }
 
 

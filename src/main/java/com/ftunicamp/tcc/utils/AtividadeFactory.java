@@ -39,6 +39,7 @@ public class AtividadeFactory {
         convenio.setDataCriacao(LocalDate.now());
         convenio.setDataModificacao(LocalDate.now());
         convenio.setStatus(verificaStatusAtividade(convenio));
+        convenio.setObservacao(request.getObservacao());
         //Mapear request para entidade - mapper struct
         return convenio;
     }
@@ -58,6 +59,7 @@ public class AtividadeFactory {
         curso.setHoraSemanal(request.getHoraSemanal());
         curso.setParticipacao(request.getParticipacao());
         curso.setStatus(verificaStatusAtividade(curso));
+        curso.setObservacao(request.getObservacao());
         //Mapear request para entidade - mapper struct
         return curso;
     }
@@ -79,14 +81,10 @@ public class AtividadeFactory {
     }
 
     public static StatusAtividade verificaStatusAtividade(Atividade atividade) {
-        if (atividade.getDataInicio().isAfter(LocalDateTime.now())) {
-            return StatusAtividade.FUTURA;
-        }
-
         if (atividade.getDataFim().isBefore(LocalDateTime.now())) {
             return StatusAtividade.CONCLUIDA;
         }
 
-        return StatusAtividade.EM_ANDAMENTO;
+        return StatusAtividade.PENDENTE;
     }
 }

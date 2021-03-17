@@ -1,10 +1,7 @@
 package com.ftunicamp.tcc.controllers;
 
 
-import com.ftunicamp.tcc.controllers.request.ConvenioRequest;
-import com.ftunicamp.tcc.controllers.request.CursoExtensaoRequest;
-import com.ftunicamp.tcc.controllers.request.RegenciaRequest;
-import com.ftunicamp.tcc.controllers.request.UnivespRequest;
+import com.ftunicamp.tcc.controllers.request.*;
 import com.ftunicamp.tcc.controllers.response.AtividadeDetalheResponse;
 import com.ftunicamp.tcc.controllers.response.AtividadeResponse;
 import com.ftunicamp.tcc.controllers.response.AutorizacaoResponse;
@@ -19,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.mail.MessagingException;
 import java.io.UnsupportedEncodingException;
 import java.util.List;
+import java.util.logging.Logger;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
@@ -72,12 +70,14 @@ public class AtividadeController {
     }
 
     @PostMapping(value = "/autorizar/{id}")
-    public ResponseEntity<AutorizacaoResponse> autorizarAtividade(@RequestHeader("id") Long id) {
-        return ResponseEntity.ok(autorizacaoService.incluirAutorizacao(id));
+    public ResponseEntity<Void> autorizarAtividade(@PathVariable("id") Long id,
+                                                   @RequestBody AutorizacaoRequest request) {
+        autorizacaoService.incluirAutorizacao(id, request);
+        return ResponseEntity.ok().build();
     }
 
     @GetMapping("/autorizacao/{id}")
-    public ResponseEntity<AutorizacaoResponse> buscarAutorizacao(@RequestHeader("id") Long id) {
+    public ResponseEntity<AutorizacaoResponse> buscarAutorizacao(@PathVariable("id") Long id) {
         return ResponseEntity.ok(autorizacaoService.buscarAutorizacao(id));
     }
 

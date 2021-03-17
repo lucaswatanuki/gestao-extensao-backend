@@ -29,11 +29,6 @@ public class RelatorioServiceImpl implements RelatorioService, PDFExportService 
 
     private List<RelatorioResponse> dadosRelatorio;
 
-    @Autowired
-    public RelatorioServiceImpl(AtividadeRepository atividadeRepository) {
-        this.atividadeRepository = atividadeRepository;
-    }
-
     public RelatorioServiceImpl(List<RelatorioResponse> dadosRelatorio) {
         this.dadosRelatorio = dadosRelatorio;
     }
@@ -54,20 +49,22 @@ public class RelatorioServiceImpl implements RelatorioService, PDFExportService 
             atividades = atividadeRepository.gerarRelatorioAtividadesPorStatusEDocente(idDocente, statusAtividade, inicio, fim);
         }
 
-        List<RelatorioResponse> response = new ArrayList<>();
+        final List<RelatorioResponse> response = new ArrayList<>();
 
-        atividades.forEach(atividade -> {
-            var responseItem = new RelatorioResponse();
-            responseItem.setNomeDocente(atividade.getDocente().getNome());
-            responseItem.setStatusAtividade(atividade.getStatus());
-            responseItem.setTipoAtividade(atividade.getTipoAtividade());
-            responseItem.setDataInicio(atividade.getDataInicio().toLocalDate());
-            responseItem.setDataFim(atividade.getDataFim().toLocalDate());
-            responseItem.setPrazo(atividade.getPrazo());
-            response.add(responseItem);
-        });
+        atividades.forEach(atividade -> response.add(mapToResponse(atividade)));
 
         return response;
+    }
+
+    private RelatorioResponse mapToResponse(Atividade atividade) {
+        return RelatorioResponse.builder()
+                .nomeDocente(atividade.getDocente().getNome())
+                .statusAtividade(atividade.getStatus())
+                .tipoAtividade(atividade.getTipoAtividade())
+                .dataInicio(atividade.getDataInicio().toLocalDate())
+                .dataFim(atividade.getDataFim().toLocalDate())
+                .prazo(atividade.getPrazo())
+                .build();
     }
 
     @Override
@@ -85,18 +82,9 @@ public class RelatorioServiceImpl implements RelatorioService, PDFExportService 
             atividades = atividadeRepository.gerarRelatorioTodasAtividadesPorStatus(inicio, fim, statusAtividade);
         }
 
-        List<RelatorioResponse> response = new ArrayList<>();
+        final List<RelatorioResponse> response = new ArrayList<>();
 
-        atividades.forEach(atividade -> {
-            var responseItem = new RelatorioResponse();
-            responseItem.setNomeDocente(atividade.getDocente().getNome());
-            responseItem.setStatusAtividade(atividade.getStatus());
-            responseItem.setTipoAtividade(atividade.getTipoAtividade());
-            responseItem.setDataInicio(atividade.getDataInicio().toLocalDate());
-            responseItem.setDataFim(atividade.getDataFim().toLocalDate());
-            responseItem.setPrazo(atividade.getPrazo());
-            response.add(responseItem);
-        });
+        atividades.forEach(atividade -> response.add(mapToResponse(atividade)));
 
         return response;
     }

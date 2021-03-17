@@ -20,4 +20,5 @@ public class ConvenioRequest implements Serializable {
     private Double valorBruto;
     private LocalDateTime dataInicio;
     private LocalDateTime dataFim;
+    private String observacao;
 }

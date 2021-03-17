@@ -21,5 +21,7 @@ public class CursoExtensaoRequest implements Serializable {
     private LocalDateTime dataFim;
     private int horaSemanal;
     private int horaMensal;
+    private String observacao;
+
 
 }

@@ -1,5 +1,6 @@
 package com.ftunicamp.tcc.service;
 
+import com.ftunicamp.tcc.controllers.request.AutorizacaoRequest;
 import com.ftunicamp.tcc.controllers.response.AutorizacaoResponse;
 import com.ftunicamp.tcc.entities.StatusAutorizacao;
 
@@ -7,7 +8,7 @@ import java.util.List;
 
 public interface AutorizacaoService {
 
-    AutorizacaoResponse incluirAutorizacao(Long idAtividade);
+    void incluirAutorizacao(Long idAtividade, AutorizacaoRequest request);
 
     AutorizacaoResponse buscarAutorizacao(Long idAutorizacao);
 

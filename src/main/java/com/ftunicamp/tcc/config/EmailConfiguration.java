@@ -17,8 +17,8 @@ public class EmailConfiguration {
     @Value("${spring.mail.password}")
     private String password;
     @Value("${spring.mail.domain}")
-    String domain;
+    private String domain;
     @Value("${spring.mail.api.key}")
-    String apiKey;
+    private String apiKey;
 
 }

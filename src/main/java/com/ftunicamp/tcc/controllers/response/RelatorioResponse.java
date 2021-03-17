@@ -1,6 +1,7 @@
 package com.ftunicamp.tcc.controllers.response;
 
 import com.ftunicamp.tcc.entities.StatusAtividade;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -9,6 +10,7 @@ import java.time.LocalDate;
 
 @Getter
 @Setter
+@Builder
 public class RelatorioResponse implements Serializable {
 
     private String nomeDocente;

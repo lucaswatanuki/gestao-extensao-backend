@@ -56,6 +56,5 @@ public class RelatorioController {
         var exporter = new RelatorioServiceImpl(dadosRelatorio);
 
         exporter.export(response);
-
     }
 }

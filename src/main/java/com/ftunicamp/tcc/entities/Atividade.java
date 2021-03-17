@@ -47,6 +47,8 @@ public abstract class Atividade {
     @Enumerated(EnumType.STRING)
     private StatusAtividade status;
 
+    private String observacao;
+
     @Transient
     public String getTipoAtividade() {
         return this.getClass().getAnnotation(DiscriminatorValue.class).value().toUpperCase();

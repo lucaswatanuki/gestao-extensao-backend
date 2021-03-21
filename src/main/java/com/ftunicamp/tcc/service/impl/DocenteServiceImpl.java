@@ -1,6 +1,7 @@
 package com.ftunicamp.tcc.service.impl;
 
 import com.ftunicamp.tcc.controllers.response.DocenteResponse;
+import com.ftunicamp.tcc.entities.Alocacao;
 import com.ftunicamp.tcc.entities.DocenteEntity;
 import com.ftunicamp.tcc.entities.StatusAtividade;
 import com.ftunicamp.tcc.exceptions.NegocioException;
@@ -48,13 +49,13 @@ public class DocenteServiceImpl implements DocenteService {
             docenteResponse.setTotalHorasAprovadas(docente.getAlocacao()
                     .stream()
                     .filter(alocacao -> alocacao.getAno() == getAnoAtual())
-                    .map(DocenteEntity.Alocacao::getTotalHorasAprovadas)
+                    .map(Alocacao::getTotalHorasAprovadas)
                     .reduce(Long::sum).orElse(0L)
             );
             docenteResponse.setTotalHorasSolicitadas(docente.getAlocacao()
                     .stream()
                     .filter(alocacao -> alocacao.getAno() == getAnoAtual())
-                    .map(DocenteEntity.Alocacao::getTotalHorasSolicitadas)
+                    .map(Alocacao::getTotalHorasSolicitadas)
                     .reduce(Long::sum).orElse(0L));
             response.add(docenteResponse);
         });

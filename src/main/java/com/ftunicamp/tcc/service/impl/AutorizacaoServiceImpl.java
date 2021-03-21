@@ -2,8 +2,8 @@ package com.ftunicamp.tcc.service.impl;
 
 import com.ftunicamp.tcc.controllers.request.AutorizacaoRequest;
 import com.ftunicamp.tcc.controllers.response.AutorizacaoResponse;
+import com.ftunicamp.tcc.entities.Alocacao;
 import com.ftunicamp.tcc.entities.AutorizacaoEntity;
-import com.ftunicamp.tcc.entities.DocenteEntity;
 import com.ftunicamp.tcc.entities.StatusAtividade;
 import com.ftunicamp.tcc.entities.StatusAutorizacao;
 import com.ftunicamp.tcc.exceptions.NegocioException;
@@ -20,17 +20,12 @@ import org.springframework.stereotype.Service;
 
 import javax.mail.MessagingException;
 import java.io.UnsupportedEncodingException;
-import java.time.LocalDate;
-import java.time.temporal.IsoFields;
-import java.time.temporal.TemporalField;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.logging.Logger;
 
 import static com.ftunicamp.tcc.utils.DateUtils.*;
-import static java.util.Collections.singletonList;
 
 @Service
 public class AutorizacaoServiceImpl implements AutorizacaoService {
@@ -70,18 +65,17 @@ public class AutorizacaoServiceImpl implements AutorizacaoService {
                         enviarEmail(idAtividade, autorizacaoEntity, request.getObservacao());
                     } else {
                         autorizacaoEntity.setStatus(StatusAutorizacao.APROVADO);
-                        var docente = atividade.getDocente();
-
                         if (atividade.getStatus().equals(StatusAtividade.PENDENTE)) {
                             var horasAprovadas = (atividade.getPrazo() * atividade.getHoraMensal());
-
-                            docente.setAlocacao(singletonList(DocenteEntity.Alocacao.builder()
+                            atividade.setAlocacao(Alocacao.builder()
+                                    .id(atividade.getAlocacao().getId())
                                     .ano(getAnoAtual())
                                     .semestre(getSemestreAtual(getMesAtual()))
                                     .totalHorasAprovadas(horasAprovadas)
-                                    .build()));
-
-                            docenteRepository.save(docente);
+                                    .totalHorasSolicitadas(-horasAprovadas)
+                                    .atividade(atividade)
+                                    .docente(atividade.getDocente())
+                                    .build());
                             atividade.setStatus(StatusAtividade.EM_ANDAMENTO);
                             atividadeRepository.save(atividade);
                         }

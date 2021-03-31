@@ -4,7 +4,7 @@ import com.ftunicamp.tcc.controllers.request.ConvenioRequest;
 import com.ftunicamp.tcc.controllers.request.CursoExtensaoRequest;
 import com.ftunicamp.tcc.controllers.request.RegenciaRequest;
 import com.ftunicamp.tcc.controllers.request.UnivespRequest;
-import com.ftunicamp.tcc.entities.*;
+import com.ftunicamp.tcc.model.*;
 import com.ftunicamp.tcc.exceptions.NegocioException;
 import org.springframework.stereotype.Component;
 

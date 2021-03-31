@@ -2,10 +2,10 @@ package com.ftunicamp.tcc.service.impl;
 
 import com.ftunicamp.tcc.controllers.request.AutorizacaoRequest;
 import com.ftunicamp.tcc.controllers.response.AutorizacaoResponse;
-import com.ftunicamp.tcc.entities.AutorizacaoEntity;
-import com.ftunicamp.tcc.entities.DocenteEntity;
-import com.ftunicamp.tcc.entities.StatusAtividade;
-import com.ftunicamp.tcc.entities.StatusAutorizacao;
+import com.ftunicamp.tcc.model.AutorizacaoEntity;
+import com.ftunicamp.tcc.model.DocenteEntity;
+import com.ftunicamp.tcc.model.StatusAtividade;
+import com.ftunicamp.tcc.model.StatusAutorizacao;
 import com.ftunicamp.tcc.exceptions.NegocioException;
 import com.ftunicamp.tcc.repositories.AtividadeRepository;
 import com.ftunicamp.tcc.repositories.AutorizacaoRepository;
@@ -20,11 +20,7 @@ import org.springframework.stereotype.Service;
 
 import javax.mail.MessagingException;
 import java.io.UnsupportedEncodingException;
-import java.time.LocalDate;
-import java.time.temporal.IsoFields;
-import java.time.temporal.TemporalField;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.logging.Logger;
@@ -95,7 +91,7 @@ public class AutorizacaoServiceImpl implements AutorizacaoService {
                 });
     }
 
-    private void enviarEmail(Long idAtividade, com.ftunicamp.tcc.entities.AutorizacaoEntity autorizacaoEntity, String observacao) {
+    private void enviarEmail(Long idAtividade, com.ftunicamp.tcc.model.AutorizacaoEntity autorizacaoEntity, String observacao) {
         CompletableFuture.runAsync(() -> {
             try {
                 emailService.enviarEmailAtividade(autorizacaoEntity.getAtividade().getDocente(), TipoEmail.STATUS_ATIVIDADE, idAtividade, observacao);

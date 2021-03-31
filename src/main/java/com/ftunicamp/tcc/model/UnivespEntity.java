@@ -1,4 +1,4 @@
-package com.ftunicamp.tcc.entities;
+package com.ftunicamp.tcc.model;
 
 import lombok.Getter;
 import lombok.Setter;

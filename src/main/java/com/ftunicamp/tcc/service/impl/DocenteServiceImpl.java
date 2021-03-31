@@ -1,14 +1,12 @@
 package com.ftunicamp.tcc.service.impl;
 
 import com.ftunicamp.tcc.controllers.response.DocenteResponse;
-import com.ftunicamp.tcc.entities.DocenteEntity;
-import com.ftunicamp.tcc.entities.StatusAtividade;
+import com.ftunicamp.tcc.model.DocenteEntity;
 import com.ftunicamp.tcc.exceptions.NegocioException;
 import com.ftunicamp.tcc.repositories.AtividadeRepository;
 import com.ftunicamp.tcc.repositories.DocenteRepository;
 import com.ftunicamp.tcc.repositories.UserRepository;
 import com.ftunicamp.tcc.service.DocenteService;
-import com.ftunicamp.tcc.utils.AtividadeFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

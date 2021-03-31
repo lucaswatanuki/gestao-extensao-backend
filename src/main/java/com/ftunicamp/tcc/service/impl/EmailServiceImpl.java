@@ -1,22 +1,18 @@
 package com.ftunicamp.tcc.service.impl;
 
 import com.ftunicamp.tcc.config.EmailConfiguration;
-import com.ftunicamp.tcc.entities.DocenteEntity;
+import com.ftunicamp.tcc.model.DocenteEntity;
 import com.ftunicamp.tcc.service.EmailService;
 import com.ftunicamp.tcc.utils.TipoEmail;
-import kong.unirest.HttpResponse;
-import kong.unirest.JsonNode;
 import kong.unirest.Unirest;
 import kong.unirest.UnirestException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
-import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import javax.mail.MessagingException;
-import javax.mail.internet.MimeMessage;
 import java.io.UnsupportedEncodingException;
 import java.util.logging.Level;
 import java.util.logging.Logger;

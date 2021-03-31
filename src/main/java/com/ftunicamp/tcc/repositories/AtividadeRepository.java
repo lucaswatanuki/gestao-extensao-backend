@@ -1,8 +1,8 @@
 package com.ftunicamp.tcc.repositories;
 
-import com.ftunicamp.tcc.entities.Atividade;
-import com.ftunicamp.tcc.entities.DocenteEntity;
-import com.ftunicamp.tcc.entities.StatusAtividade;
+import com.ftunicamp.tcc.model.Atividade;
+import com.ftunicamp.tcc.model.DocenteEntity;
+import com.ftunicamp.tcc.model.StatusAtividade;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;

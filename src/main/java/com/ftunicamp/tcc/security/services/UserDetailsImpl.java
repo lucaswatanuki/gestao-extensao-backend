@@ -1,7 +1,7 @@
 package com.ftunicamp.tcc.security.services;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.ftunicamp.tcc.entities.UsuarioEntity;
+import com.ftunicamp.tcc.model.UsuarioEntity;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;

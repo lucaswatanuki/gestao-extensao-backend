@@ -2,8 +2,8 @@ package com.ftunicamp.tcc.service.impl;
 
 import com.ftunicamp.tcc.controllers.request.RelatorioRequest;
 import com.ftunicamp.tcc.controllers.response.RelatorioResponse;
-import com.ftunicamp.tcc.entities.Atividade;
-import com.ftunicamp.tcc.entities.StatusAtividade;
+import com.ftunicamp.tcc.model.Atividade;
+import com.ftunicamp.tcc.model.StatusAtividade;
 import com.ftunicamp.tcc.repositories.AtividadeRepository;
 import com.ftunicamp.tcc.service.PDFExportService;
 import com.ftunicamp.tcc.service.RelatorioService;

@@ -7,7 +7,7 @@ import com.ftunicamp.tcc.controllers.request.UnivespRequest;
 import com.ftunicamp.tcc.controllers.response.AtividadeDetalheResponse;
 import com.ftunicamp.tcc.controllers.response.AtividadeResponse;
 import com.ftunicamp.tcc.controllers.response.Response;
-import com.ftunicamp.tcc.entities.*;
+import com.ftunicamp.tcc.model.*;
 import com.ftunicamp.tcc.exceptions.NegocioException;
 import com.ftunicamp.tcc.repositories.AlocacaoRepository;
 import com.ftunicamp.tcc.repositories.AtividadeRepository;

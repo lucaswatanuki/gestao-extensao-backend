@@ -1,7 +1,7 @@
 package com.ftunicamp.tcc.service.impl;
 
 import com.ftunicamp.tcc.controllers.response.DashboardResponse;
-import com.ftunicamp.tcc.entities.StatusAutorizacao;
+import com.ftunicamp.tcc.model.StatusAutorizacao;
 import com.ftunicamp.tcc.repositories.AtividadeRepository;
 import com.ftunicamp.tcc.repositories.AutorizacaoRepository;
 import com.ftunicamp.tcc.repositories.DocenteRepository;
@@ -33,7 +33,7 @@ public class DashboardServiceImpl implements DashboardService {
         return mapToDashboardResponse(totalAtividades, totalDocentes, autorizacoesPendentes);
     }
 
-    private DashboardResponse mapToDashboardResponse(java.util.List<com.ftunicamp.tcc.entities.Atividade> totalAtividades, java.util.List<com.ftunicamp.tcc.entities.DocenteEntity> totalDocentes, java.util.List<com.ftunicamp.tcc.entities.AutorizacaoEntity> autorizacoesPendentes) {
+    private DashboardResponse mapToDashboardResponse(java.util.List<com.ftunicamp.tcc.model.Atividade> totalAtividades, java.util.List<com.ftunicamp.tcc.model.DocenteEntity> totalDocentes, java.util.List<com.ftunicamp.tcc.model.AutorizacaoEntity> autorizacoesPendentes) {
         return DashboardResponse.builder()
                 .totalAtividades(totalAtividades.size())
                 .autorizacoesPendentes(autorizacoesPendentes.size())

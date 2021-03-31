@@ -1,6 +1,6 @@
 package com.ftunicamp.tcc.service;
 
-import com.ftunicamp.tcc.entities.DocenteEntity;
+import com.ftunicamp.tcc.model.DocenteEntity;
 import com.ftunicamp.tcc.utils.TipoEmail;
 
 import javax.mail.MessagingException;

@@ -1,6 +1,6 @@
 package com.ftunicamp.tcc.security.services;
 
-import com.ftunicamp.tcc.entities.UsuarioEntity;
+import com.ftunicamp.tcc.model.UsuarioEntity;
 import com.ftunicamp.tcc.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;

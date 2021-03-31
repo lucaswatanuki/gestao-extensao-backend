@@ -1,8 +1,8 @@
 package com.ftunicamp.tcc.utils;
 
 import com.ftunicamp.tcc.controllers.request.SignUpRequest;
-import com.ftunicamp.tcc.entities.DocenteEntity;
-import com.ftunicamp.tcc.entities.UsuarioEntity;
+import com.ftunicamp.tcc.model.DocenteEntity;
+import com.ftunicamp.tcc.model.UsuarioEntity;
 import org.springframework.stereotype.Component;
 
 @Component

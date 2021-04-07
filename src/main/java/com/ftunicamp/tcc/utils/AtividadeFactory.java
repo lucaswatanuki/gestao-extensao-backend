@@ -1,11 +1,8 @@
 package com.ftunicamp.tcc.utils;
 
-import com.ftunicamp.tcc.controllers.request.ConvenioRequest;
-import com.ftunicamp.tcc.controllers.request.CursoExtensaoRequest;
-import com.ftunicamp.tcc.controllers.request.RegenciaRequest;
-import com.ftunicamp.tcc.controllers.request.UnivespRequest;
-import com.ftunicamp.tcc.model.*;
+import com.ftunicamp.tcc.controllers.request.*;
 import com.ftunicamp.tcc.exceptions.NegocioException;
+import com.ftunicamp.tcc.model.*;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
@@ -47,7 +44,9 @@ public class AtividadeFactory {
     public static CursoExtensaoEntity criarCurso(CursoExtensaoRequest request, DocenteEntity docente) {
         var curso = new CursoExtensaoEntity();
         curso.setDocente(docente);
-        curso.setDisciplinaParticipacao(request.getDisciplina());
+        curso.setCoordenador(request.getCoordenador());
+        curso.setProjeto(request.getNomeCurso());
+        curso.setDisciplinaParticipacao(request.getDisciplinas());
         curso.setDataInicio(request.getDataInicio());
         curso.setDataFim(request.getDataFim());
         curso.setValorBruto(request.getValorBrutoTotalAula() + request.getValorBrutoOutraAtividade());
@@ -57,9 +56,12 @@ public class AtividadeFactory {
         curso.setCargaHorariaTotalMinistrada(request.getCargaHoraTotalMinistrada());
         curso.setHoraMensal(request.getHoraMensal());
         curso.setHoraSemanal(request.getHoraSemanal());
-        curso.setParticipacao(request.getParticipacao());
+        curso.setParticipacao(Participacao.valueOf(request.getParticipacao()));
         curso.setStatus(verificaStatusAtividade(curso));
         curso.setObservacao(request.getObservacao());
+        curso.setPrazo(ChronoUnit.MONTHS.between(YearMonth.from(request.getDataInicio()), YearMonth.from(request.getDataFim())));
+        curso.setDataCriacao(LocalDate.now());
+        curso.setDataModificacao(LocalDate.now());
         //Mapear request para entidade - mapper struct
         return curso;
     }

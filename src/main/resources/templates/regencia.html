@@ -1,0 +1,76 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Convênio</title>
+    <bookmarks>
+        <bookmark name="Regencia" href="#regencia"></bookmark>
+    </bookmarks>
+    <link rel="stylesheet" type="text/css" href="css/style.css"/>
+</head>
+
+<body>
+<img class="logo" src="images/unicamp_logo.png"/>
+
+<h5 style="justify-content: right">Limeira, ....... de ........................... de 20......</h5>
+
+<p>Ilma. Profa. Dra. GERUSA DE CÁSSIA SALADO
+    Coordenadora de Extensão da FT/UNICAMP</p>
+
+<p>
+    Eu,
+    ................................................................,
+    Prof Dr MS-
+    ............ em RDIDP nesta faculdade, matrícula nº........................., venho através desta, em atendimento a
+    Deliberação
+    CONSU-A-02-2001 (Artigos 8º, 9º e 12º), solicitar autorização para realização de atividades simultâneas, descritas a
+    seguir:
+</p>
+
+<h5>Tipo de Atividade simultânea: Regência concomitante</h5>
+
+Nome da Instituição de ensino superior: ${instituicao}<br>
+Nível: ( ) Graduação ( ) Pós-graduação<br>
+Curso:..........................................<br>
+Disciplinas (com carga horária): .............................................................................<br>
+Será o responsável pela disciplina: ( ) Sim ( ) Não<br>
+Será o único docente da disciplina: ( ) Sim ( ) Não<br>
+Carga horária total das aulas a serem ministradas: ..............................................<br>
+Carga horária total dedicada (aulas + preparação e outras atividades): ....... horas (semanal) / ....... horas(mensal)<br>
+Valor bruto recebido por aulas: R$..............por hora-aula / R$ .................pelo total de aulas<br>
+Valor bruto total recebido por outras atividades: R$ .................................<br>
+Período de participação: ................................................. a
+............................................<br>
+Dias e horários semanais que trabalhará na:
+Unicamp: ...........................................................................................
+Outra instituição: ....................................................................................
+
+<!-- Students Table -->
+<!--<div id="students">-->
+<!--    <div th:if="${not #lists.isEmpty(students)}">-->
+<!--        <table class="students_table paginate-table">-->
+<!--            <thead>-->
+<!--            <tr>-->
+<!--                <th>Id</th>-->
+<!--                <th>Name</th>-->
+<!--                <th>Last Name</th>-->
+<!--                <th>Nationality</th>-->
+<!--                <th>University</th>-->
+<!--                <th>Active</th>-->
+<!--            </tr>-->
+<!--            </thead>-->
+<!--            <tbody>-->
+<!--            <tr th:each="student : ${students}">-->
+<!--                <td th:text="${student?.id}"></td>-->
+<!--                <td th:text="${student?.name}"></td>-->
+<!--                <td th:text="${student?.lastName}"></td>-->
+<!--                <td th:text="${student?.nationality}"></td>-->
+<!--                <td th:text="${student?.university}"></td>-->
+<!--                <td th:text="${student?.active}"></td>-->
+<!--            </tr>-->
+<!--            </tbody>-->
+<!--        </table>-->
+<!--    </div>-->
+<!--</div>-->
+
+</body>
+</html>

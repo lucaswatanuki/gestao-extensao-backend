@@ -1,12 +1,15 @@
 package com.ftunicamp.tcc.service.impl;
 
 import com.ftunicamp.tcc.controllers.response.DocenteResponse;
+import com.ftunicamp.tcc.model.Alocacao;
 import com.ftunicamp.tcc.model.DocenteEntity;
+import com.ftunicamp.tcc.model.StatusAtividade;
 import com.ftunicamp.tcc.exceptions.NegocioException;
 import com.ftunicamp.tcc.repositories.AtividadeRepository;
 import com.ftunicamp.tcc.repositories.DocenteRepository;
 import com.ftunicamp.tcc.repositories.UserRepository;
 import com.ftunicamp.tcc.service.DocenteService;
+import com.ftunicamp.tcc.utils.AtividadeFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -46,13 +49,13 @@ public class DocenteServiceImpl implements DocenteService {
             docenteResponse.setTotalHorasAprovadas(docente.getAlocacao()
                     .stream()
                     .filter(alocacao -> alocacao.getAno() == getAnoAtual())
-                    .map(DocenteEntity.Alocacao::getTotalHorasAprovadas)
+                    .map(Alocacao::getTotalHorasAprovadas)
                     .reduce(Long::sum).orElse(0L)
             );
             docenteResponse.setTotalHorasSolicitadas(docente.getAlocacao()
                     .stream()
                     .filter(alocacao -> alocacao.getAno() == getAnoAtual())
-                    .map(DocenteEntity.Alocacao::getTotalHorasSolicitadas)
+                    .map(Alocacao::getTotalHorasSolicitadas)
                     .reduce(Long::sum).orElse(0L));
             response.add(docenteResponse);
         });

@@ -21,7 +21,7 @@ public class AutorizacaoEntity {
 
     private LocalDate data;
 
-    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private Atividade atividade;
 
     private String docente;

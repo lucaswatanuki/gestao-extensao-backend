@@ -28,6 +28,9 @@ public class DocenteEntity {
     @OneToMany(mappedBy = "docente", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<Atividade> atividades;
 
+    @OneToMany(mappedBy = "docente", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<Alocacao> alocacao;
+
     @OneToOne
     private UsuarioEntity user;
 
@@ -36,34 +39,4 @@ public class DocenteEntity {
     private String telefone;
 
     private boolean autorizado;
-
-    @OneToMany(mappedBy = "docente", fetch = FetchType.LAZY)
-    private List<Alocacao> alocacao;
-
-    @Entity
-    @Table(name = "Alocacao")
-    @Builder
-    @Getter
-    @Setter
-    @NoArgsConstructor
-    @AllArgsConstructor
-    public static class Alocacao {
-        @Id
-        @GeneratedValue
-        @Column(name = "id")
-        private Integer id;
-
-        @Column(name = "ano")
-        private int ano;
-
-        @Column(name = "semestre")
-        private int semestre;
-
-        @ManyToOne(fetch = FetchType.LAZY)
-        private DocenteEntity docente;
-
-        private long totalHorasAprovadas;
-
-        private long totalHorasSolicitadas;
-    }
 }

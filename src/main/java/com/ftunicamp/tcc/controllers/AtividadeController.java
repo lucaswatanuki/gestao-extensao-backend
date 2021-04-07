@@ -8,13 +8,21 @@ import com.ftunicamp.tcc.controllers.response.AutorizacaoResponse;
 import com.ftunicamp.tcc.controllers.response.Response;
 import com.ftunicamp.tcc.service.AtividadeService;
 import com.ftunicamp.tcc.service.AutorizacaoService;
+import com.ftunicamp.tcc.service.PdfService;
+import com.ftunicamp.tcc.utils.TipoPDF;
+import com.lowagie.text.DocumentException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.mail.MessagingException;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -28,6 +36,9 @@ public class AtividadeController {
 
     @Autowired
     private AutorizacaoService autorizacaoService;
+
+    @Autowired
+    private PdfService pdfService;
 
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping(value = "/convenio")
@@ -84,5 +95,21 @@ public class AtividadeController {
     @GetMapping("/autorizacao")
     public ResponseEntity<List<AutorizacaoResponse>> getAutorizacoes() {
         return ResponseEntity.ok(autorizacaoService.listarAutorizacoes());
+    }
+
+    @GetMapping("/download/{id}")
+    public void downloadPDFResource(HttpServletResponse response, @PathVariable("id") Long id) {
+        try {
+            Path file = Paths.get(pdfService.generatePdf(TipoPDF.CONVENIO, id).getAbsolutePath());
+            if (Files.exists(file)) {
+                response.setContentType("application/pdf");
+                response.addHeader("Content-Disposition",
+                        "attachment; filename=" + file.getFileName());
+                Files.copy(file, response.getOutputStream());
+                response.getOutputStream().flush();
+            }
+        } catch (DocumentException | IOException ex) {
+            ex.printStackTrace();
+        }
     }
 }

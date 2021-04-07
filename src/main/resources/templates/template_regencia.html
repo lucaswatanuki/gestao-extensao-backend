@@ -9,14 +9,19 @@
 </head>
 
 <body>
-<img class="logo" src="images/unicamp_logo.png"/>
+<div style="text-align: center;">
+    <img class="logo" src="images/unicamp_logo.png"/>
+</div>
 
-<h5 style="justify-content: right">Limeira, ....... de ........................... de 20......</h5>
+<h5 style="text-align:right">Limeira, ....... de ........................... de 20......</h5>
 
-<p>Ilma. Profa. Dra. GERUSA DE CÁSSIA SALADO
+<p>Ilma. Profa. Dra. ${coordenador.nome} <br/>
     Coordenadora de Extensão da FT/UNICAMP</p>
 
-<p>
+<h4 style="text-align: center">SOLICITAÇÃO DE AUTORIZAÇÃO PARA EXERCÍCIO DE ATIVIDADES SIMULTÂNEAS <br/>
+    (Regência Concomitante)</h4>
+
+<p align="justify">
     Eu,
     ................................................................,
     Prof Dr MS-
@@ -26,23 +31,24 @@
     seguir:
 </p>
 
-<h5>Tipo de Atividade simultânea: Regência concomitante</h5>
+<h4>Tipo de Atividade simultânea: Regência Concomitante</h4>
 
-Nome da Instituição de ensino superior: ${instituicao}<br>
-Nível: ( ) Graduação ( ) Pós-graduação<br>
-Curso:..........................................<br>
-Disciplinas (com carga horária): .............................................................................<br>
-Será o responsável pela disciplina: ( ) Sim ( ) Não<br>
-Será o único docente da disciplina: ( ) Sim ( ) Não<br>
-Carga horária total das aulas a serem ministradas: ..............................................<br>
-Carga horária total dedicada (aulas + preparação e outras atividades): ....... horas (semanal) / ....... horas(mensal)<br>
-Valor bruto recebido por aulas: R$..............por hora-aula / R$ .................pelo total de aulas<br>
-Valor bruto total recebido por outras atividades: R$ .................................<br>
-Período de participação: ................................................. a
-............................................<br>
-Dias e horários semanais que trabalhará na:
-Unicamp: ...........................................................................................
-Outra instituição: ....................................................................................
+<p>Nome da Instituição de ensino superior: <span th:text="${regencia.instituicao}"></span></p>
+<p>Nível: <span th:text="${regencia.nivel}"></span></p>
+<p>Curso: <span th:text="${regencia.curso}"></span></p>
+<p>Disciplinas (com carga horária): <span th:text="${regencia.disciplina}"></span></p>
+<p>Será o responsável pela disciplina: <span th:text="${regencia.responsavel} ? 'Sim' : 'Não'"></span></p>
+<p>Será o único docente da disciplina: <span th:text="${regencia.unicoDocente} ? 'Sim' : 'Não'"></span></p>
+<p>Carga horária total das aulas a serem ministradas: ..............................................</p>
+<p>Carga horária total dedicada (aulas + preparação e outras atividades): ....... horas (semanal) / .......
+    horas(mensal)</p>
+<p>Valor bruto recebido por aulas: R$..............por hora-aula / R$ .................pelo total de aulas</p>
+<p>Valor bruto total recebido por outras atividades: R$ .................................</p>
+<p>Período de participação: ................................................. a
+    ............................................</p>
+<p>Dias e horários semanais que trabalhará na:</p>
+<p>Unicamp: </p>
+<p>Outra instituição: </p>
 
 <!-- Students Table -->
 <!--<div id="students">-->

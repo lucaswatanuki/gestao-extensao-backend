@@ -6,12 +6,13 @@ import lombok.Setter;
 import javax.persistence.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Getter
 @Setter
 @Entity
-@Inheritance(strategy=InheritanceType.JOINED)
-@DiscriminatorColumn(name="TIPO_ATIVIDADE")
+@Inheritance(strategy = InheritanceType.JOINED)
+@DiscriminatorColumn(name = "TIPO_ATIVIDADE")
 public abstract class Atividade {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -48,6 +49,9 @@ public abstract class Atividade {
     private StatusAtividade status;
 
     private String observacao;
+
+    @OneToOne(mappedBy = "atividade", cascade = CascadeType.ALL)
+    private Alocacao alocacao;
 
     @Transient
     public String getTipoAtividade() {

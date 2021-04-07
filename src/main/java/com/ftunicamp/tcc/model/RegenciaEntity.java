@@ -11,10 +11,6 @@ import javax.persistence.*;
 @DiscriminatorValue("regencia")
 public class RegenciaEntity extends Atividade {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
-
     private String instituicao;
 
     @Enumerated(EnumType.STRING)

@@ -37,11 +37,10 @@ public class AtividadeServiceImpl implements AtividadeService {
     private static final String MENSAGEM_SUCESSO = "Atividade cadastrada com sucesso.";
     private static final String MENSAGEM_ERRO = "Erro ao criar atividade";
 
-    private final AtividadeRepository atividadeRepository;
+    private final AtividadeRepository<Atividade> atividadeRepository;
     private final DocenteRepository docenteRepository;
     private final AutorizacaoRepository autorizacaoRepository;
     private final EmailService emailService;
-    private final AlocacaoRepository alocacaoRepository;
 
     @Autowired
     private JwtUtils jwtUtils;
@@ -51,12 +50,11 @@ public class AtividadeServiceImpl implements AtividadeService {
     public AtividadeServiceImpl(AtividadeRepository atividadeRepository,
                                 DocenteRepository docenteRepository,
                                 AutorizacaoRepository autorizacaoRepository,
-                                EmailService emailService, AlocacaoRepository alocacaoRepository) {
+                                EmailService emailService) {
         this.atividadeRepository = atividadeRepository;
         this.docenteRepository = docenteRepository;
         this.autorizacaoRepository = autorizacaoRepository;
         this.emailService = emailService;
-        this.alocacaoRepository = alocacaoRepository;
     }
 
 
@@ -64,61 +62,23 @@ public class AtividadeServiceImpl implements AtividadeService {
     public Response<String> cadastrarConvenio(ConvenioRequest request) throws UnsupportedEncodingException, MessagingException {
         var docente = (docenteRepository.findByUser_Username(jwtUtils.getSessao().getUsername()));
         var atividade = AtividadeFactory.criarConvenio(request, docente);
-        final long atividadeId = atividadeRepository.save(atividade).getId();
-
+        setAlocacao(docente, atividade);
+        atividadeRepository.save(atividade);
         salvarAutorizacao(atividade);
-
-        if (!atividade.getStatus().equals(StatusAtividade.CONCLUIDA)) {
-            verificaAlocacaoHoras(request, docente, atividade.getPrazo());
-        }
-
-        CompletableFuture.runAsync(() -> {
-            try {
-                emailService.enviarEmailAtividade(docente, TipoEmail.NOVA_ATIVIDADE, atividadeId, request.getObservacao());
-            } catch (MessagingException | UnsupportedEncodingException e) {
-                e.printStackTrace();
-            }
-        });
-
+        enviarEmailConfirmacao(atividade, docente);
         var response = new Response<String>();
         response.setMensagem(MENSAGEM_SUCESSO);
         return response;
     }
 
-    private void verificaAlocacaoHoras(ConvenioRequest request, DocenteEntity docente, long prazo) {
-        var horasSolicitadas = prazo * request.getHoraMensal();
-        var alocacao = new DocenteEntity.Alocacao();
-        alocacao.setAno(getAnoAtual());
-        alocacao.setSemestre(getSemestreAtual(getMesAtual()));
-        alocacao.setTotalHorasSolicitadas(horasSolicitadas);
-        List<DocenteEntity.Alocacao> teste = new ArrayList<>();
-        teste.add(alocacao);
-        docente.setAlocacao(teste);
-
-//        docente.getAlocacao().add(DocenteEntity.Alocacao.builder()
-//                .ano(getAnoAtual())
-//                .semestre(getSemestreAtual(getMesAtual()))
-//                .totalHorasSolicitadas(horasSolicitadas)
-//                .docente(docente)
-//                .build());
-//        docente.setAlocacao(singletonList(DocenteEntity.Alocacao.builder()
-//                .ano(getAnoAtual())
-//                .semestre(getSemestreAtual(getMesAtual()))
-//                .totalHorasSolicitadas(horasSolicitadas)
-//                .build()));
-        docenteRepository.save(docente);
-    }
-
-
     @Override
     public Response<String> cadastrarCursoExtensao(CursoExtensaoRequest request) {
         var docente = (docenteRepository.findByUser_Username(jwtUtils.getSessao().getUsername()));
         var atividade = AtividadeFactory.criarCurso(request, docente);
-
+        setAlocacao(docente, atividade);
         atividadeRepository.save(atividade);
-
         salvarAutorizacao(atividade);
-
+        enviarEmailConfirmacao(atividade, docente);
         var response = new Response<String>();
         response.setMensagem(MENSAGEM_SUCESSO);
         return response;
@@ -180,14 +140,17 @@ public class AtividadeServiceImpl implements AtividadeService {
                 .dataFim(LocalDate.from(atividade.getDataFim()).format(Utilities.formatarData()))
                 .horasAprovadas(docente.getAlocacao()
                         .stream()
-                        .map(DocenteEntity.Alocacao::getTotalHorasAprovadas)
+                        .filter(alocacao -> alocacao.getAno() == getAnoAtual())
+                        .map(Alocacao::getTotalHorasAprovadas)
                         .reduce(Long::sum)
                         .orElse(0L))
                 .horasSolicitadas(docente.getAlocacao()
                         .stream()
-                        .map(DocenteEntity.Alocacao::getTotalHorasSolicitadas)
+                        .filter(alocacao -> alocacao.getAtividade().getId().equals(atividade.getId()))
+                        .map(Alocacao::getTotalHorasSolicitadas)
                         .reduce(Long::sum)
                         .orElse(0L))
+                .autorizado(atividade.getStatus().equals(StatusAtividade.EM_ANDAMENTO))
                 .observacao(atividade.getObservacao());
     }
 
@@ -232,5 +195,29 @@ public class AtividadeServiceImpl implements AtividadeService {
         autorizacao.setData(LocalDate.now());
         autorizacao.setDocente(atividadeEntity.getDocente().getUser().getUsername());
         autorizacaoRepository.save(autorizacao);
+    }
+
+    private void setAlocacao(DocenteEntity docente, Atividade atividade) {
+        if (!atividade.getStatus().equals(StatusAtividade.CONCLUIDA)) {
+            final var horasSolicitadas = atividade.getPrazo() * atividade.getHoraMensal();
+            var alocacao = (Alocacao.builder()
+                    .ano(getAnoAtual())
+                    .semestre(getSemestreAtual(getMesAtual()))
+                    .totalHorasSolicitadas(horasSolicitadas)
+                    .docente(docente)
+                    .atividade(atividade)
+                    .build());
+            atividade.setAlocacao(alocacao);
+        }
+    }
+
+    private void enviarEmailConfirmacao(Atividade atividade, DocenteEntity docente) {
+        CompletableFuture.runAsync(() -> {
+            try {
+                emailService.enviarEmailAtividade(docente, TipoEmail.NOVA_ATIVIDADE, atividade.getId(), atividade.getObservacao());
+            } catch (MessagingException | UnsupportedEncodingException e) {
+                e.printStackTrace();
+            }
+        });
     }
 }

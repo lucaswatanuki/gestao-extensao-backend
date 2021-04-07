@@ -2,8 +2,8 @@ package com.ftunicamp.tcc.service.impl;
 
 import com.ftunicamp.tcc.controllers.request.AutorizacaoRequest;
 import com.ftunicamp.tcc.controllers.response.AutorizacaoResponse;
+import com.ftunicamp.tcc.model.Alocacao;
 import com.ftunicamp.tcc.model.AutorizacaoEntity;
-import com.ftunicamp.tcc.model.DocenteEntity;
 import com.ftunicamp.tcc.model.StatusAtividade;
 import com.ftunicamp.tcc.model.StatusAutorizacao;
 import com.ftunicamp.tcc.exceptions.NegocioException;
@@ -26,7 +26,6 @@ import java.util.concurrent.CompletableFuture;
 import java.util.logging.Logger;
 
 import static com.ftunicamp.tcc.utils.DateUtils.*;
-import static java.util.Collections.singletonList;
 
 @Service
 public class AutorizacaoServiceImpl implements AutorizacaoService {
@@ -66,18 +65,17 @@ public class AutorizacaoServiceImpl implements AutorizacaoService {
                         enviarEmail(idAtividade, autorizacaoEntity, request.getObservacao());
                     } else {
                         autorizacaoEntity.setStatus(StatusAutorizacao.APROVADO);
-                        var docente = atividade.getDocente();
-
                         if (atividade.getStatus().equals(StatusAtividade.PENDENTE)) {
                             var horasAprovadas = (atividade.getPrazo() * atividade.getHoraMensal());
-
-                            docente.setAlocacao(singletonList(DocenteEntity.Alocacao.builder()
+                            atividade.setAlocacao(Alocacao.builder()
+                                    .id(atividade.getAlocacao().getId())
                                     .ano(getAnoAtual())
                                     .semestre(getSemestreAtual(getMesAtual()))
                                     .totalHorasAprovadas(horasAprovadas)
-                                    .build()));
-
-                            docenteRepository.save(docente);
+                                    .totalHorasSolicitadas(atividade.getAlocacao().getTotalHorasSolicitadas() - horasAprovadas)
+                                    .atividade(atividade)
+                                    .docente(atividade.getDocente())
+                                    .build());
                             atividade.setStatus(StatusAtividade.EM_ANDAMENTO);
                             atividadeRepository.save(atividade);
                         }

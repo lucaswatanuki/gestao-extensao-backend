@@ -11,7 +11,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 @Repository
-public interface AtividadeRepository extends JpaRepository<Atividade, Long> {
+public interface AtividadeRepository<T extends Atividade> extends JpaRepository<T, Long> {
 
     List<Atividade> findAllByDocente(DocenteEntity docente);
 

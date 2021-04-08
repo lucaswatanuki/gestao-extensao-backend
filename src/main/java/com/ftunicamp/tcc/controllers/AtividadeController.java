@@ -6,10 +6,10 @@ import com.ftunicamp.tcc.controllers.response.AtividadeDetalheResponse;
 import com.ftunicamp.tcc.controllers.response.AtividadeResponse;
 import com.ftunicamp.tcc.controllers.response.AutorizacaoResponse;
 import com.ftunicamp.tcc.controllers.response.Response;
+import com.ftunicamp.tcc.model.TipoAtividade;
 import com.ftunicamp.tcc.service.AtividadeService;
 import com.ftunicamp.tcc.service.AutorizacaoService;
 import com.ftunicamp.tcc.service.PdfService;
-import com.ftunicamp.tcc.utils.TipoPDF;
 import com.lowagie.text.DocumentException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -24,7 +24,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
-import java.util.logging.Logger;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
@@ -97,10 +96,12 @@ public class AtividadeController {
         return ResponseEntity.ok(autorizacaoService.listarAutorizacoes());
     }
 
-    @GetMapping("/download/{id}")
-    public void downloadPDFResource(HttpServletResponse response, @PathVariable("id") Long id) {
+    @GetMapping("/download/{tipoAtividade}/{id}")
+    public void downloadPDFResource(HttpServletResponse response,
+                                    @PathVariable("tipoAtividade") TipoAtividade tipoAtividade,
+                                    @PathVariable("id") Long id) {
         try {
-            Path file = Paths.get(pdfService.generatePdf(TipoPDF.CONVENIO, id).getAbsolutePath());
+            Path file = Paths.get(pdfService.generatePdf(tipoAtividade, id).getAbsolutePath());
             if (Files.exists(file)) {
                 response.setContentType("application/pdf");
                 response.addHeader("Content-Disposition",

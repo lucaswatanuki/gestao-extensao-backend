@@ -25,4 +25,11 @@ public class DateUtils {
         int mes = cal.get(Calendar.MONTH) + 6;
         return mes;
     }
+
+    public static String nomeDoMes(int i) {
+        String mes[] = {"janeiro", "fevereiro", "março", "abril",
+                "maio", "junho", "julho", "agosto", "setembro", "outubro",
+                "novembro", "dezembro"};
+        return (mes[i - 1]); // extenso
+    }
 }

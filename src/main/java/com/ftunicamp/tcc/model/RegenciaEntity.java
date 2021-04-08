@@ -34,12 +34,8 @@ public class RegenciaEntity extends Atividade {
 
     private Double valorBrutoTotalAulas;
 
-    private int diasTrabalhadosUnicamp;
+    private String diasTrabalhadosUnicamp;
 
-    private int diasTrabalhadosOutraInstituicao;
-
-    private DiaSemana diasUnicamp;
-
-    private DiaSemana diasOutraInstituicao;
+    private String diasTrabalhadosOutraInstituicao;
 
 }

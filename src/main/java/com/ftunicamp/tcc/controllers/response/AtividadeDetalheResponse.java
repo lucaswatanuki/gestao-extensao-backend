@@ -1,5 +1,6 @@
 package com.ftunicamp.tcc.controllers.response;
 
+import com.ftunicamp.tcc.model.TipoAtividade;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -22,5 +23,6 @@ public class AtividadeDetalheResponse {
     private long horasSolicitadas;
     private String observacao;
     private boolean autorizado;
+    private String tipoAtividade;
 
 }

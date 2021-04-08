@@ -29,4 +29,6 @@ public class CursoExtensaoEntity extends Atividade {
 
     @Enumerated(EnumType.STRING)
     private Participacao participacao;
+
+    private String instituicaoVinculada;
 }

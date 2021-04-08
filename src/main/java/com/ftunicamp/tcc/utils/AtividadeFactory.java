@@ -62,6 +62,7 @@ public class AtividadeFactory {
         curso.setPrazo(ChronoUnit.MONTHS.between(YearMonth.from(request.getDataInicio()), YearMonth.from(request.getDataFim())));
         curso.setDataCriacao(LocalDate.now());
         curso.setDataModificacao(LocalDate.now());
+        curso.setInstituicaoVinculada(request.getInstituicaoVinculada());
         //Mapear request para entidade - mapper struct
         return curso;
     }
@@ -69,7 +70,24 @@ public class AtividadeFactory {
     public static RegenciaEntity criarRegencia(RegenciaRequest request, DocenteEntity docente) {
         var regencia = new RegenciaEntity();
         regencia.setDocente(docente);
-
+        regencia.setCurso(request.getCurso());
+        regencia.setInstituicao(request.getInstituicao());
+        regencia.setNivel(request.getNivel());
+        regencia.setDisciplinaParticipacao(regencia.getDisciplinaParticipacao());
+        regencia.setResponsavel(request.isResponsavel());
+        regencia.setUnicoDocente(request.isUnicoDocente());
+        regencia.setCargaHorariaTotalDedicada(request.getCargaHorariaTotalDedicada());
+        regencia.setCargaHorariaTotalMinistrada(request.getCargaHoraTotalMinistrada());
+        regencia.setValorBrutoOutraAtividade(request.getValorBrutoOutraAtividade());
+        regencia.setValorBrutoHoraAula(request.getValorBrutoHoraAula());
+        regencia.setValorBrutoTotalAulas(request.getValorBrutoTotalAula());
+        regencia.setDiasTrabalhadosUnicamp(request.getDiasTrabalhadosUnicamp());
+        regencia.setDiasTrabalhadosOutraInstituicao(request.getDiasTrabalhadosOutraInstituicao());
+        regencia.setStatus(verificaStatusAtividade(regencia));
+        regencia.setObservacao(request.getObservacao());
+        regencia.setPrazo(ChronoUnit.MONTHS.between(YearMonth.from(request.getDataInicio()), YearMonth.from(request.getDataFim())));
+        regencia.setDataCriacao(LocalDate.now());
+        regencia.setDataModificacao(LocalDate.now());
         //Mapear request para entidade - mapper struct
         return regencia;
     }

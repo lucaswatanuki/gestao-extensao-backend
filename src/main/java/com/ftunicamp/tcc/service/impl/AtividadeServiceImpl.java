@@ -88,11 +88,10 @@ public class AtividadeServiceImpl implements AtividadeService {
     public Response<String> cadastrarRegencia(RegenciaRequest request) {
         var docente = (docenteRepository.findByUser_Username(jwtUtils.getSessao().getUsername()));
         var atividade = AtividadeFactory.criarRegencia(request, docente);
-
-        //Mapear request para entidade - mapper struct
-
+        setAlocacao(docente, atividade);
         atividadeRepository.save(atividade);
-
+        salvarAutorizacao(atividade);
+        enviarEmailConfirmacao(atividade, docente);
         var response = new Response<String>();
         response.setMensagem(MENSAGEM_SUCESSO);
         return response;
@@ -151,6 +150,7 @@ public class AtividadeServiceImpl implements AtividadeService {
                         .reduce(Long::sum)
                         .orElse(0L))
                 .autorizado(atividade.getStatus().equals(StatusAtividade.EM_ANDAMENTO))
+                .tipoAtividade(atividade.getTipoAtividade())
                 .observacao(atividade.getObservacao());
     }
 

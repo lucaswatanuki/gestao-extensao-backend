@@ -15,5 +15,6 @@ public class ConvenioEntity extends Atividade{
     private String instituicao;
     private String dataRecebimento;
     private int parcelas;
+    private String tipoAtividadeSimultanea;
 
 }

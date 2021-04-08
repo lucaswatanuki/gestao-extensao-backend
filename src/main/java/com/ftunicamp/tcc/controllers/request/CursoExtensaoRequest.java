@@ -23,6 +23,7 @@ public class CursoExtensaoRequest implements Serializable {
     private int horaSemanal;
     private int horaMensal;
     private String observacao;
+    private String instituicaoVinculada;
 
 
 }

@@ -9,74 +9,79 @@
 </head>
 
 <body>
-<div style="text-align: center;">
-    <img class="logo" src="images/unicamp_logo.png"/>
-</div>
+<header>
+    <div style="text-align: center;">
+        <img class="logo" src="images/unicamp_logo.png"/>
+    </div>
+</header>
 
-<h5 style="text-align:right">Limeira, ....... de ........................... de 20......</h5>
 
-<p>Ilma. Profa. Dra. GERUSA DE CÁSSIA SALADO <br/>
+<h5 style="text-align:right">Limeira, <span th:text="${dia}"></span> de <span th:text="${mes}"></span> de <span th:text="${ano}"></span></h5>
+
+<p>Ilma. Profa. Dra. <span th:text="${coordenador}"></span> <br/>
     Coordenadora de Extensão da FT/UNICAMP</p>
 
 <h4 style="text-align: center">SOLICITAÇÃO DE AUTORIZAÇÃO PARA EXERCÍCIO DE ATIVIDADES SIMULTÂNEAS <br/>
-    (Regência Concomitante)</h4>
+    (Convênios)</h4>
 
 <p align="justify">
-    Eu,
-    ................................................................,
-    Prof Dr MS-
-    ............ em RDIDP nesta faculdade, matrícula nº........................., venho através desta, em atendimento a
-    Deliberação
-    CONSU-A-02-2001 (Artigos 8º, 9º e 12º), solicitar autorização para realização de atividades simultâneas, descritas a
+    Eu, <span th:text="${convenio.docente.nome}"></span>, Prof Dr MS- ..... em RDIDP nesta faculdade,
+    matrícula nº <span th:text="${convenio.docente.matricula}"></span>, venho através desta, em atendimento a
+    Deliberação    CONSU-A-02-2001 (Artigos 8º, 9º e 12º), solicitar autorização para realização de atividades simultâneas, descritas a
     seguir:
 </p>
 
-<h4>Tipo de Atividade simultânea: Convênio</h4>
+<h4>Tipo de Atividade simultânea: Convênios</h4>
 
-<p>Nome da Instituição de ensino superior: <span th:text="${convenio.instituicao}"></span></p>
-<p>Nível: ( ) Graduação ( ) Pós-graduação</p>
-<p>Curso:..........................................</p>
-<p>Disciplinas (com carga horária): .............................................................................</p>
-<p>Será o responsável pela disciplina: ( ) Sim ( ) Não</p>
-<p>Será o único docente da disciplina: ( ) Sim ( ) Não</p>
-<p>Carga horária total das aulas a serem ministradas: ..............................................</p>
-<p>Carga horária total dedicada (aulas + preparação e outras atividades): ....... horas (semanal) / .......
-    horas(mensal)</p>
-<p>Valor bruto recebido por aulas: R$..............por hora-aula / R$ .................pelo total de aulas</p>
-<p>Valor bruto total recebido por outras atividades: R$ .................................</p>
-<p>Período de participação: ................................................. a
-    ............................................</p>
-<p>Dias e horários semanais que trabalhará na:</p>
-<p>Unicamp: </p>
-<p>Outra instituição: </p>
+<!--<p>Tipo de Atividade simultânea (pesquisa, ensino, extensão): <span th:text="${convenio.instituicao}"></span></p>-->
+<p>Projeto: <span th:text="${convenio.projeto}"></span></p>
+<p>Prof. Coordenador: <span th:text="${convenio.coordenador}"></span></p>
+<p>Instituição solicitante: <span th:text="${convenio.instituicao}"></span></p>
+<p>Carga horária de dedicação semanal e mensal: <span th:text="${convenio.horaSemanal}"></span> horas (semanal)
+    / <span th:text="${convenio.horaMensal}"></span> horas (mensal)</p>
+<p>A participação no projeto consistirá de: <span th:text="${convenio.descricao} ?: '-'"></span></p>
+<p>Prazo de participação: <span th:text="${convenio.prazo}"></span> meses</p>
+<p>Valor bruto recebido total: R$ <span th:text="${convenio.valorBruto} ?: '0'"></span>, em  <span th:text="${convenio.parcelas} ?: '0'"></span> parcelas.</p>
+<p>Data prevista de recebimento:  <span th:text="${convenio.dataRecebimento} ?: '-'"></span> </p>
 
-<!-- Students Table -->
-<!--<div id="students">-->
-<!--    <div th:if="${not #lists.isEmpty(students)}">-->
-<!--        <table class="students_table paginate-table">-->
-<!--            <thead>-->
-<!--            <tr>-->
-<!--                <th>Id</th>-->
-<!--                <th>Name</th>-->
-<!--                <th>Last Name</th>-->
-<!--                <th>Nationality</th>-->
-<!--                <th>University</th>-->
-<!--                <th>Active</th>-->
-<!--            </tr>-->
-<!--            </thead>-->
-<!--            <tbody>-->
-<!--            <tr th:each="student : ${students}">-->
-<!--                <td th:text="${student?.id}"></td>-->
-<!--                <td th:text="${student?.name}"></td>-->
-<!--                <td th:text="${student?.lastName}"></td>-->
-<!--                <td th:text="${student?.nationality}"></td>-->
-<!--                <td th:text="${student?.university}"></td>-->
-<!--                <td th:text="${student?.active}"></td>-->
-<!--            </tr>-->
-<!--            </tbody>-->
-<!--        </table>-->
-<!--    </div>-->
-<!--</div>-->
+<p>
+    Declaro que:
+</p>
+
+<ul>
+    <li>
+        Recolherei em efetivo à conta Unicamp/Reitoria/Atividades simultâneas (banco Santander, agência 0207,
+        conta 43.011007-7) as devidas taxas sobre o valor bruto total no prazo de até 30 dias após o recebimento dos
+        honorários (PIDS = 8%; FAEPEX = 3%; AIU = 5%);
+    </li>
+
+    <li>
+        Entregarei, no prazo de até 30 dias após o recebimento dos honorários, os seguintes documentos impressos na
+        secretaria de extensão da unidade: formulário de encaminhamento de prestação de contas; cópia do contrato
+        firmado com a solicitante; cópia do comprovante de depósito/transferência bancária das taxas; para serem
+        anexados no processo de Registro de Atividades Simultâneas ao RDIDP da Faculdade de Tecnologia;
+    </li>
+
+    <li>
+        Informarei à DGA através do site www.dga.unicamp.br/exterlogin sobre o depósito efetuado;
+    </li>
+
+    <li>
+        Estou ciente de que os valores recebidos serão informados pela área de Finanças da DGA à Diretoria Geral de
+        Recursos Humanos – DGRH para efeito de registro no cálculo dos valores excedentes a 100% de
+        complementação salarial nos termos da resolução GR 97/01;
+    </li>
+
+    <li>
+        Estou ciente de que para que a atividade aqui descrita tenha continuidade além do prazo especificado acima,
+        deverei solicitar uma nova autorização para exercê-la, bem como recolher as novas taxas correspondentes.
+    </li>
+</ul>
+
+<p>
+    Atenciosamente, <br/>
+    Prof Dr <span th:text="${convenio.docente.nome}"></span>
+</p>
 
 </body>
 </html>

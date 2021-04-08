@@ -13,21 +13,18 @@
     <img class="logo" src="images/unicamp_logo.png"/>
 </div>
 
-<h5 style="text-align:right">Limeira, ....... de ........................... de 20......</h5>
+<h5 style="text-align:right">Limeira, <span th:text="${dia}"></span> de <span th:text="${mes}"></span> de <span th:text="${ano}"></span></h5>
 
-<p>Ilma. Profa. Dra. ${coordenador.nome} <br/>
+<p>Ilma. Profa. Dra. <span th:text="${coordenador}"></span> <br/>
     Coordenadora de Extensão da FT/UNICAMP</p>
 
 <h4 style="text-align: center">SOLICITAÇÃO DE AUTORIZAÇÃO PARA EXERCÍCIO DE ATIVIDADES SIMULTÂNEAS <br/>
-    (Regência Concomitante)</h4>
+    (Cursos de Extensão)</h4>
 
 <p align="justify">
-    Eu,
-    ................................................................,
-    Prof Dr MS-
-    ............ em RDIDP nesta faculdade, matrícula nº........................., venho através desta, em atendimento a
-    Deliberação
-    CONSU-A-02-2001 (Artigos 8º, 9º e 12º), solicitar autorização para realização de atividades simultâneas, descritas a
+    Eu, <span th:text="${regencia.docente.nome}"></span>, Prof Dr MS- ..... em RDIDP nesta faculdade,
+    matrícula nº <span th:text="${regencia.docente.matricula}"></span>, venho através desta, em atendimento a
+    Deliberação    CONSU-A-02-2001 (Artigos 8º, 9º e 12º), solicitar autorização para realização de atividades simultâneas, descritas a
     seguir:
 </p>
 
@@ -39,44 +36,28 @@
 <p>Disciplinas (com carga horária): <span th:text="${regencia.disciplina}"></span></p>
 <p>Será o responsável pela disciplina: <span th:text="${regencia.responsavel} ? 'Sim' : 'Não'"></span></p>
 <p>Será o único docente da disciplina: <span th:text="${regencia.unicoDocente} ? 'Sim' : 'Não'"></span></p>
-<p>Carga horária total das aulas a serem ministradas: ..............................................</p>
-<p>Carga horária total dedicada (aulas + preparação e outras atividades): ....... horas (semanal) / .......
-    horas(mensal)</p>
-<p>Valor bruto recebido por aulas: R$..............por hora-aula / R$ .................pelo total de aulas</p>
-<p>Valor bruto total recebido por outras atividades: R$ .................................</p>
-<p>Período de participação: ................................................. a
-    ............................................</p>
+<p>Carga horária total das aulas a serem ministradas: <span th:text="${regencia.cargaHorariaTotalMinistrada} ? : '0'"></span></p>
+<p>Carga horária total dedicada (aulas + preparação e outras atividades): <span th:text="${regencia.horaSemanal} ? : '0'"></span> horas (semanal) /
+    <span th:text="${regencia.horaMensal} ? : '0'"></span> horas(mensal)</p>
+<p>Valor bruto recebido por aulas: R$ <span th:text="${regencia.valorBrutoHoraAula} ? : '0'"></span> por hora-aula / R$ <span th:text="${regencia.valorBrutoTotalAulas} ? : '0'"></span> pelo total de aulas</p>
+<p>Valor bruto total recebido por outras atividades: R$ <span th:text="${regencia.valorBrutoOutraAtividade} ? : '0'"></span></p>
+<p>Período de participação: <span th:text="${regencia.dataInicio}"></span> a <span th:text="${regencia.dataFim}"></span> </p>
 <p>Dias e horários semanais que trabalhará na:</p>
-<p>Unicamp: </p>
-<p>Outra instituição: </p>
+<p>Unicamp: <span th:text="${regencia.diasTrabalhadosUnicamp}?: '-'"></span></p>
+<p>Outra instituição: <span th:text="${regencia.diasTrabalhadosOutraInstituicao}?: '-'"></span></p>
 
-<!-- Students Table -->
-<!--<div id="students">-->
-<!--    <div th:if="${not #lists.isEmpty(students)}">-->
-<!--        <table class="students_table paginate-table">-->
-<!--            <thead>-->
-<!--            <tr>-->
-<!--                <th>Id</th>-->
-<!--                <th>Name</th>-->
-<!--                <th>Last Name</th>-->
-<!--                <th>Nationality</th>-->
-<!--                <th>University</th>-->
-<!--                <th>Active</th>-->
-<!--            </tr>-->
-<!--            </thead>-->
-<!--            <tbody>-->
-<!--            <tr th:each="student : ${students}">-->
-<!--                <td th:text="${student?.id}"></td>-->
-<!--                <td th:text="${student?.name}"></td>-->
-<!--                <td th:text="${student?.lastName}"></td>-->
-<!--                <td th:text="${student?.nationality}"></td>-->
-<!--                <td th:text="${student?.university}"></td>-->
-<!--                <td th:text="${student?.active}"></td>-->
-<!--            </tr>-->
-<!--            </tbody>-->
-<!--        </table>-->
-<!--    </div>-->
-<!--</div>-->
+<p>Declaro que:</p>
+<ul>
+    <li>Estou ciente da GR036/2008, sobre taxas de ressarcimento à Universidade oriundos de convênios, contratos e
+        cursos de extensão, quando houver remuneração pelas atividades simultâneas;</li>
+    <li>Estou ciente de que para que a atividade aqui descrita tenha continuidade além do prazo especificado acima,
+        deverei solicitar uma nova autorização para exercê-la.</li>
+</ul>
+
+<p>
+    Atenciosamente, <br/>
+    Prof Dr <span th:text="${regencia.docente.nome}"></span>
+</p>
 
 </body>
 </html>

@@ -1,0 +1,76 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Convênio</title>
+    <bookmarks>
+        <bookmark name="Curso" href="#curso"></bookmark>
+    </bookmarks>
+    <link rel="stylesheet" type="text/css" href="css/style.css"/>
+</head>
+
+<body>
+<header>
+    <div style="text-align: center;">
+        <img class="logo" src="images/unicamp_logo.png"/>
+    </div>
+</header>
+
+
+<h5 style="text-align:right">Limeira, <span th:text="${dia}"></span> de <span th:text="${mes}"></span> de <span
+        th:text="${ano}"></span></h5>
+
+<p>Ilma. Profa. Dra. <span th:text="${coordenador}"></span> <br/>
+    Coordenadora de Extensão da FT/UNICAMP</p>
+
+<h4 style="text-align: center">SOLICITAÇÃO DE AUTORIZAÇÃO PARA EXERCÍCIO DE ATIVIDADES SIMULTÂNEAS <br/>
+    (Cursos de Extensão)</h4>
+
+<p align="justify">
+    Eu, <span th:text="${curso.docente.nome}"></span>, Prof Dr MS- ..... em RDIDP nesta faculdade,
+    matrícula nº <span th:text="${curso.docente.matricula}"></span>, venho através desta, em atendimento a
+    Deliberação CONSU-A-02-2001 (Artigos 8º, 9º e 12º), solicitar autorização para realização de atividades simultâneas,
+    descritas a
+    seguir:
+</p>
+
+<h4>Tipo de Atividade simultânea: Convênios</h4>
+
+<p>Nome do curso: <span th:text="${curso.projeto}"></span></p>
+<p>Prof. Coordenador: <span th:text="${curso.coordenador}"></span></p>
+<p>Instituição vinculada: <span th:text="${curso.instituicaoVinculada}"></span></p>
+<p>Participação por: <span th:text="${curso.participacao}"></span></p>
+<p>Disciplinas de participação: <span th:text="${curso.disciplinaParticipacao} ?: '-'"></span></p>
+<p>Carga horária total das aulas a serem ministradas: <span th:text="${curso.cargaHorariaTotalMinistrada}"></span> meses
+</p>
+<p>
+    Carga horária total dedicada (aulas + preparação e outras atividades): <span
+        th:text="${curso.horaSemanal?:'0'}"></span> horas (semanal)
+    / <span th:text="${curso.horaMensal?:'0'}"></span> horas
+    (mensal)
+</p>
+<p>Valor bruto recebido por aulas: R$ <span th:text="${curso.valorBrutoHoraAula?:'0'}"></span> por hora-aula / R$ <span
+        th:text="${curso.valorBrutoTotalAulas?:'0'}"></span> pelo total de aulas </p>
+<p>Valor bruto total recebido por outras atividades: R$ <span th:text="${curso.valorBrutoOutraAtividade} ?: '0'"></span>
+</p>
+<p>Período de participação: <span th:text="${curso.prazo} ?: '0'"></span> meses</p>
+<p>
+    Declaro que:
+</p>
+
+<ul>
+    <li>Quaisquer taxas que devão ser recolhidas para a Faculdade de Tecnologia e Unicamp, assim como descontos
+        legais e encargos sociais, serão realizados pela Funcamp;
+    </li>
+    <li>
+        Estou ciente de que para que a atividade aqui descrita tenha continuidade além do prazo especificado acima,
+        deverei solicitar uma nova autorização para exercê-la.
+    </li>
+</ul>
+
+<p>
+    Atenciosamente, <br/>
+    Prof Dr <span th:text="${curso.docente.nome}"></span>
+</p>
+
+</body>
+</html>

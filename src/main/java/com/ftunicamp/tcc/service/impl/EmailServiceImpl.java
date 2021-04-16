@@ -66,10 +66,14 @@ public class EmailServiceImpl implements EmailService {
 
         if (tipoEmail.equals(TipoEmail.NOVA_ATIVIDADE)) {
             assunto = "Atividade submetida";
-            body += "Sua solicitação de atividade foi submetida com sucesso e encaminhada para a Coordenadoria de Extensão.";
+            body += "Sua solicitação de atividade #" + atividadeId + " foi submetida com sucesso e encaminhada para a Coordenadoria de Extensão.";
         } else if (tipoEmail.equals(TipoEmail.STATUS_ATIVIDADE)) {
             assunto = "Atualização de status da atividade";
             body += "O status da sua atividade foi alterado.";
+            if (!observacao.isEmpty()) {
+                body += "<p>Observações: </p>";
+                body += observacao;
+            }
         }
 
         try {

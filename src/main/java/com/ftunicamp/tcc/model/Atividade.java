@@ -50,6 +50,8 @@ public abstract class Atividade {
 
     private String observacao;
 
+    private String revisao;
+
     @OneToOne(mappedBy = "atividade", cascade = CascadeType.ALL)
     private Alocacao alocacao;
 

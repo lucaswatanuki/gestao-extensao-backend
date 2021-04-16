@@ -21,4 +21,5 @@ public class ConvenioRequest implements Serializable {
     private LocalDateTime dataInicio;
     private LocalDateTime dataFim;
     private String observacao;
+    private String tipoAtividadeSimultanea;
 }

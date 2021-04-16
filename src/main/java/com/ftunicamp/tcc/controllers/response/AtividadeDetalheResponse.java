@@ -24,5 +24,6 @@ public class AtividadeDetalheResponse {
     private String observacao;
     private boolean autorizado;
     private String tipoAtividade;
+    private String revisao;
 
 }

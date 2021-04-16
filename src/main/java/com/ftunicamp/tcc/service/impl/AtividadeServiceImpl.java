@@ -151,6 +151,7 @@ public class AtividadeServiceImpl implements AtividadeService {
                         .orElse(0L))
                 .autorizado(atividade.getStatus().equals(StatusAtividade.EM_ANDAMENTO))
                 .tipoAtividade(atividade.getTipoAtividade())
+                .revisao(atividade.getRevisao() == null ? "Não há itens a revisar" : atividade.getRevisao())
                 .observacao(atividade.getObservacao());
     }
 

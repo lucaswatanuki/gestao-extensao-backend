@@ -5,5 +5,5 @@ import lombok.Data;
 @Data
 public class AutorizacaoRequest {
     private String observacao;
-    private boolean recusado;
+    private boolean autorizado;
 }

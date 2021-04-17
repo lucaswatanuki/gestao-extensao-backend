@@ -10,6 +10,7 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import javax.transaction.Transactional;
 import java.io.IOException;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -39,13 +40,14 @@ public class ArquivoServiceImpl implements ArquivoService {
     }
 
     @Override
+    @Transactional
     public List<ArquivoDto> getArquivos(long atividadeId) {
         return arquivosRepository.findAllByAtividadeId(atividadeId)
                 .stream()
                 .map(arquivo -> {
                     var downloadPath = ServletUriComponentsBuilder
                             .fromCurrentContextPath()
-                            .path("/file/")
+                            .path("/download/")
                             .path(arquivo.getId())
                             .toUriString();
 

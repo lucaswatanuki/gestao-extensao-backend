@@ -59,42 +59,46 @@ public class AtividadeServiceImpl implements AtividadeService {
 
 
     @Override
-    public Response<String> cadastrarConvenio(ConvenioRequest request) throws UnsupportedEncodingException, MessagingException {
+    public AtividadeResponse cadastrarConvenio(ConvenioRequest request) throws UnsupportedEncodingException, MessagingException {
         var docente = (docenteRepository.findByUser_Username(jwtUtils.getSessao().getUsername()));
         var atividade = AtividadeFactory.criarConvenio(request, docente);
         setAlocacao(docente, atividade);
-        atividadeRepository.save(atividade);
+        var atividadeId = atividadeRepository.save(atividade).getId();
         salvarAutorizacao(atividade);
         enviarEmailConfirmacao(atividade, docente);
-        var response = new Response<String>();
-        response.setMensagem(MENSAGEM_SUCESSO);
-        return response;
+        return AtividadeResponse.builder()
+                .id(atividadeId)
+                .build();
     }
 
     @Override
-    public Response<String> cadastrarCursoExtensao(CursoExtensaoRequest request) {
+    public AtividadeResponse cadastrarCursoExtensao(CursoExtensaoRequest request) {
         var docente = (docenteRepository.findByUser_Username(jwtUtils.getSessao().getUsername()));
         var atividade = AtividadeFactory.criarCurso(request, docente);
         setAlocacao(docente, atividade);
-        atividadeRepository.save(atividade);
+        var atividadeId = atividadeRepository.save(atividade).getId();
         salvarAutorizacao(atividade);
         enviarEmailConfirmacao(atividade, docente);
         var response = new Response<String>();
         response.setMensagem(MENSAGEM_SUCESSO);
-        return response;
+        return AtividadeResponse.builder()
+                .id(atividadeId)
+                .build();
     }
 
     @Override
-    public Response<String> cadastrarRegencia(RegenciaRequest request) {
+    public AtividadeResponse cadastrarRegencia(RegenciaRequest request) {
         var docente = (docenteRepository.findByUser_Username(jwtUtils.getSessao().getUsername()));
         var atividade = AtividadeFactory.criarRegencia(request, docente);
         setAlocacao(docente, atividade);
-        atividadeRepository.save(atividade);
+        var atividadeId = atividadeRepository.save(atividade).getId();
         salvarAutorizacao(atividade);
         enviarEmailConfirmacao(atividade, docente);
         var response = new Response<String>();
         response.setMensagem(MENSAGEM_SUCESSO);
-        return response;
+        return AtividadeResponse.builder()
+                .id(atividadeId)
+                .build();
     }
 
     @Override

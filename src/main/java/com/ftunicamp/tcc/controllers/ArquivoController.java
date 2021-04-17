@@ -20,8 +20,8 @@ public class ArquivoController {
     @Autowired
     private ArquivoService arquivoService;
 
-    @PostMapping("/upload")
-    public ResponseEntity<Response<String>> uploadFile(@RequestParam("file") MultipartFile file, long atividadeId) {
+    @PostMapping("/upload/{atividadeId}")
+    public ResponseEntity<Response<String>> uploadFile(@RequestParam("file") MultipartFile file, @PathVariable("atividadeId") long atividadeId) {
         var mensagem = "";
         try {
             arquivoService.salvar(file, atividadeId);
@@ -40,7 +40,7 @@ public class ArquivoController {
         }
     }
 
-    @GetMapping("/file/{id}")
+    @GetMapping("/download/{id}")
     public ResponseEntity<byte[]> getArquivo(@PathVariable String id) {
         var arquivo = arquivoService.getArquivo(id);
 
@@ -49,7 +49,7 @@ public class ArquivoController {
                 .body(arquivo.getData());
     }
 
-    @GetMapping("/files/{atividadeId}")
+    @GetMapping("/{atividadeId}")
     public ResponseEntity<List<ArquivoDto>> getArquivos(@PathVariable("atividadeId") long atividadeId) {
         var arquivos = arquivoService.getArquivos(atividadeId);
 

@@ -41,19 +41,19 @@ public class AtividadeController {
 
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping(value = "/convenio")
-    public ResponseEntity<Response<String>> incluirAtividadeConvenio(@RequestBody ConvenioRequest request) throws UnsupportedEncodingException, MessagingException {
+    public ResponseEntity<AtividadeResponse> incluirAtividadeConvenio(@RequestBody ConvenioRequest request) throws UnsupportedEncodingException, MessagingException {
         return ResponseEntity.ok(atividadeService.cadastrarConvenio(request));
     }
 
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping(value = "/curso")
-    public ResponseEntity<Response<String>> incluirCursoExtensao(@RequestBody CursoExtensaoRequest request) {
+    public ResponseEntity<AtividadeResponse> incluirCursoExtensao(@RequestBody CursoExtensaoRequest request) {
         return ResponseEntity.ok(atividadeService.cadastrarCursoExtensao(request));
     }
 
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping(value = "/regencia")
-    public ResponseEntity<Response<String>> incluirRegenciaConcomitante(@RequestBody RegenciaRequest request) {
+    public ResponseEntity<AtividadeResponse> incluirRegenciaConcomitante(@RequestBody RegenciaRequest request) {
         return ResponseEntity.ok(atividadeService.cadastrarRegencia(request));
     }
 

@@ -35,8 +35,9 @@ public class ArquivoServiceImpl implements ArquivoService {
     }
 
     @Override
-    public Arquivo getArquivo(String id) {
-        return arquivosRepository.findById(id).orElseThrow(() -> new NoSuchElementException("Arquivo não encontrado!"));
+    @Transactional
+    public Arquivo getArquivo(long id) {
+        return arquivosRepository.findByAtividadeId(id).orElseThrow(() -> new NoSuchElementException("Arquivo não encontrado!"));
     }
 
     @Override

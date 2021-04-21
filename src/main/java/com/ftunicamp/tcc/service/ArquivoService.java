@@ -11,7 +11,7 @@ import java.util.stream.Stream;
 public interface ArquivoService {
     Arquivo salvar(MultipartFile multipartFile, long atividadeId) throws IOException;
 
-    Arquivo getArquivo(String id);
+    Arquivo getArquivo(long id);
 
     List<ArquivoDto> getArquivos(long atividadeId);
 }

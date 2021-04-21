@@ -37,6 +37,7 @@ public class AtividadeFactory {
         convenio.setDataModificacao(LocalDate.now());
         convenio.setStatus(verificaStatusAtividade(convenio));
         convenio.setObservacao(request.getObservacao());
+        convenio.setTipoAtividadeSimultanea(request.getTipoAtividadeSimultanea());
         //Mapear request para entidade - mapper struct
         return convenio;
     }

@@ -57,10 +57,11 @@ public class AutorizacaoServiceImpl implements AutorizacaoService {
         autorizacao.ifPresentOrElse(autorizacaoEntity -> {
                     var atividade = autorizacaoEntity.getAtividade();
 
-                    if (request.isRecusado()) {
+                    if (!request.isAutorizado()) {
                         autorizacaoEntity.setStatus(StatusAutorizacao.REPROVADO);
                         autorizacaoRepository.save(autorizacaoEntity);
                         atividade.setStatus(StatusAtividade.EM_REVISAO);
+                        atividade.setRevisao(request.getObservacao());
                         atividadeRepository.save(atividade);
                         enviarEmail(idAtividade, autorizacaoEntity, request.getObservacao());
                     } else {

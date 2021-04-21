@@ -14,11 +14,11 @@ import java.util.List;
 
 public interface AtividadeService {
 
-    Response<String> cadastrarConvenio(ConvenioRequest request) throws UnsupportedEncodingException, MessagingException;
+    AtividadeResponse cadastrarConvenio(ConvenioRequest request) throws UnsupportedEncodingException, MessagingException;
 
-    Response<String> cadastrarCursoExtensao(CursoExtensaoRequest request);
+    AtividadeResponse cadastrarCursoExtensao(CursoExtensaoRequest request);
 
-    Response<String> cadastrarRegencia(RegenciaRequest request);
+    AtividadeResponse cadastrarRegencia(RegenciaRequest request);
 
     Response<String> cadastrarAtividadeUnivesp(UnivespRequest request);
 

@@ -1,6 +1,7 @@
 package com.ftunicamp.tcc.controllers;
 
 import com.ftunicamp.tcc.controllers.response.DocenteResponse;
+import com.ftunicamp.tcc.dto.AlocacaoDto;
 import com.ftunicamp.tcc.service.DocenteService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -26,5 +27,11 @@ public class DocenteController {
          docenteService.deletarDocente(username);
          return ResponseEntity.ok("Usuário deletado.");
     }
+
+    @GetMapping("/{id}/alocacoes")
+    public ResponseEntity<List<AlocacaoDto>> getAlocacoes(@PathVariable("id") long docenteId) {
+        return ResponseEntity.ok(docenteService.consultarAlocacoes(docenteId));
+    }
+
 
 }

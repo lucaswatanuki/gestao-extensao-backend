@@ -1,20 +1,21 @@
 package com.ftunicamp.tcc.service.impl;
 
 import com.ftunicamp.tcc.controllers.response.DocenteResponse;
+import com.ftunicamp.tcc.dto.AlocacaoDto;
+import com.ftunicamp.tcc.exceptions.NegocioException;
 import com.ftunicamp.tcc.model.Alocacao;
 import com.ftunicamp.tcc.model.DocenteEntity;
 import com.ftunicamp.tcc.model.StatusAtividade;
-import com.ftunicamp.tcc.exceptions.NegocioException;
-import com.ftunicamp.tcc.repositories.AtividadeRepository;
+import com.ftunicamp.tcc.repositories.AlocacaoRepository;
 import com.ftunicamp.tcc.repositories.DocenteRepository;
 import com.ftunicamp.tcc.repositories.UserRepository;
 import com.ftunicamp.tcc.service.DocenteService;
-import com.ftunicamp.tcc.utils.AtividadeFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static com.ftunicamp.tcc.utils.DateUtils.getAnoAtual;
 
@@ -23,13 +24,14 @@ public class DocenteServiceImpl implements DocenteService {
 
     private final DocenteRepository docenteRepository;
     private final UserRepository userRepository;
-    private final AtividadeRepository atividadeRepository;
+    private final AlocacaoRepository alocacaoRepository;
 
     @Autowired
-    public DocenteServiceImpl(DocenteRepository docenteRepository, UserRepository userRepository, AtividadeRepository atividadeRepository) {
+    public DocenteServiceImpl(DocenteRepository docenteRepository, UserRepository userRepository,
+                              AlocacaoRepository alocacaoRepository) {
         this.docenteRepository = docenteRepository;
         this.userRepository = userRepository;
-        this.atividadeRepository = atividadeRepository;
+        this.alocacaoRepository = alocacaoRepository;
     }
 
     @Override
@@ -108,5 +110,19 @@ public class DocenteServiceImpl implements DocenteService {
         user.ifPresent(userRepository::delete);
     }
 
+    @Override
+    public List<AlocacaoDto> consultarAlocacoes(long docenteId) {
+        var alocacoes = alocacaoRepository.findByDocente_id(docenteId);
 
+        return alocacoes.stream()
+                .filter(alocacao -> alocacao.getAtividade().getStatus().equals(StatusAtividade.CONCLUIDA) ||
+                        alocacao.getAtividade().getStatus().equals(StatusAtividade.EM_ANDAMENTO))
+                .map(alocacao -> AlocacaoDto.builder()
+                        .ano(alocacao.getAno())
+                        .semestre(alocacao.getSemestre())
+                        .horasAprovadas(alocacao.getTotalHorasAprovadas())
+                        .tipoAtividade(alocacao.getAtividade().getTipoAtividade())
+                        .build()
+                ).collect(Collectors.toList());
+    }
 }

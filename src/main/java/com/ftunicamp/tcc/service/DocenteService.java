@@ -14,4 +14,5 @@ public interface DocenteService {
     void deletarDocente(String username);
 
     List<AlocacaoDto> consultarAlocacoes(long docenteId);
+
 }

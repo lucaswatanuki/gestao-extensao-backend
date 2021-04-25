@@ -2,6 +2,7 @@ package com.ftunicamp.tcc.service.impl;
 
 import com.ftunicamp.tcc.controllers.response.DocenteResponse;
 import com.ftunicamp.tcc.dto.AlocacaoDto;
+import com.ftunicamp.tcc.dto.UsuarioDto;
 import com.ftunicamp.tcc.exceptions.NegocioException;
 import com.ftunicamp.tcc.model.Alocacao;
 import com.ftunicamp.tcc.model.DocenteEntity;
@@ -10,6 +11,7 @@ import com.ftunicamp.tcc.repositories.AlocacaoRepository;
 import com.ftunicamp.tcc.repositories.DocenteRepository;
 import com.ftunicamp.tcc.repositories.UserRepository;
 import com.ftunicamp.tcc.service.DocenteService;
+import com.ftunicamp.tcc.service.UsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,7 +22,7 @@ import java.util.stream.Collectors;
 import static com.ftunicamp.tcc.utils.DateUtils.getAnoAtual;
 
 @Service
-public class DocenteServiceImpl implements DocenteService {
+public class DocenteServiceImpl implements DocenteService, UsuarioService {
 
     private final DocenteRepository docenteRepository;
     private final UserRepository userRepository;
@@ -124,5 +126,22 @@ public class DocenteServiceImpl implements DocenteService {
                         .tipoAtividade(alocacao.getAtividade().getTipoAtividade())
                         .build()
                 ).collect(Collectors.toList());
+    }
+
+    @Override
+    public UsuarioDto getDadosUsuario(long id) {
+        var docente = docenteRepository.findByUser_Id(id);
+
+        return UsuarioDto.builder()
+                .nome(docente.getNome())
+                .telefone(docente.getTelefone())
+                .email(docente.getEmail())
+                .matricula(docente.getMatricula())
+                .build();
+    }
+
+    @Override
+    public void alterarDadosUsuario(long id, UsuarioDto request) {
+
     }
 }

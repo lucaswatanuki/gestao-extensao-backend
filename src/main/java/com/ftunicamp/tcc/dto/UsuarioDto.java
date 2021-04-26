@@ -16,5 +16,6 @@ public class UsuarioDto {
     private String email;
     private String telefone;
     private String matricula;
+    private String endereco;
 
 }

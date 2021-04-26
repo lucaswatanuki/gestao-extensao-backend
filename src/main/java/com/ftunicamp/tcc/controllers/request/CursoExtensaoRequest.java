@@ -1,10 +1,12 @@
 package com.ftunicamp.tcc.controllers.request;
 
+import com.ftunicamp.tcc.dto.AlocacaoDto;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Getter
 @Setter
@@ -24,6 +26,6 @@ public class CursoExtensaoRequest implements Serializable {
     private int horaMensal;
     private String observacao;
     private String instituicaoVinculada;
-
+    private List<AlocacaoDto> alocacoes;
 
 }

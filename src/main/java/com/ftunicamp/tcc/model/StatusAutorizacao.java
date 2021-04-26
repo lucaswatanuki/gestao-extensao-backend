@@ -7,7 +7,9 @@ public enum StatusAutorizacao {
 
     APROVADO("Aceito"),
     PENDENTE("Pendente"),
-    REPROVADO("Reprovado");
+    REPROVADO("Reprovado"),
+    REVISAO("Em revisão");
+
 
     private final String status;
 

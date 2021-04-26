@@ -137,11 +137,22 @@ public class DocenteServiceImpl implements DocenteService, UsuarioService {
                 .telefone(docente.getTelefone())
                 .email(docente.getEmail())
                 .matricula(docente.getMatricula())
+                .endereco(docente.getEndereco())
                 .build();
     }
 
     @Override
     public void alterarDadosUsuario(long id, UsuarioDto request) {
+        var docente = docenteRepository.findByUser_Id(id);
 
+        if (request.getNome() != null) {
+            docente.setNome(request.getNome());
+        }
+
+        if (request.getTelefone() != null) {
+            docente.setTelefone(request.getTelefone());
+        }
+
+        docenteRepository.save(docente);
     }
 }

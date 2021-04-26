@@ -58,7 +58,7 @@ public class AutorizacaoServiceImpl implements AutorizacaoService {
                     var atividade = autorizacaoEntity.getAtividade();
 
                     if (!request.isAutorizado()) {
-                        autorizacaoEntity.setStatus(StatusAutorizacao.REPROVADO);
+                        autorizacaoEntity.setStatus(StatusAutorizacao.REVISAO);
                         autorizacaoRepository.save(autorizacaoEntity);
                         atividade.setStatus(StatusAtividade.EM_REVISAO);
                         atividade.setRevisao(request.getObservacao());

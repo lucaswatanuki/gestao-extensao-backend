@@ -9,6 +9,7 @@ import lombok.Data;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class AlocacaoDto {
 
+    private long id;
     private int ano;
     private int semestre;
     private long horasAprovadas;

@@ -9,4 +9,5 @@ import java.util.List;
 @Repository
 public interface AlocacaoRepository extends JpaRepository<Alocacao, Integer> {
     List<Alocacao> findByDocente_id(long docenteId);
+    List<Alocacao> findByAtividade_id(long atividadeId);
 }

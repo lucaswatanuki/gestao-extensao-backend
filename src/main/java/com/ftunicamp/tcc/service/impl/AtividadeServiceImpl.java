@@ -7,9 +7,9 @@ import com.ftunicamp.tcc.controllers.request.UnivespRequest;
 import com.ftunicamp.tcc.controllers.response.AtividadeDetalheResponse;
 import com.ftunicamp.tcc.controllers.response.AtividadeResponse;
 import com.ftunicamp.tcc.controllers.response.Response;
-import com.ftunicamp.tcc.model.*;
+import com.ftunicamp.tcc.dto.AlocacaoDto;
 import com.ftunicamp.tcc.exceptions.NegocioException;
-import com.ftunicamp.tcc.repositories.AlocacaoRepository;
+import com.ftunicamp.tcc.model.*;
 import com.ftunicamp.tcc.repositories.AtividadeRepository;
 import com.ftunicamp.tcc.repositories.AutorizacaoRepository;
 import com.ftunicamp.tcc.repositories.DocenteRepository;
@@ -28,6 +28,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
+import java.util.stream.Collectors;
 
 import static com.ftunicamp.tcc.utils.DateUtils.*;
 
@@ -62,7 +63,7 @@ public class AtividadeServiceImpl implements AtividadeService {
     public AtividadeResponse cadastrarConvenio(ConvenioRequest request) throws UnsupportedEncodingException, MessagingException {
         var docente = (docenteRepository.findByUser_Username(jwtUtils.getSessao().getUsername()));
         var atividade = AtividadeFactory.criarConvenio(request, docente);
-        setAlocacao(docente, atividade);
+        setAlocacao(docente, atividade, request.getAlocacoes());
         var atividadeId = atividadeRepository.save(atividade).getId();
         salvarAutorizacao(atividade);
         enviarEmailConfirmacao(atividade, docente);
@@ -75,7 +76,7 @@ public class AtividadeServiceImpl implements AtividadeService {
     public AtividadeResponse cadastrarCursoExtensao(CursoExtensaoRequest request) {
         var docente = (docenteRepository.findByUser_Username(jwtUtils.getSessao().getUsername()));
         var atividade = AtividadeFactory.criarCurso(request, docente);
-        setAlocacao(docente, atividade);
+        setAlocacao(docente, atividade, request.getAlocacoes());
         var atividadeId = atividadeRepository.save(atividade).getId();
         salvarAutorizacao(atividade);
         enviarEmailConfirmacao(atividade, docente);
@@ -90,7 +91,7 @@ public class AtividadeServiceImpl implements AtividadeService {
     public AtividadeResponse cadastrarRegencia(RegenciaRequest request) {
         var docente = (docenteRepository.findByUser_Username(jwtUtils.getSessao().getUsername()));
         var atividade = AtividadeFactory.criarRegencia(request, docente);
-        setAlocacao(docente, atividade);
+        setAlocacao(docente, atividade, request.getAlocacoes());
         var atividadeId = atividadeRepository.save(atividade).getId();
         salvarAutorizacao(atividade);
         enviarEmailConfirmacao(atividade, docente);
@@ -202,17 +203,20 @@ public class AtividadeServiceImpl implements AtividadeService {
         autorizacaoRepository.save(autorizacao);
     }
 
-    private void setAlocacao(DocenteEntity docente, Atividade atividade) {
+    private void setAlocacao(DocenteEntity docente, Atividade atividade, List<AlocacaoDto> alocacoesDto) {
         if (!atividade.getStatus().equals(StatusAtividade.CONCLUIDA)) {
             final var horasSolicitadas = atividade.getPrazo() * atividade.getHoraMensal();
-            var alocacao = (Alocacao.builder()
-                    .ano(getAnoAtual())
-                    .semestre(getSemestreAtual(getMesAtual()))
-                    .totalHorasSolicitadas(horasSolicitadas)
-                    .docente(docente)
-                    .atividade(atividade)
-                    .build());
-            atividade.setAlocacao(alocacao);
+            var alocacoes = alocacoesDto.stream()
+                    .map(dto -> {
+                        return Alocacao.builder()
+                                .ano(dto.getAno())
+                                .semestre(dto.getSemestre())
+                                .totalHorasSolicitadas(dto.getHorasSolicitadas())
+                                .atividade(atividade)
+                                .docente(docente)
+                                .build();
+                    }).collect(Collectors.toList());
+            atividade.setAlocacao(alocacoes);
         }
     }
 

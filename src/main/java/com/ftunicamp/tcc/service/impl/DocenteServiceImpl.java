@@ -120,12 +120,13 @@ public class DocenteServiceImpl implements DocenteService, UsuarioService {
                 .filter(alocacao -> alocacao.getAtividade().getStatus().equals(StatusAtividade.CONCLUIDA) ||
                         alocacao.getAtividade().getStatus().equals(StatusAtividade.EM_ANDAMENTO))
                 .map(alocacao -> AlocacaoDto.builder()
+                        .id(alocacao.getAtividade().getId())
                         .ano(alocacao.getAno())
                         .semestre(alocacao.getSemestre())
                         .horasAprovadas(alocacao.getTotalHorasAprovadas())
                         .tipoAtividade(alocacao.getAtividade().getTipoAtividade())
-                        .build()
-                ).collect(Collectors.toList());
+                        .build())
+                .collect(Collectors.toList());
     }
 
     @Override

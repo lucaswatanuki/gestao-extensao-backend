@@ -30,7 +30,7 @@ public class Alocacao {
     @JoinColumn(name="docente_id")
     private DocenteEntity docente;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "atividade_id", referencedColumnName = "id")
     private Atividade atividade;
 

@@ -2,6 +2,7 @@ package com.ftunicamp.tcc.service.impl;
 
 import com.ftunicamp.tcc.config.EmailConfiguration;
 import com.ftunicamp.tcc.model.DocenteEntity;
+import com.ftunicamp.tcc.model.UsuarioEntity;
 import com.ftunicamp.tcc.service.EmailService;
 import com.ftunicamp.tcc.utils.TipoEmail;
 import kong.unirest.Unirest;
@@ -26,6 +27,9 @@ public class EmailServiceImpl implements EmailService {
 
     @Value("${spring.mail.from.username}")
     String email;
+
+    @Value("${frontend.url}")
+    String frontUrl;
 
     @Autowired
     public EmailServiceImpl(EmailConfiguration emailConfig) {
@@ -86,6 +90,29 @@ public class EmailServiceImpl implements EmailService {
                     .field("o:tracking", "False")
                     .field("v:docente", docente.getNome())
                     .field("v:body", body)
+                    .asJson();
+            Logger.getAnonymousLogger().log(Level.INFO, request.getBody().toPrettyString());
+        } catch (UnirestException e) {
+            Logger.getAnonymousLogger().log(Level.WARNING, e.getMessage());
+        }
+    }
+
+    @Override
+    public void enviarEmailResetSenha(UsuarioEntity user, String token, String baseUrl) throws UnsupportedEncodingException {
+        String assunto = "Alterar senha";
+        String remetente = "Coordenadoria de Extensão FT ";
+        String urlVerificada = baseUrl + "/senha/alterarSenha?token=" + token;
+
+        try {
+            var request = Unirest.post("https://api.mailgun.net/v3/" + emailConfig.getDomain() + "/messages")
+                    .basicAuth("api", emailConfig.getApiKey())
+                    .field("from", remetente + email)
+                    .field("to", user.getEmail())
+                    .field("subject", assunto)
+                    .field("template", "reset_senha")
+                    .field("o:tracking", "False")
+                    .field("v:username", user.getUsername())
+                    .field("v:url", urlVerificada)
                     .asJson();
             Logger.getAnonymousLogger().log(Level.INFO, request.getBody().toPrettyString());
         } catch (UnirestException e) {

@@ -2,11 +2,9 @@ package com.ftunicamp.tcc.service.impl;
 
 import com.ftunicamp.tcc.controllers.request.AutorizacaoRequest;
 import com.ftunicamp.tcc.controllers.response.AutorizacaoResponse;
-import com.ftunicamp.tcc.model.Alocacao;
-import com.ftunicamp.tcc.model.AutorizacaoEntity;
-import com.ftunicamp.tcc.model.StatusAtividade;
-import com.ftunicamp.tcc.model.StatusAutorizacao;
+import com.ftunicamp.tcc.model.*;
 import com.ftunicamp.tcc.exceptions.NegocioException;
+import com.ftunicamp.tcc.repositories.AlocacaoRepository;
 import com.ftunicamp.tcc.repositories.AtividadeRepository;
 import com.ftunicamp.tcc.repositories.AutorizacaoRepository;
 import com.ftunicamp.tcc.repositories.DocenteRepository;
@@ -19,6 +17,7 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 
 import javax.mail.MessagingException;
+import javax.transaction.Transactional;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
@@ -34,7 +33,8 @@ public class AutorizacaoServiceImpl implements AutorizacaoService {
     private final JwtUtils jwtUtils;
     private final DocenteRepository docenteRepository;
     private final EmailService emailService;
-    private final AtividadeRepository atividadeRepository;
+    private final AtividadeRepository<Atividade> atividadeRepository;
+    private final AlocacaoRepository alocacaoRepository;
 
     @Autowired
     public AutorizacaoServiceImpl(AutorizacaoRepository autorizacaoRepository,
@@ -42,15 +42,18 @@ public class AutorizacaoServiceImpl implements AutorizacaoService {
                                   DocenteRepository docenteRepository,
                                   JavaMailSender javaMailSender,
                                   EmailService emailService,
-                                  AtividadeRepository atividadeRepository) {
+                                  AtividadeRepository<Atividade> atividadeRepository,
+                                  AlocacaoRepository alocacaoRepository) {
         this.autorizacaoRepository = autorizacaoRepository;
         this.jwtUtils = jwtUtils;
         this.docenteRepository = docenteRepository;
         this.emailService = emailService;
         this.atividadeRepository = atividadeRepository;
+        this.alocacaoRepository = alocacaoRepository;
     }
 
     @Override
+    @Transactional
     public void incluirAutorizacao(Long idAtividade, AutorizacaoRequest request) {
         final var autorizacao = autorizacaoRepository.findById(idAtividade);
 
@@ -58,7 +61,7 @@ public class AutorizacaoServiceImpl implements AutorizacaoService {
                     var atividade = autorizacaoEntity.getAtividade();
 
                     if (!request.isAutorizado()) {
-                        autorizacaoEntity.setStatus(StatusAutorizacao.REPROVADO);
+                        autorizacaoEntity.setStatus(StatusAutorizacao.REVISAO);
                         autorizacaoRepository.save(autorizacaoEntity);
                         atividade.setStatus(StatusAtividade.EM_REVISAO);
                         atividade.setRevisao(request.getObservacao());
@@ -67,16 +70,11 @@ public class AutorizacaoServiceImpl implements AutorizacaoService {
                     } else {
                         autorizacaoEntity.setStatus(StatusAutorizacao.APROVADO);
                         if (atividade.getStatus().equals(StatusAtividade.PENDENTE)) {
-                            var horasAprovadas = (atividade.getPrazo() * atividade.getHoraMensal());
-                            atividade.setAlocacao(Alocacao.builder()
-                                    .id(atividade.getAlocacao().getId())
-                                    .ano(getAnoAtual())
-                                    .semestre(getSemestreAtual(getMesAtual()))
-                                    .totalHorasAprovadas(horasAprovadas)
-                                    .totalHorasSolicitadas(atividade.getAlocacao().getTotalHorasSolicitadas() - horasAprovadas)
-                                    .atividade(atividade)
-                                    .docente(atividade.getDocente())
-                                    .build());
+                            var alocacoes = alocacaoRepository.findByAtividade_id(atividade.getId());
+                            alocacoes.forEach(alocacao -> {
+                                alocacao.setTotalHorasAprovadas(alocacao.getTotalHorasSolicitadas());
+                                alocacaoRepository.save(alocacao);
+                            });
                             atividade.setStatus(StatusAtividade.EM_ANDAMENTO);
                             atividadeRepository.save(atividade);
                         }

@@ -2,12 +2,19 @@ package com.ftunicamp.tcc.controllers;
 
 import com.ftunicamp.tcc.controllers.response.DocenteResponse;
 import com.ftunicamp.tcc.dto.AlocacaoDto;
+import com.ftunicamp.tcc.dto.PasswordDto;
+import com.ftunicamp.tcc.dto.UsuarioDto;
 import com.ftunicamp.tcc.service.DocenteService;
+import com.ftunicamp.tcc.service.PasswordService;
+import com.ftunicamp.tcc.service.UsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
@@ -15,7 +22,13 @@ import java.util.List;
 public class DocenteController {
 
     @Autowired
-    DocenteService docenteService;
+    private DocenteService docenteService;
+
+    @Autowired
+    private PasswordService passwordService;
+
+    @Autowired
+    private UsuarioService usuarioService;
 
     @GetMapping("/todos")
     public ResponseEntity<List<DocenteResponse>> listarDocentes() {
@@ -24,8 +37,8 @@ public class DocenteController {
 
     @DeleteMapping("/delete/{username}")
     public ResponseEntity<String> deletarDocente(@PathVariable("username") String username) {
-         docenteService.deletarDocente(username);
-         return ResponseEntity.ok("Usuário deletado.");
+        docenteService.deletarDocente(username);
+        return ResponseEntity.ok("Usuário deletado.");
     }
 
     @GetMapping("/{id}/alocacoes")
@@ -33,5 +46,29 @@ public class DocenteController {
         return ResponseEntity.ok(docenteService.consultarAlocacoes(docenteId));
     }
 
+    @PutMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public ResponseEntity<Void> alterarDadosUsuario(@PathVariable("id") long usuarioId,
+                                                    @RequestBody UsuarioDto request) {
+        try {
+            usuarioService.alterarDadosUsuario(usuarioId, request);
+        } catch (Exception e) {
+            Logger.getAnonymousLogger().log(Level.WARNING, e.getMessage());
+        }
+        return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<UsuarioDto> getDadosUsuario(@PathVariable("id") long id) {
+        return ResponseEntity.ok(usuarioService.getDadosUsuario(id));
+    }
+
+    @PutMapping("/{docenteId}/alterarSenha")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public ResponseEntity<Void> alterarSenha(@PathVariable("docenteId") long usuarioId,
+                                             @RequestBody PasswordDto request) {
+        passwordService.alterarSenha(request);
+        return ResponseEntity.noContent().build();
+    }
 
 }

@@ -1,14 +1,15 @@
 package com.ftunicamp.tcc.controllers.request;
 
+import com.ftunicamp.tcc.dto.AlocacaoDto;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Getter
 @Setter
-public class ConvenioRequest implements Serializable {
+public class ConvenioRequest {
 
     private String projeto;
     private String coordenador;
@@ -22,4 +23,5 @@ public class ConvenioRequest implements Serializable {
     private LocalDateTime dataFim;
     private String observacao;
     private String tipoAtividadeSimultanea;
+    private List<AlocacaoDto> alocacoes;
 }

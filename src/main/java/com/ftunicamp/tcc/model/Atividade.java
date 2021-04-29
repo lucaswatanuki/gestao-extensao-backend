@@ -52,8 +52,8 @@ public abstract class Atividade {
 
     private String revisao;
 
-    @OneToOne(mappedBy = "atividade", cascade = CascadeType.ALL)
-    private Alocacao alocacao;
+    @OneToMany(mappedBy = "atividade", cascade = CascadeType.ALL)
+    private List<Alocacao> alocacao;
 
     @Transient
     public String getTipoAtividade() {

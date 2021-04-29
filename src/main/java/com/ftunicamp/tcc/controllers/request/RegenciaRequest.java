@@ -1,9 +1,11 @@
 package com.ftunicamp.tcc.controllers.request;
 
+import com.ftunicamp.tcc.dto.AlocacaoDto;
 import com.ftunicamp.tcc.model.Nivel;
 import lombok.Data;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Data
 public class RegenciaRequest {
@@ -26,4 +28,6 @@ public class RegenciaRequest {
     private String diasTrabalhadosOutraInstituicao;
     private boolean responsavel;
     private boolean unicoDocente;
+    private List<AlocacaoDto> alocacoes;
+
 }

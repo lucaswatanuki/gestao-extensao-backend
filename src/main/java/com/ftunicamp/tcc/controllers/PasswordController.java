@@ -1,6 +1,8 @@
 package com.ftunicamp.tcc.controllers;
 
+import com.ftunicamp.tcc.controllers.response.Response;
 import com.ftunicamp.tcc.dto.PasswordDto;
+import com.ftunicamp.tcc.dto.PasswordTokenDto;
 import com.ftunicamp.tcc.service.PasswordService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -28,12 +30,11 @@ public class PasswordController {
         return ResponseEntity.ok().build();
     }
 
-    @GetMapping("/alterarSenha")
-    public String alterarSenha(@RequestParam("token") String token) {
-        var tokenValido = passwordService.validarToken(token);
-        if (tokenValido) {
-            return "redirect:" + frontUrl +"senha/reset";
-        } else return "redirect:" + frontUrl +"login";
+    @GetMapping("/verificarToken/{token}")
+    public ResponseEntity<PasswordTokenDto> verificarToken(@PathVariable("token") String token) {
+        return ResponseEntity.ok(PasswordTokenDto.builder()
+                .valido(passwordService.validarToken(token))
+                .build());
     }
 
     @PostMapping("/alterarSenha")
@@ -42,7 +43,6 @@ public class PasswordController {
         if (!tokenValido) {
             return ResponseEntity.badRequest().build();
         }
-
         passwordService.alterarSenha(dto);
         return ResponseEntity.ok().build();
     }

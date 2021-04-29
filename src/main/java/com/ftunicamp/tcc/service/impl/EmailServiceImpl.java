@@ -101,7 +101,7 @@ public class EmailServiceImpl implements EmailService {
     public void enviarEmailResetSenha(UsuarioEntity user, String token, String baseUrl) throws UnsupportedEncodingException {
         String assunto = "Alterar senha";
         String remetente = "Coordenadoria de Extensão FT ";
-        String urlVerificada = baseUrl + "/senha/alterarSenha?token=" + token;
+        String urlVerificada = frontUrl + "senha/alterarSenha/" + token;
 
         try {
             var request = Unirest.post("https://api.mailgun.net/v3/" + emailConfig.getDomain() + "/messages")

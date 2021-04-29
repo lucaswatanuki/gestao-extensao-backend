@@ -61,6 +61,12 @@ public class PasswordServiceImpl implements PasswordService {
         }
 
         var usuario = userToken.getUser();
+
+        if (dto.getSenhaAtual() != null) {
+            if (!passwordEncoder.matches(dto.getSenhaAtual(), usuario.getPassword())) {
+                throw new NegocioException("Verificar senha");
+            }
+        }
         usuario.setPassword(passwordEncoder.encode(dto.getSenha()));
 
         userRepository.save(usuario);
@@ -68,9 +74,9 @@ public class PasswordServiceImpl implements PasswordService {
 
     @Override
     public Boolean validarToken(String token) {
-        final PasswordResetToken passToken = tokenRepository.findByToken(token);
+        var passToken = tokenRepository.findByToken(token);
 
-        return isTokenFound(passToken) && (!isTokenExpired(passToken));
+        return isTokenFound(passToken);
     }
 
     public void createPasswordResetTokenForUser(UsuarioEntity user, String token) {
@@ -82,8 +88,5 @@ public class PasswordServiceImpl implements PasswordService {
         return passToken != null;
     }
 
-    private boolean isTokenExpired(PasswordResetToken passToken) {
-        final Calendar cal = Calendar.getInstance();
-        return passToken.getExpiryDate().before(cal.getTime());
-    }
+
 }

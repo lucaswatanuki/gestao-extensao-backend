@@ -11,7 +11,9 @@ import java.io.UnsupportedEncodingException;
 public interface PasswordService {
 
     void resetarSenha(PasswordDto dto, HttpServletRequest request) throws MessagingException, UnsupportedEncodingException;
+
     void alterarSenha(PasswordDto dto);
+
     Boolean validarToken(String token);
 
 }

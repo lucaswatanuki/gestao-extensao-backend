@@ -8,6 +8,6 @@ public class PasswordDto {
     private String email;
     private String token;
     private String senha;
-    private String senhaConfirmacao;
+    private String senhaAtual;
 
 }

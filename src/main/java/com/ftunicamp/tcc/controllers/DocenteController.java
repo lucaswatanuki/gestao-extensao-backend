@@ -2,8 +2,10 @@ package com.ftunicamp.tcc.controllers;
 
 import com.ftunicamp.tcc.controllers.response.DocenteResponse;
 import com.ftunicamp.tcc.dto.AlocacaoDto;
+import com.ftunicamp.tcc.dto.PasswordDto;
 import com.ftunicamp.tcc.dto.UsuarioDto;
 import com.ftunicamp.tcc.service.DocenteService;
+import com.ftunicamp.tcc.service.PasswordService;
 import com.ftunicamp.tcc.service.UsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -20,7 +22,10 @@ import java.util.logging.Logger;
 public class DocenteController {
 
     @Autowired
-    DocenteService docenteService;
+    private DocenteService docenteService;
+
+    @Autowired
+    private PasswordService passwordService;
 
     @Autowired
     private UsuarioService usuarioService;
@@ -56,6 +61,14 @@ public class DocenteController {
     @GetMapping("/{id}")
     public ResponseEntity<UsuarioDto> getDadosUsuario(@PathVariable("id") long id) {
         return ResponseEntity.ok(usuarioService.getDadosUsuario(id));
+    }
+
+    @PutMapping("/{docenteId}/alterarSenha")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public ResponseEntity<Void> alterarSenha(@PathVariable("docenteId") long usuarioId,
+                                             @RequestBody PasswordDto request) {
+        passwordService.alterarSenha(request);
+        return ResponseEntity.noContent().build();
     }
 
 }

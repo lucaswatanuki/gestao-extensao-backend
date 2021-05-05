@@ -74,7 +74,7 @@ public class AtividadeFactory {
         regencia.setProjeto(request.getCurso());
         regencia.setInstituicao(request.getInstituicao());
         regencia.setNivel(request.getNivel());
-        regencia.setDisciplinaParticipacao(regencia.getDisciplinaParticipacao());
+        regencia.setDisciplinaParticipacao(request.getDisciplinaParticipacao());
         regencia.setResponsavel(request.isResponsavel());
         regencia.setUnicoDocente(request.isUnicoDocente());
         regencia.setCargaHorariaTotalDedicada(request.getCargaHorariaTotalDedicada());

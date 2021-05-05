@@ -2,12 +2,14 @@ package com.ftunicamp.tcc.service.impl;
 
 import com.ftunicamp.tcc.controllers.request.AutorizacaoRequest;
 import com.ftunicamp.tcc.controllers.response.AutorizacaoResponse;
-import com.ftunicamp.tcc.model.*;
 import com.ftunicamp.tcc.exceptions.NegocioException;
+import com.ftunicamp.tcc.model.Atividade;
+import com.ftunicamp.tcc.model.AutorizacaoEntity;
+import com.ftunicamp.tcc.model.StatusAtividade;
+import com.ftunicamp.tcc.model.StatusAutorizacao;
 import com.ftunicamp.tcc.repositories.AlocacaoRepository;
 import com.ftunicamp.tcc.repositories.AtividadeRepository;
 import com.ftunicamp.tcc.repositories.AutorizacaoRepository;
-import com.ftunicamp.tcc.repositories.DocenteRepository;
 import com.ftunicamp.tcc.security.jwt.JwtUtils;
 import com.ftunicamp.tcc.service.AutorizacaoService;
 import com.ftunicamp.tcc.service.EmailService;
@@ -24,14 +26,11 @@ import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.logging.Logger;
 
-import static com.ftunicamp.tcc.utils.DateUtils.*;
-
 @Service
 public class AutorizacaoServiceImpl implements AutorizacaoService {
 
     private final AutorizacaoRepository autorizacaoRepository;
     private final JwtUtils jwtUtils;
-    private final DocenteRepository docenteRepository;
     private final EmailService emailService;
     private final AtividadeRepository<Atividade> atividadeRepository;
     private final AlocacaoRepository alocacaoRepository;
@@ -39,14 +38,12 @@ public class AutorizacaoServiceImpl implements AutorizacaoService {
     @Autowired
     public AutorizacaoServiceImpl(AutorizacaoRepository autorizacaoRepository,
                                   JwtUtils jwtUtils,
-                                  DocenteRepository docenteRepository,
                                   JavaMailSender javaMailSender,
                                   EmailService emailService,
                                   AtividadeRepository<Atividade> atividadeRepository,
                                   AlocacaoRepository alocacaoRepository) {
         this.autorizacaoRepository = autorizacaoRepository;
         this.jwtUtils = jwtUtils;
-        this.docenteRepository = docenteRepository;
         this.emailService = emailService;
         this.atividadeRepository = atividadeRepository;
         this.alocacaoRepository = alocacaoRepository;
@@ -59,18 +56,21 @@ public class AutorizacaoServiceImpl implements AutorizacaoService {
 
         autorizacao.ifPresentOrElse(autorizacaoEntity -> {
                     var atividade = autorizacaoEntity.getAtividade();
+                    var alocacoes = alocacaoRepository.findByAtividade_id(atividade.getId());
 
                     if (!request.isAutorizado()) {
+                        if (alocacoes != null) {
+                            alocacaoRepository.deleteInBatch(alocacoes);
+                        }
                         autorizacaoEntity.setStatus(StatusAutorizacao.REVISAO);
                         autorizacaoRepository.save(autorizacaoEntity);
                         atividade.setStatus(StatusAtividade.EM_REVISAO);
                         atividade.setRevisao(request.getObservacao());
                         atividadeRepository.save(atividade);
-                        enviarEmail(idAtividade, autorizacaoEntity, request.getObservacao());
+                        enviarEmail(atividade, request.getObservacao());
                     } else {
                         autorizacaoEntity.setStatus(StatusAutorizacao.APROVADO);
                         if (atividade.getStatus().equals(StatusAtividade.PENDENTE)) {
-                            var alocacoes = alocacaoRepository.findByAtividade_id(atividade.getId());
                             alocacoes.forEach(alocacao -> {
                                 alocacao.setTotalHorasAprovadas(alocacao.getTotalHorasSolicitadas());
                                 alocacaoRepository.save(alocacao);
@@ -80,7 +80,7 @@ public class AutorizacaoServiceImpl implements AutorizacaoService {
                         }
 
                         autorizacaoRepository.save(autorizacaoEntity);
-                        enviarEmail(idAtividade, autorizacaoEntity, request.getObservacao());
+                        enviarEmail(atividade, request.getObservacao());
                     }
                 },
                 () -> {
@@ -88,10 +88,10 @@ public class AutorizacaoServiceImpl implements AutorizacaoService {
                 });
     }
 
-    private void enviarEmail(Long idAtividade, com.ftunicamp.tcc.model.AutorizacaoEntity autorizacaoEntity, String observacao) {
+    private void enviarEmail(Atividade atividade, String observacao) {
         CompletableFuture.runAsync(() -> {
             try {
-                emailService.enviarEmailAtividade(autorizacaoEntity.getAtividade().getDocente(), TipoEmail.STATUS_ATIVIDADE, idAtividade, observacao);
+                emailService.enviarEmailAtividade(atividade, TipoEmail.STATUS_ATIVIDADE, observacao);
             } catch (MessagingException | UnsupportedEncodingException e) {
                 Logger.getAnonymousLogger().warning(e.getMessage());
                 e.printStackTrace();
@@ -151,6 +151,7 @@ public class AutorizacaoServiceImpl implements AutorizacaoService {
                 .status(autorizacao.getStatus().getStatus())
                 .id(autorizacao.getId())
                 .urgente(autorizacao.getAtividade().isUrgente())
+                .tipoAtividade(autorizacao.getAtividade().getTipoAtividade())
                 .build();
         autorizacaoResponse.add(response);
     }

@@ -7,8 +7,6 @@ import com.ftunicamp.tcc.model.TipoAtividade;
 import com.ftunicamp.tcc.repositories.ConvenioRepository;
 import com.ftunicamp.tcc.repositories.CursoRepository;
 import com.ftunicamp.tcc.repositories.RegenciaRepository;
-import com.ftunicamp.tcc.utils.ContextPdf;
-import com.ftunicamp.tcc.utils.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ClassPathResource;
@@ -21,10 +19,6 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.time.LocalDate;
-import java.time.format.TextStyle;
-import java.util.Calendar;
-import java.util.Locale;
 import java.util.Optional;
 
 import static com.ftunicamp.tcc.utils.DateUtils.nomeDoMes;
@@ -82,7 +76,7 @@ public class PdfServiceImpl implements PdfService {
                     context.setVariable("dia", cursoExtensaoEntity.getDataModificacao().getDayOfMonth());
                     context.setVariable("mes", nomeDoMes(cursoExtensaoEntity.getDataModificacao().getMonthValue()));
                     context.setVariable("ano", cursoExtensaoEntity.getDataModificacao().getYear());
-                } );
+                });
                 break;
             case CONVENIO:
                 Optional<ConvenioEntity> convenio = convenioRepository.findById(id);
@@ -92,11 +86,16 @@ public class PdfServiceImpl implements PdfService {
                     context.setVariable("dia", convenioEntity.getDataModificacao().getDayOfMonth());
                     context.setVariable("mes", nomeDoMes(convenioEntity.getDataModificacao().getMonthValue()));
                     context.setVariable("ano", convenioEntity.getDataModificacao().getYear());
-                } );
+                });
                 break;
             case REGENCIA:
                 Optional<RegenciaEntity> regencia = regenciaRepository.findById(id);
-                regencia.ifPresent(regenciaEntity -> context.setVariable("regencia", regenciaEntity));
+                regencia.ifPresent(regenciaEntity -> {
+                    context.setVariable("regencia", regenciaEntity);
+                    context.setVariable("dia", regenciaEntity.getDataModificacao().getDayOfMonth());
+                    context.setVariable("mes", nomeDoMes(regenciaEntity.getDataModificacao().getMonthValue()));
+                    context.setVariable("ano", regenciaEntity.getDataModificacao().getYear());
+                });
         }
         return context;
     }

@@ -30,7 +30,7 @@ public class Alocacao {
     @JoinColumn(name="docente_id")
     private DocenteEntity docente;
 
-    @ManyToOne
+    @ManyToOne(cascade = {CascadeType.MERGE, CascadeType.PERSIST})
     @JoinColumn(name = "atividade_id", referencedColumnName = "id")
     private Atividade atividade;
 

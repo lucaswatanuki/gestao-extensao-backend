@@ -36,7 +36,7 @@ public class AtividadeFactory {
         convenio.setDataCriacao(LocalDate.now());
         convenio.setDataModificacao(LocalDate.now());
         convenio.setStatus(verificaStatusAtividade(convenio));
-        convenio.setObservacao(request.getObservacao());
+        convenio.setObservacao(request.getObservacao() == null ? "" : request.getObservacao());
         convenio.setTipoAtividadeSimultanea(request.getTipoAtividadeSimultanea());
         //Mapear request para entidade - mapper struct
         return convenio;
@@ -59,7 +59,7 @@ public class AtividadeFactory {
         curso.setHoraSemanal(request.getHoraSemanal());
         curso.setParticipacao(Participacao.valueOf(request.getParticipacao()));
         curso.setStatus(verificaStatusAtividade(curso));
-        curso.setObservacao(request.getObservacao());
+        curso.setObservacao(request.getObservacao() == null ? "" : request.getObservacao());
         curso.setPrazo(ChronoUnit.MONTHS.between(YearMonth.from(request.getDataInicio()), YearMonth.from(request.getDataFim())));
         curso.setDataCriacao(LocalDate.now());
         curso.setDataModificacao(LocalDate.now());
@@ -71,7 +71,7 @@ public class AtividadeFactory {
     public static RegenciaEntity criarRegencia(RegenciaRequest request, DocenteEntity docente) {
         var regencia = new RegenciaEntity();
         regencia.setDocente(docente);
-        regencia.setCurso(request.getCurso());
+        regencia.setProjeto(request.getCurso());
         regencia.setInstituicao(request.getInstituicao());
         regencia.setNivel(request.getNivel());
         regencia.setDisciplinaParticipacao(regencia.getDisciplinaParticipacao());
@@ -84,11 +84,18 @@ public class AtividadeFactory {
         regencia.setValorBrutoTotalAulas(request.getValorBrutoTotalAula());
         regencia.setDiasTrabalhadosUnicamp(request.getDiasTrabalhadosUnicamp());
         regencia.setDiasTrabalhadosOutraInstituicao(request.getDiasTrabalhadosOutraInstituicao());
+        regencia.setDataFim(request.getDataFim());
+        regencia.setDataInicio(request.getDataInicio());
         regencia.setStatus(verificaStatusAtividade(regencia));
-        regencia.setObservacao(request.getObservacao());
+        regencia.setObservacao(request.getObservacao() == null ? "" : request.getObservacao());
         regencia.setPrazo(ChronoUnit.MONTHS.between(YearMonth.from(request.getDataInicio()), YearMonth.from(request.getDataFim())));
         regencia.setDataCriacao(LocalDate.now());
         regencia.setDataModificacao(LocalDate.now());
+        regencia.setCoordenador(request.getCoordenador());
+        regencia.setHoraMensal(request.getHoraMensal());
+        regencia.setHoraSemanal(request.getHoraSemanal());
+        regencia.setValorBruto(request.getValorBrutoTotalAula() + request.getValorBrutoOutraAtividade());
+        regencia.setCurso(request.getCurso());
         //Mapear request para entidade - mapper struct
         return regencia;
     }

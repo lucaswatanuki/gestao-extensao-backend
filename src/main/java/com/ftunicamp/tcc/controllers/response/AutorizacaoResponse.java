@@ -23,4 +23,6 @@ public class AutorizacaoResponse implements Serializable {
 
     private boolean urgente;
 
+    private String tipoAtividade;
+
 }

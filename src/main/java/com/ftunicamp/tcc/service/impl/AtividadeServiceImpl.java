@@ -4,9 +4,7 @@ import com.ftunicamp.tcc.controllers.request.ConvenioRequest;
 import com.ftunicamp.tcc.controllers.request.CursoExtensaoRequest;
 import com.ftunicamp.tcc.controllers.request.RegenciaRequest;
 import com.ftunicamp.tcc.controllers.request.UnivespRequest;
-import com.ftunicamp.tcc.controllers.response.AtividadeDetalheResponse;
-import com.ftunicamp.tcc.controllers.response.AtividadeResponse;
-import com.ftunicamp.tcc.controllers.response.Response;
+import com.ftunicamp.tcc.controllers.response.*;
 import com.ftunicamp.tcc.dto.AlocacaoDto;
 import com.ftunicamp.tcc.exceptions.NegocioException;
 import com.ftunicamp.tcc.model.*;
@@ -27,10 +25,9 @@ import java.io.UnsupportedEncodingException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
-
-import static com.ftunicamp.tcc.utils.DateUtils.*;
 
 @Service
 public class AtividadeServiceImpl implements AtividadeService {
@@ -39,6 +36,9 @@ public class AtividadeServiceImpl implements AtividadeService {
     private static final String MENSAGEM_ERRO = "Erro ao criar atividade";
 
     private final AtividadeRepository<Atividade> atividadeRepository;
+    private final AtividadeRepository<ConvenioEntity> convenioRepository;
+    private final AtividadeRepository<RegenciaEntity> regenciaRepository;
+    private final AtividadeRepository<CursoExtensaoEntity> cursoRepository;
     private final DocenteRepository docenteRepository;
     private final AutorizacaoRepository autorizacaoRepository;
     private final EmailService emailService;
@@ -48,11 +48,17 @@ public class AtividadeServiceImpl implements AtividadeService {
 
 
     @Autowired
-    public AtividadeServiceImpl(AtividadeRepository atividadeRepository,
+    public AtividadeServiceImpl(AtividadeRepository<Atividade> atividadeRepository,
+                                AtividadeRepository<ConvenioEntity> convenioRepository,
+                                AtividadeRepository<RegenciaEntity> regenciaRepository,
+                                AtividadeRepository<CursoExtensaoEntity> cursoRepository,
                                 DocenteRepository docenteRepository,
                                 AutorizacaoRepository autorizacaoRepository,
                                 EmailService emailService) {
         this.atividadeRepository = atividadeRepository;
+        this.convenioRepository = convenioRepository;
+        this.regenciaRepository = regenciaRepository;
+        this.cursoRepository = cursoRepository;
         this.docenteRepository = docenteRepository;
         this.autorizacaoRepository = autorizacaoRepository;
         this.emailService = emailService;
@@ -66,7 +72,7 @@ public class AtividadeServiceImpl implements AtividadeService {
         setAlocacao(docente, atividade, request.getAlocacoes());
         var atividadeId = atividadeRepository.save(atividade).getId();
         salvarAutorizacao(atividade);
-        enviarEmailConfirmacao(atividade, docente);
+        enviarEmailConfirmacao(atividade);
         return AtividadeResponse.builder()
                 .id(atividadeId)
                 .build();
@@ -79,7 +85,7 @@ public class AtividadeServiceImpl implements AtividadeService {
         setAlocacao(docente, atividade, request.getAlocacoes());
         var atividadeId = atividadeRepository.save(atividade).getId();
         salvarAutorizacao(atividade);
-        enviarEmailConfirmacao(atividade, docente);
+        enviarEmailConfirmacao(atividade);
         var response = new Response<String>();
         response.setMensagem(MENSAGEM_SUCESSO);
         return AtividadeResponse.builder()
@@ -94,7 +100,7 @@ public class AtividadeServiceImpl implements AtividadeService {
         setAlocacao(docente, atividade, request.getAlocacoes());
         var atividadeId = atividadeRepository.save(atividade).getId();
         salvarAutorizacao(atividade);
-        enviarEmailConfirmacao(atividade, docente);
+        enviarEmailConfirmacao(atividade);
         var response = new Response<String>();
         response.setMensagem(MENSAGEM_SUCESSO);
         return AtividadeResponse.builder()
@@ -118,47 +124,37 @@ public class AtividadeServiceImpl implements AtividadeService {
 
     @Override
     public AtividadeDetalheResponse buscarAtividade(Long id) {
-        var response = AtividadeDetalheResponse.builder();
+//        var response = AtividadeDetalheResponse.builder();
+//
+//        var atividadeEntity = atividadeRepository.findById(id);
+//
+//        atividadeEntity.ifPresentOrElse(atividade -> {
+//            var docente = atividade.getDocente();
+//            mapToAtividadeDetalheResponse(response, atividade, docente);
+//        }, () -> {
+//            throw new NegocioException("Não foi encontrada nenhuma atividade");
+//        });
+//
+//        return response.build();
 
-        var atividadeEntity = atividadeRepository.findById(id);
-
-        atividadeEntity.ifPresentOrElse(atividade -> {
-            var docente = atividade.getDocente();
-            mapToAtividadeDetalheResponse(response, atividade, docente);
-        }, () -> {
-            throw new NegocioException("Não foi encontrada nenhuma atividade");
-        });
-
-        return response.build();
+        return null;
     }
 
-    private void mapToAtividadeDetalheResponse(AtividadeDetalheResponse.AtividadeDetalheResponseBuilder response, Atividade atividade, DocenteEntity docente) {
-        response.id(atividade.getId())
-                .docente(docente.getNome())
-                .projeto(atividade.getProjeto())
-                .valorBruto(atividade.getValorBruto())
-                .prazo(atividade.getPrazo())
-                .horaMensal(atividade.getHoraMensal())
-                .horaSemanal(atividade.getHoraSemanal())
-                .dataInicio(LocalDate.from(atividade.getDataInicio()).format(Utilities.formatarData()))
-                .dataFim(LocalDate.from(atividade.getDataFim()).format(Utilities.formatarData()))
-//                .horasAprovadas(docente.getAlocacao()
-//                        .stream()
-//                        .filter(alocacao -> alocacao.getAno() == getAnoAtual())
-//                        .map(Alocacao::getTotalHorasAprovadas)
-//                        .reduce(Long::sum)
-//                        .orElse(0L))
-//                .horasSolicitadas(docente.getAlocacao()
-//                        .stream()
-//                        .filter(alocacao -> alocacao.getAtividade().getId().equals(atividade.getId()))
-//                        .map(Alocacao::getTotalHorasSolicitadas)
-//                        .reduce(Long::sum)
-//                        .orElse(0L))
-                .autorizado(atividade.getStatus().equals(StatusAtividade.EM_ANDAMENTO))
-                .tipoAtividade(atividade.getTipoAtividade())
-                .revisao(atividade.getRevisao() == null ? "Não há itens a revisar" : atividade.getRevisao())
-                .observacao(atividade.getObservacao());
-    }
+//    private void mapToAtividadeDetalheResponse(AtividadeDetalheResponse.AtividadeDetalheResponseBuilder response, Atividade atividade, DocenteEntity docente) {
+//        response.id(atividade.getId())
+//                .docente(docente.getNome())
+//                .projeto(atividade.getProjeto())
+//                .valorBruto(atividade.getValorBruto())
+//                .prazo(atividade.getPrazo())
+//                .horaMensal(atividade.getHoraMensal())
+//                .horaSemanal(atividade.getHoraSemanal())
+//                .dataInicio(LocalDate.from(atividade.getDataInicio()).format(Utilities.formatarData()))
+//                .dataFim(LocalDate.from(atividade.getDataFim()).format(Utilities.formatarData()))
+//                .autorizado(atividade.getStatus().equals(StatusAtividade.EM_ANDAMENTO))
+//                .tipoAtividade(atividade.getTipoAtividade())
+//                .revisao(atividade.getRevisao() == null ? "Não há itens a revisar" : atividade.getRevisao())
+//                .observacao(atividade.getObservacao());
+//    }
 
     @Override
     public void excluirAtividade(Long id) {
@@ -194,6 +190,127 @@ public class AtividadeServiceImpl implements AtividadeService {
         return atividadesResponse;
     }
 
+    @Override
+    public ConvenioDto consultarConvenio(long id) {
+        var convenio = convenioRepository.findById(id).orElse(null);
+
+        if (convenio == null) {
+            throw new NoSuchElementException("Atividade não encontrada.");
+        }
+
+        return ConvenioDto.builder()
+                .id(convenio.getId())
+                .docente(convenio.getDocente().getNome())
+                .projeto(convenio.getProjeto())
+                .valorBruto(convenio.getValorBruto())
+                .prazo(convenio.getPrazo())
+                .horaMensal(convenio.getHoraMensal())
+                .horaSemanal(convenio.getHoraSemanal())
+                .dataInicio(LocalDate.from(convenio.getDataInicio()).format(Utilities.formatarData()))
+                .dataFim(LocalDate.from(convenio.getDataFim()).format(Utilities.formatarData()))
+                .autorizado(convenio.getStatus().equals(StatusAtividade.EM_ANDAMENTO))
+                .tipoAtividade(convenio.getTipoAtividade())
+                .revisao(convenio.getRevisao() == null ? "Não há itens a revisar" : convenio.getRevisao())
+                .observacao(convenio.getObservacao())
+                .alocacoes(convenio.getAlocacao().stream().map(alocacao -> AlocacaoDto.builder()
+                        .id(alocacao.getId())
+                        .ano(alocacao.getAno())
+                        .semestre(alocacao.getSemestre())
+                        .horasAprovadas(alocacao.getTotalHorasAprovadas())
+                        .horasSolicitadas(alocacao.getTotalHorasSolicitadas())
+                        .build()).collect(Collectors.toList()))
+                .descricao(convenio.getDescricao())
+                .tipoAtividadeSimultanea(convenio.getTipoAtividadeSimultanea())
+                .instituicao(convenio.getInstituicao())
+                .build();
+    }
+
+    @Override
+    public CursoExtensaoDto consultarCursoExtensao(long id) {
+        var curso = cursoRepository.findById(id).orElse(null);
+
+        if (curso == null) {
+            throw new NoSuchElementException("Atividade não encontrada.");
+        }
+
+        return CursoExtensaoDto.builder()
+                .id(curso.getId())
+                .docente(curso.getDocente().getNome())
+                .projeto(curso.getProjeto())
+                .valorBruto(curso.getValorBruto())
+                .prazo(curso.getPrazo())
+                .horaMensal(curso.getHoraMensal())
+                .horaSemanal(curso.getHoraSemanal())
+                .dataInicio(LocalDate.from(curso.getDataInicio()).format(Utilities.formatarData()))
+                .dataFim(LocalDate.from(curso.getDataFim()).format(Utilities.formatarData()))
+                .autorizado(curso.getStatus().equals(StatusAtividade.EM_ANDAMENTO))
+                .tipoAtividade(curso.getTipoAtividade())
+                .revisao(curso.getRevisao() == null ? "Não há itens a revisar" : curso.getRevisao())
+                .observacao(curso.getObservacao())
+                .alocacoes(curso.getAlocacao().stream().map(alocacao -> AlocacaoDto.builder()
+                        .id(alocacao.getId())
+                        .ano(alocacao.getAno())
+                        .semestre(alocacao.getSemestre())
+                        .horasAprovadas(alocacao.getTotalHorasAprovadas())
+                        .horasSolicitadas(alocacao.getTotalHorasSolicitadas())
+                        .build()).collect(Collectors.toList()))
+                .valorBrutoHoraAula(curso.getValorBrutoHoraAula())
+                .cargaHorariaTotal(curso.getCargaHorariaTotalDedicada() + curso.getCargaHorariaTotalMinistrada())
+                .disciplinas(curso.getDisciplinaParticipacao())
+                .valorBrutoTotalAula(curso.getValorBrutoHoraAula())
+                .nomeCurso(curso.getProjeto())
+                .instituicaoVinculada(curso.getInstituicaoVinculada())
+                .participacao(curso.getParticipacao().toString())
+                .build();
+    }
+
+    @Override
+    public RegenciaDto consultarRegencia(long id) {
+        var regencia = regenciaRepository.findById(id).orElse(null);
+
+        if (regencia == null) {
+            throw new NoSuchElementException("Atividade não encontrada.");
+        }
+
+        return RegenciaDto.builder()
+                .id(regencia.getId())
+                .docente(regencia.getDocente().getNome())
+                .projeto(regencia.getProjeto())
+                .valorBruto(regencia.getValorBruto())
+                .prazo(regencia.getPrazo())
+                .horaMensal(regencia.getHoraMensal())
+                .horaSemanal(regencia.getHoraSemanal())
+                .dataInicio(LocalDate.from(regencia.getDataInicio()).format(Utilities.formatarData()))
+                .dataFim(LocalDate.from(regencia.getDataFim()).format(Utilities.formatarData()))
+                .autorizado(regencia.getStatus().equals(StatusAtividade.EM_ANDAMENTO))
+                .tipoAtividade(regencia.getTipoAtividade())
+                .revisao(regencia.getRevisao() == null ? "Não há itens a revisar" : regencia.getRevisao())
+                .observacao(regencia.getObservacao())
+                .alocacoes(regencia.getAlocacao().stream().map(alocacao -> AlocacaoDto.builder()
+                        .id(alocacao.getId())
+                        .ano(alocacao.getAno())
+                        .semestre(alocacao.getSemestre())
+                        .horasAprovadas(alocacao.getTotalHorasAprovadas())
+                        .horasSolicitadas(alocacao.getTotalHorasSolicitadas())
+                        .build()).collect(Collectors.toList()))
+                .valorBrutoHoraAula(regencia.getValorBrutoHoraAula())
+                .cargaHorariaTotalDedicada(regencia.getCargaHorariaTotalDedicada())
+                .cargaHoraTotalMinistrada(regencia.getCargaHorariaTotalMinistrada())
+                .coordenador(regencia.getCoordenador())
+                .diasTrabalhadosOutraInstituicao(regencia.getDiasTrabalhadosOutraInstituicao())
+                .diasTrabalhadosUnicamp(regencia.getDiasTrabalhadosUnicamp())
+                .disciplinaParticipacao(regencia.getDisciplinaParticipacao())
+                .curso(regencia.getCurso())
+                .nivel(regencia.getNivel())
+                .unicoDocente(regencia.isUnicoDocente())
+                .responsavel(regencia.isResponsavel())
+                .valorBrutoOutraAtividade(regencia.getValorBrutoOutraAtividade())
+                .instituicao(regencia.getInstituicao())
+                .valorBruto(regencia.getValorBruto())
+                .valorBrutoTotalAula(regencia.getValorBrutoHoraAula())
+                .build();
+    }
+
     private void salvarAutorizacao(Atividade atividadeEntity) {
         var autorizacao = new AutorizacaoEntity();
         autorizacao.setStatus(StatusAutorizacao.PENDENTE);
@@ -205,7 +322,6 @@ public class AtividadeServiceImpl implements AtividadeService {
 
     private void setAlocacao(DocenteEntity docente, Atividade atividade, List<AlocacaoDto> alocacoesDto) {
         if (!atividade.getStatus().equals(StatusAtividade.CONCLUIDA)) {
-            final var horasSolicitadas = atividade.getPrazo() * atividade.getHoraMensal();
             var alocacoes = alocacoesDto.stream()
                     .map(dto -> {
                         return Alocacao.builder()
@@ -220,10 +336,10 @@ public class AtividadeServiceImpl implements AtividadeService {
         }
     }
 
-    private void enviarEmailConfirmacao(Atividade atividade, DocenteEntity docente) {
+    private void enviarEmailConfirmacao(Atividade atividade) {
         CompletableFuture.runAsync(() -> {
             try {
-                emailService.enviarEmailAtividade(docente, TipoEmail.NOVA_ATIVIDADE, atividade.getId(), atividade.getObservacao());
+                emailService.enviarEmailAtividade(atividade, TipoEmail.NOVA_ATIVIDADE, atividade.getObservacao());
             } catch (MessagingException | UnsupportedEncodingException e) {
                 e.printStackTrace();
             }

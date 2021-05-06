@@ -1,5 +1,7 @@
 package com.ftunicamp.tcc.service;
 
+import com.ftunicamp.tcc.model.Atividade;
+import com.ftunicamp.tcc.model.AutorizacaoEntity;
 import com.ftunicamp.tcc.model.DocenteEntity;
 import com.ftunicamp.tcc.model.UsuarioEntity;
 import com.ftunicamp.tcc.utils.TipoEmail;
@@ -11,7 +13,7 @@ public interface EmailService {
 
     void enviarEmailVerificacao(DocenteEntity docente, String baseUrl) throws UnsupportedEncodingException, MessagingException;
 
-    void enviarEmailAtividade(DocenteEntity docente, TipoEmail tipoEmail, long atividadeId, String observacao) throws MessagingException, UnsupportedEncodingException;
+    void enviarEmailAtividade(Atividade atividade, TipoEmail tipoEmail, String observacao) throws MessagingException, UnsupportedEncodingException;
 
     void enviarEmailResetSenha(UsuarioEntity user, String token, String baseUrl) throws MessagingException, UnsupportedEncodingException;
 }

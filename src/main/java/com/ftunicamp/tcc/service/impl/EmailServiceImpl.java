@@ -1,6 +1,7 @@
 package com.ftunicamp.tcc.service.impl;
 
 import com.ftunicamp.tcc.config.EmailConfiguration;
+import com.ftunicamp.tcc.model.Atividade;
 import com.ftunicamp.tcc.model.DocenteEntity;
 import com.ftunicamp.tcc.model.UsuarioEntity;
 import com.ftunicamp.tcc.service.EmailService;
@@ -63,18 +64,19 @@ public class EmailServiceImpl implements EmailService {
 
     @Override
     @Async
-    public void enviarEmailAtividade(DocenteEntity docente, TipoEmail tipoEmail, long atividadeId, String observacao) throws MessagingException, UnsupportedEncodingException {
+    public void enviarEmailAtividade(Atividade atividade, TipoEmail tipoEmail, String observacao) throws MessagingException, UnsupportedEncodingException {
         String remetente = "Coordenadoria de Extensão FT ";
         String body = "";
         String assunto = "";
+        var docente = atividade.getDocente();
 
         if (tipoEmail.equals(TipoEmail.NOVA_ATIVIDADE)) {
             assunto = "Atividade submetida";
-            body += "Sua solicitação de atividade #" + atividadeId + " foi submetida com sucesso e encaminhada para a Coordenadoria de Extensão.";
+            body += "Sua solicitação de atividade #" + atividade.getId() + " foi submetida com sucesso e encaminhada para a Coordenadoria de Extensão.";
         } else if (tipoEmail.equals(TipoEmail.STATUS_ATIVIDADE)) {
             assunto = "Atualização de status da atividade";
-            body += "O status da sua atividade foi alterado.";
-            if (!observacao.isEmpty()) {
+            body += "O status da sua atividade foi alterado para: " + atividade.getStatus().getStatus();
+            if (observacao != null && !observacao.isEmpty()) {
                 body += "<p>Observações: </p>";
                 body += observacao;
             }

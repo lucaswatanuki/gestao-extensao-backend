@@ -2,10 +2,7 @@ package com.ftunicamp.tcc.controllers;
 
 
 import com.ftunicamp.tcc.controllers.request.*;
-import com.ftunicamp.tcc.controllers.response.AtividadeDetalheResponse;
-import com.ftunicamp.tcc.controllers.response.AtividadeResponse;
-import com.ftunicamp.tcc.controllers.response.AutorizacaoResponse;
-import com.ftunicamp.tcc.controllers.response.Response;
+import com.ftunicamp.tcc.controllers.response.*;
 import com.ftunicamp.tcc.model.TipoAtividade;
 import com.ftunicamp.tcc.service.AtividadeService;
 import com.ftunicamp.tcc.service.AutorizacaoService;
@@ -73,6 +70,11 @@ public class AtividadeController {
         return ResponseEntity.ok(atividadeService.listarAtividades());
     }
 
+//    @PutMapping("/{id}")
+//    public ResponseEntity<Void> atualizarDadosAtividade(@PathVariable("id") long id, @RequestBody ) {
+//        return ResponseEntity.ok(atividadeService.editarAtividade())
+//    }
+
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @DeleteMapping("/{id}")
     public void excluirAtividade(@PathVariable("id") Long id) {
@@ -112,5 +114,21 @@ public class AtividadeController {
         } catch (DocumentException | IOException ex) {
             ex.printStackTrace();
         }
+    }
+
+    @GetMapping("/curso-extensao/{id}")
+    public ResponseEntity<CursoExtensaoDto> getCursoExtensao(@PathVariable("id") long id) {
+        return ResponseEntity.ok(atividadeService.consultarCursoExtensao(id));
+    }
+
+    @GetMapping("/convenio/{id}")
+    public ResponseEntity<ConvenioDto> getConvenio(@PathVariable("id") long id) {
+        var response = atividadeService.consultarConvenio(id);
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/regencia/{id}")
+    public ResponseEntity<RegenciaDto> getRegencia(@PathVariable("id") long id) {
+        return ResponseEntity.ok(atividadeService.consultarRegencia(id));
     }
 }

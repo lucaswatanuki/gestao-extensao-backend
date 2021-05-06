@@ -4,9 +4,7 @@ import com.ftunicamp.tcc.controllers.request.ConvenioRequest;
 import com.ftunicamp.tcc.controllers.request.CursoExtensaoRequest;
 import com.ftunicamp.tcc.controllers.request.RegenciaRequest;
 import com.ftunicamp.tcc.controllers.request.UnivespRequest;
-import com.ftunicamp.tcc.controllers.response.AtividadeDetalheResponse;
-import com.ftunicamp.tcc.controllers.response.AtividadeResponse;
-import com.ftunicamp.tcc.controllers.response.Response;
+import com.ftunicamp.tcc.controllers.response.*;
 
 import javax.mail.MessagingException;
 import java.io.UnsupportedEncodingException;
@@ -29,4 +27,10 @@ public interface AtividadeService {
     AtividadeResponse editarAtividade(Long id);
 
     List<AtividadeResponse> listarAtividades();
+
+    ConvenioDto consultarConvenio(long id);
+
+    CursoExtensaoDto consultarCursoExtensao(long id);
+
+    RegenciaDto consultarRegencia(long id);
 }

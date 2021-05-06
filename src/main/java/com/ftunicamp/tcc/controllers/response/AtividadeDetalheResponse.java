@@ -1,28 +1,31 @@
 package com.ftunicamp.tcc.controllers.response;
 
+import com.ftunicamp.tcc.dto.AlocacaoDto;
+import com.ftunicamp.tcc.model.Alocacao;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.List;
+
 @Getter
-@Setter
-@Builder
+@AllArgsConstructor
 public class AtividadeDetalheResponse {
 
-    private long id;
-    private String projeto;
-    private Double valorBruto;
-    private String docente;
-    private int horaMensal;
-    private int horaSemanal;
-    private long prazo;
-    private String dataInicio;
-    private String dataFim;
-    private long horasAprovadas;
-    private long horasSolicitadas;
-    private String observacao;
-    private boolean autorizado;
-    private String tipoAtividade;
-    private String revisao;
+    private final long id;
+    private final String projeto;
+    private final Double valorBruto;
+    private final String docente;
+    private final int horaMensal;
+    private final int horaSemanal;
+    private final long prazo;
+    private final String dataInicio;
+    private final String dataFim;
+    private final String observacao;
+    private final boolean autorizado;
+    private final String tipoAtividade;
+    private final String revisao;
+    private final List<AlocacaoDto> alocacoes;
 
 }

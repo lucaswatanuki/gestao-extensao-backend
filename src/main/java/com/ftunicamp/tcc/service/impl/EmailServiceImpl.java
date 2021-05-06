@@ -88,10 +88,11 @@ public class EmailServiceImpl implements EmailService {
                     .field("from", remetente + email)
                     .field("to", docente.getEmail())
                     .field("subject", assunto)
-                    .field("template", "template_atividade")
+                    .field("template", tipoEmail.equals(TipoEmail.NOVA_ATIVIDADE) ? "template_atividade": "atividade_update")
                     .field("o:tracking", "False")
                     .field("v:docente", docente.getNome())
                     .field("v:body", body)
+                    .field("v:observacao", tipoEmail.equals(TipoEmail.NOVA_ATIVIDADE) ? null: observacao == null ? "Nenhuma." : observacao)
                     .asJson();
             Logger.getAnonymousLogger().log(Level.INFO, request.getBody().toPrettyString());
         } catch (UnirestException e) {

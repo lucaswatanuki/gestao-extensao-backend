@@ -6,6 +6,7 @@ import com.ftunicamp.tcc.model.Nivel;
 import lombok.Builder;
 import lombok.Getter;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Getter
@@ -27,7 +28,7 @@ public class RegenciaDto extends AtividadeDetalheResponse {
     private final boolean unicoDocente;
 
     @Builder
-    public RegenciaDto(long id, String projeto, Double valorBruto, String docente, int horaMensal, int horaSemanal, long prazo, String dataInicio, String dataFim, String observacao, boolean autorizado, String tipoAtividade, String revisao, List<AlocacaoDto> alocacoes, Nivel nivel, String curso, String coordenador, String disciplinaParticipacao, int cargaHoraTotalMinistrada, int cargaHorariaTotalDedicada, Double valorBrutoHoraAula, Double valorBrutoTotalAula, Double valorBrutoOutraAtividade, String instituicao, String diasTrabalhadosUnicamp, String diasTrabalhadosOutraInstituicao, boolean responsavel, boolean unicoDocente) {
+    public RegenciaDto(long id, String projeto, Double valorBruto, String docente, int horaMensal, int horaSemanal, long prazo, LocalDateTime dataInicio, LocalDateTime dataFim, String observacao, boolean autorizado, String tipoAtividade, String revisao, List<AlocacaoDto> alocacoes, Nivel nivel, String curso, String coordenador, String disciplinaParticipacao, int cargaHoraTotalMinistrada, int cargaHorariaTotalDedicada, Double valorBrutoHoraAula, Double valorBrutoTotalAula, Double valorBrutoOutraAtividade, String instituicao, String diasTrabalhadosUnicamp, String diasTrabalhadosOutraInstituicao, boolean responsavel, boolean unicoDocente) {
         super(id, projeto, valorBruto, docente, horaMensal, horaSemanal, prazo, dataInicio, dataFim, observacao, autorizado, tipoAtividade, revisao, alocacoes);
         this.nivel = nivel;
         this.curso = curso;

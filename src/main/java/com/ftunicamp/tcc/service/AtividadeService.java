@@ -20,8 +20,6 @@ public interface AtividadeService {
 
     Response<String> cadastrarAtividadeUnivesp(UnivespRequest request);
 
-    AtividadeDetalheResponse buscarAtividade(Long id);
-
     void excluirAtividade(Long id);
 
     AtividadeResponse editarAtividade(Long id);
@@ -33,4 +31,10 @@ public interface AtividadeService {
     CursoExtensaoDto consultarCursoExtensao(long id);
 
     RegenciaDto consultarRegencia(long id);
+
+    void updateConvenio(ConvenioDto convenioDto);
+
+    void updateCursoExtensao(CursoExtensaoDto cursoExtensaoDto);
+
+    void updateRegencia(RegenciaDto regenciaDto);
 }

@@ -7,6 +7,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Getter
@@ -20,8 +21,8 @@ public class AtividadeDetalheResponse {
     private final int horaMensal;
     private final int horaSemanal;
     private final long prazo;
-    private final String dataInicio;
-    private final String dataFim;
+    private final LocalDateTime dataInicio;
+    private final LocalDateTime dataFim;
     private final String observacao;
     private final boolean autorizado;
     private final String tipoAtividade;

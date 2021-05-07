@@ -10,6 +10,7 @@ import com.ftunicamp.tcc.model.StatusAtividade;
 import com.ftunicamp.tcc.repositories.AlocacaoRepository;
 import com.ftunicamp.tcc.repositories.DocenteRepository;
 import com.ftunicamp.tcc.repositories.UserRepository;
+import com.ftunicamp.tcc.security.jwt.JwtUtils;
 import com.ftunicamp.tcc.service.DocenteService;
 import com.ftunicamp.tcc.service.UsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,13 +28,15 @@ public class DocenteServiceImpl implements DocenteService, UsuarioService {
     private final DocenteRepository docenteRepository;
     private final UserRepository userRepository;
     private final AlocacaoRepository alocacaoRepository;
+    private final JwtUtils jwtUtils;
 
     @Autowired
     public DocenteServiceImpl(DocenteRepository docenteRepository, UserRepository userRepository,
-                              AlocacaoRepository alocacaoRepository) {
+                              AlocacaoRepository alocacaoRepository, JwtUtils jwtUtils) {
         this.docenteRepository = docenteRepository;
         this.userRepository = userRepository;
         this.alocacaoRepository = alocacaoRepository;
+        this.jwtUtils = jwtUtils;
     }
 
     @Override
@@ -113,7 +116,7 @@ public class DocenteServiceImpl implements DocenteService, UsuarioService {
     }
 
     @Override
-    public List<AlocacaoDto> consultarAlocacoes(long docenteId) {
+    public List<AlocacaoDto> consultarAlocacoesDocente(long docenteId) {
         var alocacoes = alocacaoRepository.findByDocente_id(docenteId);
 
         return alocacoes.stream()
@@ -127,6 +130,36 @@ public class DocenteServiceImpl implements DocenteService, UsuarioService {
                         .tipoAtividade(alocacao.getAtividade().getTipoAtividade())
                         .build())
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<AlocacaoDto> getAlocacoes() {
+        final var sessao = jwtUtils.getSessao();
+        final var profiles = sessao.getProfiles();
+
+        if (profiles.stream().noneMatch(profile -> profile.equalsIgnoreCase("ROLE_ADMIN"))) {
+            var docente = docenteRepository.findByUser_Username(jwtUtils.getSessao().getUsername());
+            return alocacaoRepository.findByDocente_id(docente.getId())
+                    .stream()
+                    .map(this::mapToAlocacaoDto)
+                    .collect(Collectors.toList());
+        }
+
+        return alocacaoRepository.findAll()
+                .stream()
+                .map(this::mapToAlocacaoDto)
+                .collect(Collectors.toList());
+    }
+
+    private AlocacaoDto mapToAlocacaoDto(Alocacao alocacao) {
+        return AlocacaoDto.builder()
+                .id(alocacao.getId())
+                .ano(alocacao.getAno())
+                .semestre(alocacao.getSemestre())
+                .horasAprovadas(alocacao.getTotalHorasAprovadas())
+                .horasSolicitadas(alocacao.getTotalHorasSolicitadas())
+                .tipoAtividade(alocacao.getAtividade().getTipoAtividade())
+                .build();
     }
 
     @Override

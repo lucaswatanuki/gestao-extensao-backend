@@ -42,8 +42,13 @@ public class DocenteController {
     }
 
     @GetMapping("/{id}/alocacoes")
-    public ResponseEntity<List<AlocacaoDto>> getAlocacoes(@PathVariable("id") long docenteId) {
-        return ResponseEntity.ok(docenteService.consultarAlocacoes(docenteId));
+    public ResponseEntity<List<AlocacaoDto>> getAlocacoesDocente(@PathVariable("id") long docenteId) {
+        return ResponseEntity.ok(docenteService.consultarAlocacoesDocente(docenteId));
+    }
+
+    @GetMapping("/alocacoes")
+    public ResponseEntity<List<AlocacaoDto>> getAlocacoes() {
+        return ResponseEntity.ok(docenteService.getAlocacoes());
     }
 
     @PutMapping("/{id}")

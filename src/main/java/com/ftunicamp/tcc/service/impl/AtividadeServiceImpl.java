@@ -16,14 +16,12 @@ import com.ftunicamp.tcc.service.AtividadeService;
 import com.ftunicamp.tcc.service.EmailService;
 import com.ftunicamp.tcc.utils.AtividadeFactory;
 import com.ftunicamp.tcc.utils.TipoEmail;
-import com.ftunicamp.tcc.utils.Utilities;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.mail.MessagingException;
 import java.io.UnsupportedEncodingException;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -205,6 +203,7 @@ public class AtividadeServiceImpl implements AtividadeService {
         return CursoExtensaoDto.builder()
                 .id(curso.getId())
                 .docente(curso.getDocente().getNome())
+                .coordenador(curso.getCoordenador())
                 .projeto(curso.getProjeto())
                 .valorBruto(curso.getValorBruto())
                 .prazo(curso.getPrazo())
@@ -224,6 +223,7 @@ public class AtividadeServiceImpl implements AtividadeService {
                         .horasSolicitadas(alocacao.getTotalHorasSolicitadas())
                         .build()).collect(Collectors.toList()))
                 .valorBrutoHoraAula(curso.getValorBrutoHoraAula())
+                .valorBrutoOutraAtividade(curso.getValorBrutoOutraAtividade())
                 .cargaHorariaTotal(curso.getCargaHorariaTotalDedicada() + curso.getCargaHorariaTotalMinistrada())
                 .disciplinas(curso.getDisciplinaParticipacao())
                 .valorBrutoTotalAula(curso.getValorBrutoHoraAula())
@@ -282,27 +282,24 @@ public class AtividadeServiceImpl implements AtividadeService {
 
     @Override
     public void updateConvenio(ConvenioDto request) {
-        convenioRepository.findById(request.getId()).ifPresentOrElse(convenio -> {
-            convenioRepository.save(AtividadeFactory.updateConvenio(request, convenio));
-        }, () -> {
+        convenioRepository.findById(request.getId())
+                .ifPresentOrElse(convenio -> convenioRepository.save(AtividadeFactory.updateConvenio(request, convenio)), () -> {
             throw new NoSuchElementException(ATIVIDADE_ERRO);
         });
     }
 
     @Override
     public void updateCursoExtensao(CursoExtensaoDto request) {
-        cursoRepository.findById(request.getId()).ifPresentOrElse(curso -> {
-            cursoRepository.save(AtividadeFactory.updateCurso(request, curso));
-        }, () -> {
+        cursoRepository.findById(request.getId())
+                .ifPresentOrElse(curso -> cursoRepository.save(AtividadeFactory.updateCurso(request, curso)), () -> {
             throw new NoSuchElementException(ATIVIDADE_ERRO);
         });
     }
 
     @Override
     public void updateRegencia(RegenciaDto request) {
-        regenciaRepository.findById(request.getId()).ifPresentOrElse(regencia -> {
-            regenciaRepository.save(AtividadeFactory.updateRegencia(request, regencia));
-        }, () -> {
+        regenciaRepository.findById(request.getId())
+                .ifPresentOrElse(regencia -> regenciaRepository.save(AtividadeFactory.updateRegencia(request, regencia)), () -> {
             throw new NoSuchElementException(ATIVIDADE_ERRO);
         });
     }

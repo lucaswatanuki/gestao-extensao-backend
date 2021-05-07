@@ -1,6 +1,5 @@
 package com.ftunicamp.tcc.dto;
 
-import com.ftunicamp.tcc.security.services.UserDetailsImpl;
 import lombok.Getter;
 import lombok.Setter;
 

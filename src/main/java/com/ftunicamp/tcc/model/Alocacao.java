@@ -1,7 +1,5 @@
 package com.ftunicamp.tcc.model;
 
-import com.ftunicamp.tcc.model.Atividade;
-import com.ftunicamp.tcc.model.DocenteEntity;
 import lombok.*;
 
 import javax.persistence.*;

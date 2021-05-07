@@ -9,7 +9,6 @@ import com.ftunicamp.tcc.repositories.UserRepository;
 import com.ftunicamp.tcc.service.EmailService;
 import com.ftunicamp.tcc.service.PasswordService;
 import com.ftunicamp.tcc.utils.Utilities;
-import javassist.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -17,7 +16,6 @@ import org.springframework.stereotype.Service;
 import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletRequest;
 import java.io.UnsupportedEncodingException;
-import java.util.Calendar;
 import java.util.NoSuchElementException;
 import java.util.UUID;
 

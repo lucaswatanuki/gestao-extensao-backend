@@ -76,10 +76,6 @@ public class EmailServiceImpl implements EmailService {
         } else if (tipoEmail.equals(TipoEmail.STATUS_ATIVIDADE)) {
             assunto = "Atualização de status da atividade";
             body += "O status da sua atividade foi alterado para: " + atividade.getStatus().getStatus();
-            if (observacao != null && !observacao.isEmpty()) {
-                body += "<p>Observações: </p>";
-                body += observacao;
-            }
         }
 
         try {

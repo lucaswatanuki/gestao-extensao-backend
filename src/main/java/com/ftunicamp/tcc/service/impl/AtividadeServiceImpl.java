@@ -23,6 +23,7 @@ import org.springframework.stereotype.Service;
 import javax.mail.MessagingException;
 import java.io.UnsupportedEncodingException;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -34,6 +35,8 @@ public class AtividadeServiceImpl implements AtividadeService {
 
     private static final String MENSAGEM_SUCESSO = "Atividade cadastrada com sucesso.";
     private static final String MENSAGEM_ERRO = "Erro ao criar atividade";
+    private static final String ATIVIDADE_ERRO = "Atividade não econtrada.";
+
 
     private final AtividadeRepository<Atividade> atividadeRepository;
     private final AtividadeRepository<ConvenioEntity> convenioRepository;
@@ -123,40 +126,6 @@ public class AtividadeServiceImpl implements AtividadeService {
     }
 
     @Override
-    public AtividadeDetalheResponse buscarAtividade(Long id) {
-//        var response = AtividadeDetalheResponse.builder();
-//
-//        var atividadeEntity = atividadeRepository.findById(id);
-//
-//        atividadeEntity.ifPresentOrElse(atividade -> {
-//            var docente = atividade.getDocente();
-//            mapToAtividadeDetalheResponse(response, atividade, docente);
-//        }, () -> {
-//            throw new NegocioException("Não foi encontrada nenhuma atividade");
-//        });
-//
-//        return response.build();
-
-        return null;
-    }
-
-//    private void mapToAtividadeDetalheResponse(AtividadeDetalheResponse.AtividadeDetalheResponseBuilder response, Atividade atividade, DocenteEntity docente) {
-//        response.id(atividade.getId())
-//                .docente(docente.getNome())
-//                .projeto(atividade.getProjeto())
-//                .valorBruto(atividade.getValorBruto())
-//                .prazo(atividade.getPrazo())
-//                .horaMensal(atividade.getHoraMensal())
-//                .horaSemanal(atividade.getHoraSemanal())
-//                .dataInicio(LocalDate.from(atividade.getDataInicio()).format(Utilities.formatarData()))
-//                .dataFim(LocalDate.from(atividade.getDataFim()).format(Utilities.formatarData()))
-//                .autorizado(atividade.getStatus().equals(StatusAtividade.EM_ANDAMENTO))
-//                .tipoAtividade(atividade.getTipoAtividade())
-//                .revisao(atividade.getRevisao() == null ? "Não há itens a revisar" : atividade.getRevisao())
-//                .observacao(atividade.getObservacao());
-//    }
-
-    @Override
     public void excluirAtividade(Long id) {
         atividadeRepository.findById(id).ifPresentOrElse(atividadeRepository::delete, () -> {
             throw new NegocioException("Atividade não encontrada");
@@ -206,8 +175,8 @@ public class AtividadeServiceImpl implements AtividadeService {
                 .prazo(convenio.getPrazo())
                 .horaMensal(convenio.getHoraMensal())
                 .horaSemanal(convenio.getHoraSemanal())
-                .dataInicio(LocalDate.from(convenio.getDataInicio()).format(Utilities.formatarData()))
-                .dataFim(LocalDate.from(convenio.getDataFim()).format(Utilities.formatarData()))
+                .dataInicio(convenio.getDataInicio())
+                .dataFim(convenio.getDataFim())
                 .autorizado(convenio.getStatus().equals(StatusAtividade.EM_ANDAMENTO))
                 .tipoAtividade(convenio.getTipoAtividade())
                 .revisao(convenio.getRevisao() == null ? "Não há itens a revisar" : convenio.getRevisao())
@@ -241,8 +210,8 @@ public class AtividadeServiceImpl implements AtividadeService {
                 .prazo(curso.getPrazo())
                 .horaMensal(curso.getHoraMensal())
                 .horaSemanal(curso.getHoraSemanal())
-                .dataInicio(LocalDate.from(curso.getDataInicio()).format(Utilities.formatarData()))
-                .dataFim(LocalDate.from(curso.getDataFim()).format(Utilities.formatarData()))
+                .dataInicio(curso.getDataInicio())
+                .dataFim(curso.getDataFim())
                 .autorizado(curso.getStatus().equals(StatusAtividade.EM_ANDAMENTO))
                 .tipoAtividade(curso.getTipoAtividade())
                 .revisao(curso.getRevisao() == null ? "Não há itens a revisar" : curso.getRevisao())
@@ -280,8 +249,8 @@ public class AtividadeServiceImpl implements AtividadeService {
                 .prazo(regencia.getPrazo())
                 .horaMensal(regencia.getHoraMensal())
                 .horaSemanal(regencia.getHoraSemanal())
-                .dataInicio(LocalDate.from(regencia.getDataInicio()).format(Utilities.formatarData()))
-                .dataFim(LocalDate.from(regencia.getDataFim()).format(Utilities.formatarData()))
+                .dataInicio(regencia.getDataInicio())
+                .dataFim(regencia.getDataFim())
                 .autorizado(regencia.getStatus().equals(StatusAtividade.EM_ANDAMENTO))
                 .tipoAtividade(regencia.getTipoAtividade())
                 .revisao(regencia.getRevisao() == null ? "Não há itens a revisar" : regencia.getRevisao())
@@ -309,6 +278,33 @@ public class AtividadeServiceImpl implements AtividadeService {
                 .valorBruto(regencia.getValorBruto())
                 .valorBrutoTotalAula(regencia.getValorBrutoHoraAula())
                 .build();
+    }
+
+    @Override
+    public void updateConvenio(ConvenioDto request) {
+        convenioRepository.findById(request.getId()).ifPresentOrElse(convenio -> {
+            convenioRepository.save(AtividadeFactory.updateConvenio(request, convenio));
+        }, () -> {
+            throw new NoSuchElementException(ATIVIDADE_ERRO);
+        });
+    }
+
+    @Override
+    public void updateCursoExtensao(CursoExtensaoDto request) {
+        cursoRepository.findById(request.getId()).ifPresentOrElse(curso -> {
+            cursoRepository.save(AtividadeFactory.updateCurso(request, curso));
+        }, () -> {
+            throw new NoSuchElementException(ATIVIDADE_ERRO);
+        });
+    }
+
+    @Override
+    public void updateRegencia(RegenciaDto request) {
+        regenciaRepository.findById(request.getId()).ifPresentOrElse(regencia -> {
+            regenciaRepository.save(AtividadeFactory.updateRegencia(request, regencia));
+        }, () -> {
+            throw new NoSuchElementException(ATIVIDADE_ERRO);
+        });
     }
 
     private void salvarAutorizacao(Atividade atividadeEntity) {

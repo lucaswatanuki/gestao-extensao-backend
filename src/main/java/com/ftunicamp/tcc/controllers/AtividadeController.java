@@ -60,20 +60,11 @@ public class AtividadeController {
         return ResponseEntity.ok(atividadeService.cadastrarAtividadeUnivesp(request));
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<AtividadeDetalheResponse> buscarAtividadeDetalhada(@PathVariable("id") Long id) {
-        return ResponseEntity.ok(atividadeService.buscarAtividade(id));
-    }
 
     @GetMapping("/listar")
     public ResponseEntity<List<AtividadeResponse>> listarAtividades() {
         return ResponseEntity.ok(atividadeService.listarAtividades());
     }
-
-//    @PutMapping("/{id}")
-//    public ResponseEntity<Void> atualizarDadosAtividade(@PathVariable("id") long id, @RequestBody ) {
-//        return ResponseEntity.ok(atividadeService.editarAtividade())
-//    }
 
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @DeleteMapping("/{id}")
@@ -130,5 +121,23 @@ public class AtividadeController {
     @GetMapping("/regencia/{id}")
     public ResponseEntity<RegenciaDto> getRegencia(@PathVariable("id") long id) {
         return ResponseEntity.ok(atividadeService.consultarRegencia(id));
+    }
+
+    @PutMapping("/regencia")
+    public ResponseEntity<Void> updateRegencia(@RequestBody RegenciaDto regenciaDto) {
+        atividadeService.updateRegencia(regenciaDto);
+        return ResponseEntity.ok().build();
+    }
+
+    @PutMapping("/curso-extensao")
+    public ResponseEntity<Void> updateCursoExtensao(@RequestBody CursoExtensaoDto cursoExtensaoDto) {
+        atividadeService.updateCursoExtensao(cursoExtensaoDto);
+        return ResponseEntity.ok().build();
+    }
+
+    @PutMapping("/convenio")
+    public ResponseEntity<Void> updateConvenio(@RequestBody ConvenioDto convenioDto) {
+        atividadeService.updateConvenio(convenioDto);
+        return ResponseEntity.ok().build();
     }
 }

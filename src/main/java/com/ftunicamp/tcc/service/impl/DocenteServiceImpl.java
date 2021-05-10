@@ -3,7 +3,6 @@ package com.ftunicamp.tcc.service.impl;
 import com.ftunicamp.tcc.controllers.response.DocenteResponse;
 import com.ftunicamp.tcc.dto.AlocacaoDto;
 import com.ftunicamp.tcc.dto.UsuarioDto;
-import com.ftunicamp.tcc.exceptions.NegocioException;
 import com.ftunicamp.tcc.model.Alocacao;
 import com.ftunicamp.tcc.model.DocenteEntity;
 import com.ftunicamp.tcc.model.StatusAtividade;
@@ -71,43 +70,6 @@ public class DocenteServiceImpl implements DocenteService, UsuarioService {
     }
 
     @Override
-    public DocenteResponse consultarDocente(Long id) {
-        var docente = docenteRepository.findById(id);
-
-        if (docente.isEmpty()) {
-            throw new NegocioException("Docente não cadastrado");
-        }
-
-        var atividades = docente.get().getAtividades();
-
-//        atividades.forEach(atividade -> {
-//            var totalHorasAtividade = atividade.getHoraMensal() * atividade.getPrazo();
-//            var statusAtividadeAtualizado = AtividadeFactory.verificaStatusAtividade(atividade);
-//            if (!atividade.getStatus().equals(statusAtividadeAtualizado)) {
-//                atividade.setStatus(statusAtividadeAtualizado);
-//                atividadeRepository.save(atividade);
-//
-//                if (statusAtividadeAtualizado.equals(StatusAtividade.CONCLUIDA)) {
-//                    var alocacao = docente.get().getAlocacao();
-//                    docente.get().set(docente.get().getTotalHorasEmAndamento() - totalHorasAtividade);
-//                    docenteRepository.save(docente.get());
-//                }
-//                if (statusAtividadeAtualizado.equals(StatusAtividade.EM_ANDAMENTO)) {
-//                    docente.get().setTotalHorasEmAndamento(docente.get().getTotalHorasEmAndamento() + totalHorasAtividade);
-//                    docente.get().setTotalHorasFuturas(docente.get().getTotalHorasFuturas() - totalHorasAtividade);
-//                    docenteRepository.save(docente.get());
-//                }
-//            }
-//        });
-//
-//        var response = new DocenteResponse();
-//        response.setTotalHorasEmAndamento(docente.get().getTotalHorasEmAndamento());
-//        response.setTotalHorasFuturas(docente.get().getTotalHorasFuturas());
-
-        return null;
-    }
-
-    @Override
     public void deletarDocente(String username) {
         var docente = docenteRepository.findByUser_Username(username);
         docenteRepository.delete(docente);
@@ -149,6 +111,16 @@ public class DocenteServiceImpl implements DocenteService, UsuarioService {
                 .stream()
                 .map(this::mapToAlocacaoDto)
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public void atualizarAlocacao(AlocacaoDto dto) {
+        alocacaoRepository.findById(dto.getId()).ifPresent(alocacao -> {
+            alocacao.setAno(dto.getAno());
+            alocacao.setSemestre(dto.getSemestre());
+            alocacao.setTotalHorasSolicitadas(dto.getHorasSolicitadas());
+            alocacaoRepository.save(alocacao);
+        });
     }
 
     private AlocacaoDto mapToAlocacaoDto(Alocacao alocacao) {

@@ -9,12 +9,12 @@ public interface DocenteService {
 
     List<DocenteResponse> listarDocentes();
 
-    DocenteResponse consultarDocente(Long id);
-
     void deletarDocente(String username);
 
     List<AlocacaoDto> consultarAlocacoesDocente(long docenteId);
 
     List<AlocacaoDto> getAlocacoes();
+
+    void atualizarAlocacao(AlocacaoDto dto);
 
 }

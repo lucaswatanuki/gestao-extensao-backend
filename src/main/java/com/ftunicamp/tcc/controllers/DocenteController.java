@@ -51,6 +51,12 @@ public class DocenteController {
         return ResponseEntity.ok(docenteService.getAlocacoes());
     }
 
+    @PutMapping("/alocacoes")
+    public ResponseEntity<Void> atualizarAlocacao(@RequestBody AlocacaoDto alocacaoDto) {
+        docenteService.atualizarAlocacao(alocacaoDto);
+        return ResponseEntity.ok().build();
+    }
+
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public ResponseEntity<Void> alterarDadosUsuario(@PathVariable("id") long usuarioId,

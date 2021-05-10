@@ -16,7 +16,7 @@ public class Alocacao {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     @Column(name = "id")
-    private Integer id;
+    private Long id;
 
     @Column(name = "ano")
     private int ano;

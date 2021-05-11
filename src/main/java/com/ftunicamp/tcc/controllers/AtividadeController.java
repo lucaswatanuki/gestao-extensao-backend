@@ -140,4 +140,10 @@ public class AtividadeController {
         atividadeService.updateConvenio(convenioDto);
         return ResponseEntity.ok().build();
     }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> excluirAtividade(@PathVariable("id") long id) {
+        atividadeService.excluirAtividade(id);
+        return ResponseEntity.ok().build();
+    }
 }

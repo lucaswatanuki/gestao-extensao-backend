@@ -8,9 +8,7 @@ import com.ftunicamp.tcc.controllers.response.*;
 import com.ftunicamp.tcc.dto.AlocacaoDto;
 import com.ftunicamp.tcc.exceptions.NegocioException;
 import com.ftunicamp.tcc.model.*;
-import com.ftunicamp.tcc.repositories.AtividadeRepository;
-import com.ftunicamp.tcc.repositories.AutorizacaoRepository;
-import com.ftunicamp.tcc.repositories.DocenteRepository;
+import com.ftunicamp.tcc.repositories.*;
 import com.ftunicamp.tcc.security.jwt.JwtUtils;
 import com.ftunicamp.tcc.service.AtividadeService;
 import com.ftunicamp.tcc.service.EmailService;
@@ -43,6 +41,8 @@ public class AtividadeServiceImpl implements AtividadeService {
     private final DocenteRepository docenteRepository;
     private final AutorizacaoRepository autorizacaoRepository;
     private final EmailService emailService;
+    private final ArquivosRepository arquivosRepository;
+    private final AlocacaoRepository alocacaoRepository;
 
     @Autowired
     private JwtUtils jwtUtils;
@@ -55,7 +55,7 @@ public class AtividadeServiceImpl implements AtividadeService {
                                 AtividadeRepository<CursoExtensaoEntity> cursoRepository,
                                 DocenteRepository docenteRepository,
                                 AutorizacaoRepository autorizacaoRepository,
-                                EmailService emailService) {
+                                EmailService emailService, ArquivosRepository arquivosRepository, AlocacaoRepository alocacaoRepository) {
         this.atividadeRepository = atividadeRepository;
         this.convenioRepository = convenioRepository;
         this.regenciaRepository = regenciaRepository;
@@ -63,6 +63,8 @@ public class AtividadeServiceImpl implements AtividadeService {
         this.docenteRepository = docenteRepository;
         this.autorizacaoRepository = autorizacaoRepository;
         this.emailService = emailService;
+        this.arquivosRepository = arquivosRepository;
+        this.alocacaoRepository = alocacaoRepository;
     }
 
 
@@ -125,7 +127,12 @@ public class AtividadeServiceImpl implements AtividadeService {
 
     @Override
     public void excluirAtividade(Long id) {
-        atividadeRepository.findById(id).ifPresentOrElse(atividadeRepository::delete, () -> {
+        atividadeRepository.findById(id).ifPresentOrElse(atividade -> {
+            alocacaoRepository.findByAtividade_id(atividade.getId()).forEach(alocacaoRepository::delete);
+            arquivosRepository.findByAtividadeId(atividade.getId()).ifPresent(arquivosRepository::delete);
+            autorizacaoRepository.findByAtividade_id(atividade.getId()).ifPresent(autorizacaoRepository::delete);
+            atividadeRepository.delete(atividade);
+        }, () -> {
             throw new NegocioException("Atividade não encontrada");
         });
     }

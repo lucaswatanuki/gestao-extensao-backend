@@ -74,10 +74,9 @@ public class DocenteController {
         return ResponseEntity.ok(usuarioService.getDadosUsuario(id));
     }
 
-    @PutMapping("/{docenteId}/alterarSenha")
+    @PutMapping("/alterarSenha")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public ResponseEntity<Void> alterarSenha(@PathVariable("docenteId") long usuarioId,
-                                             @RequestBody PasswordDto request) {
+    public ResponseEntity<Void> alterarSenha(@RequestBody PasswordDto request) {
         passwordService.alterarSenha(request);
         return ResponseEntity.noContent().build();
     }

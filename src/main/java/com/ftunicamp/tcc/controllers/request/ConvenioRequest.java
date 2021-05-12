@@ -1,10 +1,10 @@
 package com.ftunicamp.tcc.controllers.request;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.ftunicamp.tcc.dto.AlocacaoDto;
-import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -13,6 +13,8 @@ import java.util.List;
 @Getter
 @Setter
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class ConvenioRequest implements Serializable {
 
     private String projeto;

@@ -42,8 +42,19 @@ public class DocenteController {
     }
 
     @GetMapping("/{id}/alocacoes")
-    public ResponseEntity<List<AlocacaoDto>> getAlocacoes(@PathVariable("id") long docenteId) {
-        return ResponseEntity.ok(docenteService.consultarAlocacoes(docenteId));
+    public ResponseEntity<List<AlocacaoDto>> getAlocacoesDocente(@PathVariable("id") long docenteId) {
+        return ResponseEntity.ok(docenteService.consultarAlocacoesDocente(docenteId));
+    }
+
+    @GetMapping("/alocacoes")
+    public ResponseEntity<List<AlocacaoDto>> getAlocacoes() {
+        return ResponseEntity.ok(docenteService.getAlocacoes());
+    }
+
+    @PutMapping("/alocacoes")
+    public ResponseEntity<Void> atualizarAlocacao(@RequestBody AlocacaoDto alocacaoDto) {
+        docenteService.atualizarAlocacao(alocacaoDto);
+        return ResponseEntity.ok().build();
     }
 
     @PutMapping("/{id}")
@@ -63,10 +74,9 @@ public class DocenteController {
         return ResponseEntity.ok(usuarioService.getDadosUsuario(id));
     }
 
-    @PutMapping("/{docenteId}/alterarSenha")
+    @PutMapping("/alterarSenha")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public ResponseEntity<Void> alterarSenha(@PathVariable("docenteId") long usuarioId,
-                                             @RequestBody PasswordDto request) {
+    public ResponseEntity<Void> alterarSenha(@RequestBody PasswordDto request) {
         passwordService.alterarSenha(request);
         return ResponseEntity.noContent().build();
     }

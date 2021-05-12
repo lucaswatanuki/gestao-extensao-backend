@@ -1,7 +1,5 @@
 package com.ftunicamp.tcc.model;
 
-import com.ftunicamp.tcc.model.Atividade;
-import com.ftunicamp.tcc.model.DocenteEntity;
 import lombok.*;
 
 import javax.persistence.*;
@@ -18,7 +16,7 @@ public class Alocacao {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     @Column(name = "id")
-    private Integer id;
+    private Long id;
 
     @Column(name = "ano")
     private int ano;
@@ -26,11 +24,11 @@ public class Alocacao {
     @Column(name = "semestre")
     private int semestre;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="docente_id")
     private DocenteEntity docente;
 
-    @ManyToOne(cascade = {CascadeType.MERGE, CascadeType.PERSIST})
+    @ManyToOne(cascade = {CascadeType.MERGE, CascadeType.PERSIST}, fetch = FetchType.LAZY)
     @JoinColumn(name = "atividade_id", referencedColumnName = "id")
     private Atividade atividade;
 

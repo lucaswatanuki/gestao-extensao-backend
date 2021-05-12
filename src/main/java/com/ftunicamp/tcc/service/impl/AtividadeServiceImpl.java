@@ -8,22 +8,19 @@ import com.ftunicamp.tcc.controllers.response.*;
 import com.ftunicamp.tcc.dto.AlocacaoDto;
 import com.ftunicamp.tcc.exceptions.NegocioException;
 import com.ftunicamp.tcc.model.*;
-import com.ftunicamp.tcc.repositories.AtividadeRepository;
-import com.ftunicamp.tcc.repositories.AutorizacaoRepository;
-import com.ftunicamp.tcc.repositories.DocenteRepository;
+import com.ftunicamp.tcc.repositories.*;
 import com.ftunicamp.tcc.security.jwt.JwtUtils;
 import com.ftunicamp.tcc.service.AtividadeService;
 import com.ftunicamp.tcc.service.EmailService;
 import com.ftunicamp.tcc.utils.AtividadeFactory;
 import com.ftunicamp.tcc.utils.TipoEmail;
-import com.ftunicamp.tcc.utils.Utilities;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.mail.MessagingException;
 import java.io.UnsupportedEncodingException;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -45,6 +42,8 @@ public class AtividadeServiceImpl implements AtividadeService {
     private final DocenteRepository docenteRepository;
     private final AutorizacaoRepository autorizacaoRepository;
     private final EmailService emailService;
+    private final ArquivosRepository arquivosRepository;
+    private final AlocacaoRepository alocacaoRepository;
 
     @Autowired
     private JwtUtils jwtUtils;
@@ -57,7 +56,7 @@ public class AtividadeServiceImpl implements AtividadeService {
                                 AtividadeRepository<CursoExtensaoEntity> cursoRepository,
                                 DocenteRepository docenteRepository,
                                 AutorizacaoRepository autorizacaoRepository,
-                                EmailService emailService) {
+                                EmailService emailService, ArquivosRepository arquivosRepository, AlocacaoRepository alocacaoRepository) {
         this.atividadeRepository = atividadeRepository;
         this.convenioRepository = convenioRepository;
         this.regenciaRepository = regenciaRepository;
@@ -65,6 +64,8 @@ public class AtividadeServiceImpl implements AtividadeService {
         this.docenteRepository = docenteRepository;
         this.autorizacaoRepository = autorizacaoRepository;
         this.emailService = emailService;
+        this.arquivosRepository = arquivosRepository;
+        this.alocacaoRepository = alocacaoRepository;
     }
 
 
@@ -126,8 +127,14 @@ public class AtividadeServiceImpl implements AtividadeService {
     }
 
     @Override
+    @Transactional
     public void excluirAtividade(Long id) {
-        atividadeRepository.findById(id).ifPresentOrElse(atividadeRepository::delete, () -> {
+        atividadeRepository.findById(id).ifPresentOrElse(atividade -> {
+            alocacaoRepository.findByAtividade_id(atividade.getId()).forEach(alocacaoRepository::delete);
+            arquivosRepository.findByAtividadeId(atividade.getId()).ifPresent(arquivosRepository::delete);
+            autorizacaoRepository.findByAtividade_id(atividade.getId()).ifPresent(autorizacaoRepository::delete);
+            atividadeRepository.delete(atividade);
+        }, () -> {
             throw new NegocioException("Atividade não encontrada");
         });
     }
@@ -205,6 +212,7 @@ public class AtividadeServiceImpl implements AtividadeService {
         return CursoExtensaoDto.builder()
                 .id(curso.getId())
                 .docente(curso.getDocente().getNome())
+                .coordenador(curso.getCoordenador())
                 .projeto(curso.getProjeto())
                 .valorBruto(curso.getValorBruto())
                 .prazo(curso.getPrazo())
@@ -224,6 +232,7 @@ public class AtividadeServiceImpl implements AtividadeService {
                         .horasSolicitadas(alocacao.getTotalHorasSolicitadas())
                         .build()).collect(Collectors.toList()))
                 .valorBrutoHoraAula(curso.getValorBrutoHoraAula())
+                .valorBrutoOutraAtividade(curso.getValorBrutoOutraAtividade())
                 .cargaHorariaTotal(curso.getCargaHorariaTotalDedicada() + curso.getCargaHorariaTotalMinistrada())
                 .disciplinas(curso.getDisciplinaParticipacao())
                 .valorBrutoTotalAula(curso.getValorBrutoHoraAula())
@@ -282,27 +291,24 @@ public class AtividadeServiceImpl implements AtividadeService {
 
     @Override
     public void updateConvenio(ConvenioDto request) {
-        convenioRepository.findById(request.getId()).ifPresentOrElse(convenio -> {
-            convenioRepository.save(AtividadeFactory.updateConvenio(request, convenio));
-        }, () -> {
+        convenioRepository.findById(request.getId())
+                .ifPresentOrElse(convenio -> convenioRepository.save(AtividadeFactory.updateConvenio(request, convenio)), () -> {
             throw new NoSuchElementException(ATIVIDADE_ERRO);
         });
     }
 
     @Override
     public void updateCursoExtensao(CursoExtensaoDto request) {
-        cursoRepository.findById(request.getId()).ifPresentOrElse(curso -> {
-            cursoRepository.save(AtividadeFactory.updateCurso(request, curso));
-        }, () -> {
+        cursoRepository.findById(request.getId())
+                .ifPresentOrElse(curso -> cursoRepository.save(AtividadeFactory.updateCurso(request, curso)), () -> {
             throw new NoSuchElementException(ATIVIDADE_ERRO);
         });
     }
 
     @Override
     public void updateRegencia(RegenciaDto request) {
-        regenciaRepository.findById(request.getId()).ifPresentOrElse(regencia -> {
-            regenciaRepository.save(AtividadeFactory.updateRegencia(request, regencia));
-        }, () -> {
+        regenciaRepository.findById(request.getId())
+                .ifPresentOrElse(regencia -> regenciaRepository.save(AtividadeFactory.updateRegencia(request, regencia)), () -> {
             throw new NoSuchElementException(ATIVIDADE_ERRO);
         });
     }

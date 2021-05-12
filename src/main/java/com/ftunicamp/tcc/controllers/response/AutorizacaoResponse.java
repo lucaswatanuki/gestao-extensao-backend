@@ -25,4 +25,6 @@ public class AutorizacaoResponse implements Serializable {
 
     private String tipoAtividade;
 
+    private long atividadeId;
+
 }

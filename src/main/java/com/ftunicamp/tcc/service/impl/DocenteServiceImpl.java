@@ -3,13 +3,13 @@ package com.ftunicamp.tcc.service.impl;
 import com.ftunicamp.tcc.controllers.response.DocenteResponse;
 import com.ftunicamp.tcc.dto.AlocacaoDto;
 import com.ftunicamp.tcc.dto.UsuarioDto;
-import com.ftunicamp.tcc.exceptions.NegocioException;
 import com.ftunicamp.tcc.model.Alocacao;
 import com.ftunicamp.tcc.model.DocenteEntity;
 import com.ftunicamp.tcc.model.StatusAtividade;
 import com.ftunicamp.tcc.repositories.AlocacaoRepository;
 import com.ftunicamp.tcc.repositories.DocenteRepository;
 import com.ftunicamp.tcc.repositories.UserRepository;
+import com.ftunicamp.tcc.security.jwt.JwtUtils;
 import com.ftunicamp.tcc.service.DocenteService;
 import com.ftunicamp.tcc.service.UsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,13 +27,15 @@ public class DocenteServiceImpl implements DocenteService, UsuarioService {
     private final DocenteRepository docenteRepository;
     private final UserRepository userRepository;
     private final AlocacaoRepository alocacaoRepository;
+    private final JwtUtils jwtUtils;
 
     @Autowired
     public DocenteServiceImpl(DocenteRepository docenteRepository, UserRepository userRepository,
-                              AlocacaoRepository alocacaoRepository) {
+                              AlocacaoRepository alocacaoRepository, JwtUtils jwtUtils) {
         this.docenteRepository = docenteRepository;
         this.userRepository = userRepository;
         this.alocacaoRepository = alocacaoRepository;
+        this.jwtUtils = jwtUtils;
     }
 
     @Override
@@ -68,43 +70,6 @@ public class DocenteServiceImpl implements DocenteService, UsuarioService {
     }
 
     @Override
-    public DocenteResponse consultarDocente(Long id) {
-        var docente = docenteRepository.findById(id);
-
-        if (docente.isEmpty()) {
-            throw new NegocioException("Docente não cadastrado");
-        }
-
-        var atividades = docente.get().getAtividades();
-
-//        atividades.forEach(atividade -> {
-//            var totalHorasAtividade = atividade.getHoraMensal() * atividade.getPrazo();
-//            var statusAtividadeAtualizado = AtividadeFactory.verificaStatusAtividade(atividade);
-//            if (!atividade.getStatus().equals(statusAtividadeAtualizado)) {
-//                atividade.setStatus(statusAtividadeAtualizado);
-//                atividadeRepository.save(atividade);
-//
-//                if (statusAtividadeAtualizado.equals(StatusAtividade.CONCLUIDA)) {
-//                    var alocacao = docente.get().getAlocacao();
-//                    docente.get().set(docente.get().getTotalHorasEmAndamento() - totalHorasAtividade);
-//                    docenteRepository.save(docente.get());
-//                }
-//                if (statusAtividadeAtualizado.equals(StatusAtividade.EM_ANDAMENTO)) {
-//                    docente.get().setTotalHorasEmAndamento(docente.get().getTotalHorasEmAndamento() + totalHorasAtividade);
-//                    docente.get().setTotalHorasFuturas(docente.get().getTotalHorasFuturas() - totalHorasAtividade);
-//                    docenteRepository.save(docente.get());
-//                }
-//            }
-//        });
-//
-//        var response = new DocenteResponse();
-//        response.setTotalHorasEmAndamento(docente.get().getTotalHorasEmAndamento());
-//        response.setTotalHorasFuturas(docente.get().getTotalHorasFuturas());
-
-        return null;
-    }
-
-    @Override
     public void deletarDocente(String username) {
         var docente = docenteRepository.findByUser_Username(username);
         docenteRepository.delete(docente);
@@ -113,7 +78,7 @@ public class DocenteServiceImpl implements DocenteService, UsuarioService {
     }
 
     @Override
-    public List<AlocacaoDto> consultarAlocacoes(long docenteId) {
+    public List<AlocacaoDto> consultarAlocacoesDocente(long docenteId) {
         var alocacoes = alocacaoRepository.findByDocente_id(docenteId);
 
         return alocacoes.stream()
@@ -127,6 +92,46 @@ public class DocenteServiceImpl implements DocenteService, UsuarioService {
                         .tipoAtividade(alocacao.getAtividade().getTipoAtividade())
                         .build())
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<AlocacaoDto> getAlocacoes() {
+        final var sessao = jwtUtils.getSessao();
+        final var profiles = sessao.getProfiles();
+
+        if (profiles.stream().noneMatch(profile -> profile.equalsIgnoreCase("ROLE_ADMIN"))) {
+            var docente = docenteRepository.findByUser_Username(jwtUtils.getSessao().getUsername());
+            return alocacaoRepository.findByDocente_id(docente.getId())
+                    .stream()
+                    .map(this::mapToAlocacaoDto)
+                    .collect(Collectors.toList());
+        }
+
+        return alocacaoRepository.findAll()
+                .stream()
+                .map(this::mapToAlocacaoDto)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public void atualizarAlocacao(AlocacaoDto dto) {
+        alocacaoRepository.findById(dto.getId()).ifPresent(alocacao -> {
+            alocacao.setAno(dto.getAno());
+            alocacao.setSemestre(dto.getSemestre());
+            alocacao.setTotalHorasSolicitadas(dto.getHorasSolicitadas());
+            alocacaoRepository.save(alocacao);
+        });
+    }
+
+    private AlocacaoDto mapToAlocacaoDto(Alocacao alocacao) {
+        return AlocacaoDto.builder()
+                .id(alocacao.getId())
+                .ano(alocacao.getAno())
+                .semestre(alocacao.getSemestre())
+                .horasAprovadas(alocacao.getTotalHorasAprovadas())
+                .horasSolicitadas(alocacao.getTotalHorasSolicitadas())
+                .tipoAtividade(alocacao.getAtividade().getTipoAtividade())
+                .build();
     }
 
     @Override

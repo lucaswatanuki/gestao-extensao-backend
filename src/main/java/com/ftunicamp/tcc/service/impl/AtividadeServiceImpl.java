@@ -16,6 +16,7 @@ import com.ftunicamp.tcc.utils.AtividadeFactory;
 import com.ftunicamp.tcc.utils.TipoEmail;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.mail.MessagingException;
 import java.io.UnsupportedEncodingException;
@@ -126,6 +127,7 @@ public class AtividadeServiceImpl implements AtividadeService {
     }
 
     @Override
+    @Transactional
     public void excluirAtividade(Long id) {
         atividadeRepository.findById(id).ifPresentOrElse(atividade -> {
             alocacaoRepository.findByAtividade_id(atividade.getId()).forEach(alocacaoRepository::delete);

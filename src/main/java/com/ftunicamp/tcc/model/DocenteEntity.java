@@ -25,10 +25,10 @@ public class DocenteEntity {
 
     private String endereco;
 
-    @OneToMany(mappedBy = "docente", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "docente", fetch = FetchType.LAZY)
     private List<Atividade> atividades;
 
-    @OneToMany(mappedBy = "docente", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "docente", fetch = FetchType.LAZY)
     private List<Alocacao> alocacao;
 
     @OneToOne

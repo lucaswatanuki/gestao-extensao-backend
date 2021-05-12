@@ -66,12 +66,6 @@ public class AtividadeController {
         return ResponseEntity.ok(atividadeService.listarAtividades());
     }
 
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    @DeleteMapping("/{id}")
-    public void excluirAtividade(@PathVariable("id") Long id) {
-        atividadeService.excluirAtividade(id);
-    }
-
     @PostMapping(value = "/autorizar/{id}")
     public ResponseEntity<Void> autorizarAtividade(@PathVariable("id") Long id,
                                                    @RequestBody AutorizacaoRequest request) {

@@ -24,7 +24,7 @@ public abstract class Atividade {
 
     private String coordenador;
 
-    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     private DocenteEntity docente;
 
     private Integer horaMensal;
@@ -52,8 +52,11 @@ public abstract class Atividade {
 
     private String revisao;
 
-    @OneToMany(mappedBy = "atividade", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "atividade", fetch = FetchType.LAZY, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
     private List<Alocacao> alocacao;
+
+    @OneToOne(mappedBy = "atividade", fetch = FetchType.LAZY)
+    private AutorizacaoEntity autorizacao;
 
     @Transient
     public String getTipoAtividade() {

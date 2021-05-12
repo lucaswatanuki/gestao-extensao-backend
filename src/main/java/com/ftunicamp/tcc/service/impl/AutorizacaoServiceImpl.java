@@ -152,6 +152,7 @@ public class AutorizacaoServiceImpl implements AutorizacaoService {
                 .id(autorizacao.getId())
                 .urgente(autorizacao.getAtividade().isUrgente())
                 .tipoAtividade(autorizacao.getAtividade().getTipoAtividade())
+                .atividadeId(autorizacao.getAtividade().getId())
                 .build();
         autorizacaoResponse.add(response);
     }

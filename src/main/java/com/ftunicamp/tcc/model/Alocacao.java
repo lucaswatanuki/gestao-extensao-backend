@@ -24,11 +24,11 @@ public class Alocacao {
     @Column(name = "semestre")
     private int semestre;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="docente_id")
     private DocenteEntity docente;
 
-    @ManyToOne(cascade = {CascadeType.MERGE, CascadeType.PERSIST})
+    @ManyToOne(cascade = {CascadeType.MERGE, CascadeType.PERSIST}, fetch = FetchType.LAZY)
     @JoinColumn(name = "atividade_id", referencedColumnName = "id")
     private Atividade atividade;
 

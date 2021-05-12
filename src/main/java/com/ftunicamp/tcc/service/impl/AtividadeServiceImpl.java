@@ -188,13 +188,15 @@ public class AtividadeServiceImpl implements AtividadeService {
                 .tipoAtividade(convenio.getTipoAtividade())
                 .revisao(convenio.getRevisao() == null ? "Não há itens a revisar" : convenio.getRevisao())
                 .observacao(convenio.getObservacao())
-                .alocacoes(convenio.getAlocacao().stream().map(alocacao -> AlocacaoDto.builder()
-                        .id(alocacao.getId())
-                        .ano(alocacao.getAno())
-                        .semestre(alocacao.getSemestre())
-                        .horasAprovadas(alocacao.getTotalHorasAprovadas())
-                        .horasSolicitadas(alocacao.getTotalHorasSolicitadas())
-                        .build()).collect(Collectors.toList()))
+                .alocacoes(convenio.getAlocacao().stream().map(alocacao -> {
+                    var alocacaoDto = new AlocacaoDto();
+                    alocacaoDto.setId(alocacao.getId());
+                    alocacaoDto.setAno(alocacao.getAno());
+                    alocacaoDto.setSemestre(alocacao.getSemestre());
+                    alocacaoDto.setHorasAprovadas(alocacao.getTotalHorasAprovadas());
+                    alocacaoDto.setHorasSolicitadas(alocacao.getTotalHorasSolicitadas());
+                    return alocacaoDto;
+                }).collect(Collectors.toList()))
                 .descricao(convenio.getDescricao())
                 .tipoAtividadeSimultanea(convenio.getTipoAtividadeSimultanea())
                 .instituicao(convenio.getInstituicao())
@@ -224,13 +226,15 @@ public class AtividadeServiceImpl implements AtividadeService {
                 .tipoAtividade(curso.getTipoAtividade())
                 .revisao(curso.getRevisao() == null ? "Não há itens a revisar" : curso.getRevisao())
                 .observacao(curso.getObservacao())
-                .alocacoes(curso.getAlocacao().stream().map(alocacao -> AlocacaoDto.builder()
-                        .id(alocacao.getId())
-                        .ano(alocacao.getAno())
-                        .semestre(alocacao.getSemestre())
-                        .horasAprovadas(alocacao.getTotalHorasAprovadas())
-                        .horasSolicitadas(alocacao.getTotalHorasSolicitadas())
-                        .build()).collect(Collectors.toList()))
+                .alocacoes(curso.getAlocacao().stream().map(alocacao -> {
+                    var alocacaoDto = new AlocacaoDto();
+                    alocacaoDto.setId(alocacao.getId());
+                    alocacaoDto.setAno(alocacao.getAno());
+                    alocacaoDto.setSemestre(alocacao.getSemestre());
+                    alocacaoDto.setHorasAprovadas(alocacao.getTotalHorasAprovadas());
+                    alocacaoDto.setHorasSolicitadas(alocacao.getTotalHorasSolicitadas());
+                    return alocacaoDto;
+                }).collect(Collectors.toList()))
                 .valorBrutoHoraAula(curso.getValorBrutoHoraAula())
                 .valorBrutoOutraAtividade(curso.getValorBrutoOutraAtividade())
                 .cargaHorariaTotal(curso.getCargaHorariaTotalDedicada() + curso.getCargaHorariaTotalMinistrada())
@@ -264,13 +268,15 @@ public class AtividadeServiceImpl implements AtividadeService {
                 .tipoAtividade(regencia.getTipoAtividade())
                 .revisao(regencia.getRevisao() == null ? "Não há itens a revisar" : regencia.getRevisao())
                 .observacao(regencia.getObservacao())
-                .alocacoes(regencia.getAlocacao().stream().map(alocacao -> AlocacaoDto.builder()
-                        .id(alocacao.getId())
-                        .ano(alocacao.getAno())
-                        .semestre(alocacao.getSemestre())
-                        .horasAprovadas(alocacao.getTotalHorasAprovadas())
-                        .horasSolicitadas(alocacao.getTotalHorasSolicitadas())
-                        .build()).collect(Collectors.toList()))
+                .alocacoes(regencia.getAlocacao().stream().map(alocacao -> {
+                    var alocacaoDto = new AlocacaoDto();
+                    alocacaoDto.setId(alocacao.getId());
+                    alocacaoDto.setAno(alocacao.getAno());
+                    alocacaoDto.setSemestre(alocacao.getSemestre());
+                    alocacaoDto.setHorasAprovadas(alocacao.getTotalHorasAprovadas());
+                    alocacaoDto.setHorasSolicitadas(alocacao.getTotalHorasSolicitadas());
+                    return alocacaoDto;
+                }).collect(Collectors.toList()))
                 .valorBrutoHoraAula(regencia.getValorBrutoHoraAula())
                 .cargaHorariaTotalDedicada(regencia.getCargaHorariaTotalDedicada())
                 .cargaHoraTotalMinistrada(regencia.getCargaHorariaTotalMinistrada())

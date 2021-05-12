@@ -12,10 +12,9 @@ import java.util.List;
 
 @Getter
 @Setter
-@Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class ConvenioRequest implements Serializable {
+public class ConvenioRequest {
 
     private String projeto;
     private String coordenador;
@@ -29,6 +28,5 @@ public class ConvenioRequest implements Serializable {
     private LocalDateTime dataFim;
     private String observacao;
     private String tipoAtividadeSimultanea;
-    @JsonProperty("alocacoes")
-    private transient List<AlocacaoDto> alocacoes;
+    private List<AlocacaoDto> alocacoes;
 }

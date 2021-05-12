@@ -86,13 +86,16 @@ public class DocenteServiceImpl implements DocenteService, UsuarioService {
         return alocacoes.stream()
                 .filter(alocacao -> alocacao.getAtividade().getStatus().equals(StatusAtividade.CONCLUIDA) ||
                         alocacao.getAtividade().getStatus().equals(StatusAtividade.EM_ANDAMENTO))
-                .map(alocacao -> AlocacaoDto.builder()
-                        .id(alocacao.getAtividade().getId())
-                        .ano(alocacao.getAno())
-                        .semestre(alocacao.getSemestre())
-                        .horasAprovadas(alocacao.getTotalHorasAprovadas())
-                        .tipoAtividade(alocacao.getAtividade().getTipoAtividade())
-                        .build())
+                .map(alocacao -> {
+                    var alocacaoDto = new AlocacaoDto();
+                    alocacaoDto.setId(alocacao.getId());
+                    alocacaoDto.setAno(alocacao.getAno());
+                    alocacaoDto.setSemestre(alocacao.getSemestre());
+                    alocacaoDto.setHorasAprovadas(alocacao.getTotalHorasAprovadas());
+                    alocacaoDto.setHorasSolicitadas(alocacao.getTotalHorasSolicitadas());
+                    alocacaoDto.setStatus(alocacao.getAtividade().getAutorizacao().getStatus());
+                    return alocacaoDto;
+                })
                 .collect(Collectors.toList());
     }
 
@@ -129,15 +132,15 @@ public class DocenteServiceImpl implements DocenteService, UsuarioService {
     }
 
     private AlocacaoDto mapToAlocacaoDto(Alocacao alocacao) {
-        return AlocacaoDto.builder()
-                .id(alocacao.getId())
-                .ano(alocacao.getAno())
-                .semestre(alocacao.getSemestre())
-                .horasAprovadas(alocacao.getTotalHorasAprovadas())
-                .horasSolicitadas(alocacao.getTotalHorasSolicitadas())
-                .tipoAtividade(alocacao.getAtividade().getTipoAtividade())
-                .status(alocacao.getAtividade().getAutorizacao().getStatus())
-                .build();
+        var alocacaoDto = new AlocacaoDto();
+        alocacaoDto.setId(alocacao.getId());
+        alocacaoDto.setAno(alocacao.getAno());
+        alocacaoDto.setSemestre(alocacao.getSemestre());
+        alocacaoDto.setHorasAprovadas(alocacao.getTotalHorasAprovadas());
+        alocacaoDto.setHorasSolicitadas(alocacao.getTotalHorasSolicitadas());
+        alocacaoDto.setTipoAtividade(alocacao.getAtividade().getTipoAtividade());
+        alocacaoDto.setStatus(alocacao.getAtividade().getAutorizacao().getStatus());
+        return alocacaoDto;
     }
 
     @Override

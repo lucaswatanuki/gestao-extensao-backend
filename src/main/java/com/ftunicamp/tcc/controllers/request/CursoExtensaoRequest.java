@@ -1,5 +1,6 @@
 package com.ftunicamp.tcc.controllers.request;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.ftunicamp.tcc.dto.AlocacaoDto;
 import lombok.Getter;
 import lombok.Setter;

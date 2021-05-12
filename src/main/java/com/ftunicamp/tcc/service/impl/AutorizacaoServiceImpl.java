@@ -59,9 +59,6 @@ public class AutorizacaoServiceImpl implements AutorizacaoService {
                     var alocacoes = alocacaoRepository.findByAtividade_id(atividade.getId());
 
                     if (!request.isAutorizado()) {
-                        if (alocacoes != null) {
-                            alocacaoRepository.deleteInBatch(alocacoes);
-                        }
                         autorizacaoEntity.setStatus(StatusAutorizacao.REVISAO);
                         autorizacaoRepository.save(autorizacaoEntity);
                         atividade.setStatus(StatusAtividade.EM_REVISAO);

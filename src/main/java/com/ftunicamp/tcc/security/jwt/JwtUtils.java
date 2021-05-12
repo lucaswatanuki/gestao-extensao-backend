@@ -26,7 +26,7 @@ public class JwtUtils {
     private String jwtSecret;
 
     @Value("${gestao.extensao.tempoExpiracaoJwt}")
-    private int jwtExpirationMs;
+    private long jwtExpirationMs;
 
     @Getter
     private Sessao sessao;

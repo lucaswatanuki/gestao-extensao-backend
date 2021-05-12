@@ -3,9 +3,11 @@ package com.ftunicamp.tcc.service.impl;
 import com.ftunicamp.tcc.controllers.response.DocenteResponse;
 import com.ftunicamp.tcc.dto.AlocacaoDto;
 import com.ftunicamp.tcc.dto.UsuarioDto;
+import com.ftunicamp.tcc.exceptions.NegocioException;
 import com.ftunicamp.tcc.model.Alocacao;
 import com.ftunicamp.tcc.model.DocenteEntity;
 import com.ftunicamp.tcc.model.StatusAtividade;
+import com.ftunicamp.tcc.model.StatusAutorizacao;
 import com.ftunicamp.tcc.repositories.AlocacaoRepository;
 import com.ftunicamp.tcc.repositories.DocenteRepository;
 import com.ftunicamp.tcc.repositories.UserRepository;
@@ -116,6 +118,9 @@ public class DocenteServiceImpl implements DocenteService, UsuarioService {
     @Override
     public void atualizarAlocacao(AlocacaoDto dto) {
         alocacaoRepository.findById(dto.getId()).ifPresent(alocacao -> {
+            if (alocacao.getAtividade().getAutorizacao().getStatus().equals(StatusAutorizacao.APROVADO)) {
+                throw new NegocioException("Não é possível alterar alocação para atividade aprovada.");
+            }
             alocacao.setAno(dto.getAno());
             alocacao.setSemestre(dto.getSemestre());
             alocacao.setTotalHorasSolicitadas(dto.getHorasSolicitadas());
@@ -131,6 +136,7 @@ public class DocenteServiceImpl implements DocenteService, UsuarioService {
                 .horasAprovadas(alocacao.getTotalHorasAprovadas())
                 .horasSolicitadas(alocacao.getTotalHorasSolicitadas())
                 .tipoAtividade(alocacao.getAtividade().getTipoAtividade())
+                .status(alocacao.getAtividade().getAutorizacao().getStatus())
                 .build();
     }
 

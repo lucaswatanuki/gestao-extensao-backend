@@ -1,6 +1,7 @@
 package com.ftunicamp.tcc.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.ftunicamp.tcc.model.StatusAutorizacao;
 import lombok.Builder;
 import lombok.Data;
 
@@ -15,5 +16,6 @@ public class AlocacaoDto {
     private long horasAprovadas;
     private long horasSolicitadas;
     private String tipoAtividade;
+    private StatusAutorizacao status;
 
 }

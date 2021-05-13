@@ -92,6 +92,7 @@ public class PdfServiceImpl implements PdfService {
                 Optional<RegenciaEntity> regencia = regenciaRepository.findById(id);
                 regencia.ifPresent(regenciaEntity -> {
                     context.setVariable("regencia", regenciaEntity);
+                    context.setVariable("coordenador", nomeCoordenador);
                     context.setVariable("dia", regenciaEntity.getDataModificacao().getDayOfMonth());
                     context.setVariable("mes", nomeDoMes(regenciaEntity.getDataModificacao().getMonthValue()));
                     context.setVariable("ano", regenciaEntity.getDataModificacao().getYear());

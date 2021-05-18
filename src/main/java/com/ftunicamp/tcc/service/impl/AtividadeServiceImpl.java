@@ -188,19 +188,36 @@ public class AtividadeServiceImpl implements AtividadeService {
                 .tipoAtividade(convenio.getTipoAtividade())
                 .revisao(convenio.getRevisao() == null ? "Não há itens a revisar" : convenio.getRevisao())
                 .observacao(convenio.getObservacao())
-                .alocacoes(convenio.getAlocacao().stream().map(alocacao -> {
-                    var alocacaoDto = new AlocacaoDto();
-                    alocacaoDto.setId(alocacao.getId());
-                    alocacaoDto.setAno(alocacao.getAno());
-                    alocacaoDto.setSemestre(alocacao.getSemestre());
-                    alocacaoDto.setHorasAprovadas(alocacao.getTotalHorasAprovadas());
-                    alocacaoDto.setHorasSolicitadas(alocacao.getTotalHorasSolicitadas());
-                    return alocacaoDto;
-                }).collect(Collectors.toList()))
+                .alocacoes(getAlocacoesSemestral(convenio))
                 .descricao(convenio.getDescricao())
                 .tipoAtividadeSimultanea(convenio.getTipoAtividadeSimultanea())
                 .instituicao(convenio.getInstituicao())
                 .build();
+    }
+
+    private List<AlocacaoDto> getAlocacoesSemestral(ConvenioEntity convenio) {
+        return convenio.getDocente().getAlocacao()
+                .stream()
+                .filter(x -> convenio.getAlocacao()
+                        .stream()
+                        .map(Alocacao::getAno).collect(Collectors.toList())
+                        .contains(x.getAno()) &&
+                        convenio.getAlocacao()
+                                .stream()
+                                .map(Alocacao::getSemestre).collect(Collectors.toList())
+                                .contains(x.getSemestre()))
+                .map(alocacao -> {
+                    var alocacaoDto = new AlocacaoDto();
+                    alocacaoDto.setId(alocacao.getId());
+                    alocacaoDto.setAno(alocacao.getAno());
+                    alocacaoDto.setSemestre(alocacao.getSemestre());
+                    alocacaoDto.setTipoAtividade(alocacao.getAtividade().getTipoAtividade());
+                    alocacaoDto.setHorasAprovadas(alocacao.getTotalHorasAprovadas());
+                    alocacaoDto.setHorasSolicitadas(alocacao.getTotalHorasSolicitadas());
+                    alocacaoDto.setStatus(alocacao.getAtividade().getAutorizacao().getStatus());
+
+                    return alocacaoDto;
+                }).collect(Collectors.toList());
     }
 
     @Override
@@ -299,24 +316,24 @@ public class AtividadeServiceImpl implements AtividadeService {
     public void updateConvenio(ConvenioDto request) {
         convenioRepository.findById(request.getId())
                 .ifPresentOrElse(convenio -> convenioRepository.save(AtividadeFactory.updateConvenio(request, convenio)), () -> {
-            throw new NoSuchElementException(ATIVIDADE_ERRO);
-        });
+                    throw new NoSuchElementException(ATIVIDADE_ERRO);
+                });
     }
 
     @Override
     public void updateCursoExtensao(CursoExtensaoDto request) {
         cursoRepository.findById(request.getId())
                 .ifPresentOrElse(curso -> cursoRepository.save(AtividadeFactory.updateCurso(request, curso)), () -> {
-            throw new NoSuchElementException(ATIVIDADE_ERRO);
-        });
+                    throw new NoSuchElementException(ATIVIDADE_ERRO);
+                });
     }
 
     @Override
     public void updateRegencia(RegenciaDto request) {
         regenciaRepository.findById(request.getId())
                 .ifPresentOrElse(regencia -> regenciaRepository.save(AtividadeFactory.updateRegencia(request, regencia)), () -> {
-            throw new NoSuchElementException(ATIVIDADE_ERRO);
-        });
+                    throw new NoSuchElementException(ATIVIDADE_ERRO);
+                });
     }
 
     private void salvarAutorizacao(Atividade atividadeEntity) {

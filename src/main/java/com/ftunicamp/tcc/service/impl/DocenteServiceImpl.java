@@ -93,6 +93,7 @@ public class DocenteServiceImpl implements DocenteService, UsuarioService {
                     alocacaoDto.setSemestre(alocacao.getSemestre());
                     alocacaoDto.setHorasAprovadas(alocacao.getTotalHorasAprovadas());
                     alocacaoDto.setHorasSolicitadas(alocacao.getTotalHorasSolicitadas());
+                    alocacaoDto.setTipoAtividade(alocacao.getAtividade().getTipoAtividade());
                     alocacaoDto.setStatus(alocacao.getAtividade().getAutorizacao().getStatus());
                     return alocacaoDto;
                 })

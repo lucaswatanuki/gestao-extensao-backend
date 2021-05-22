@@ -1,11 +1,8 @@
 package com.ftunicamp.tcc.controllers.response;
 
 import com.ftunicamp.tcc.dto.AlocacaoDto;
-import com.ftunicamp.tcc.model.Alocacao;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
-import lombok.Setter;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -28,5 +25,6 @@ public class AtividadeDetalheResponse {
     private final String tipoAtividade;
     private final String revisao;
     private final List<AlocacaoDto> alocacoes;
+    private final boolean excedido;
 
 }

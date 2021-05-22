@@ -1,17 +1,19 @@
 package com.ftunicamp.tcc.controllers.request;
 
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.ftunicamp.tcc.dto.AlocacaoDto;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.List;
 
 @Getter
 @Setter
-public class CursoExtensaoRequest implements Serializable {
+@AllArgsConstructor
+@NoArgsConstructor
+public class CursoExtensaoRequest {
 
     private String nomeCurso;
     private String coordenador;
@@ -28,5 +30,4 @@ public class CursoExtensaoRequest implements Serializable {
     private String observacao;
     private String instituicaoVinculada;
     private List<AlocacaoDto> alocacoes;
-
 }

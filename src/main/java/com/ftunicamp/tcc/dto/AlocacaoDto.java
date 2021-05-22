@@ -11,6 +11,7 @@ import lombok.Setter;
 public class AlocacaoDto {
 
     private long id;
+    private long atividadeId;
     private int ano;
     private int semestre;
     private long horasAprovadas;

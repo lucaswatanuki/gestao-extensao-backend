@@ -135,6 +135,7 @@ public class DocenteServiceImpl implements DocenteService, UsuarioService {
     private AlocacaoDto mapToAlocacaoDto(Alocacao alocacao) {
         var alocacaoDto = new AlocacaoDto();
         alocacaoDto.setId(alocacao.getId());
+        alocacaoDto.setAtividadeId(alocacao.getAtividade().getId());
         alocacaoDto.setAno(alocacao.getAno());
         alocacaoDto.setSemestre(alocacao.getSemestre());
         alocacaoDto.setHorasAprovadas(alocacao.getTotalHorasAprovadas());

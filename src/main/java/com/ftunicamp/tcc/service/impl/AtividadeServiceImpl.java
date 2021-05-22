@@ -192,23 +192,40 @@ public class AtividadeServiceImpl implements AtividadeService {
                 .descricao(convenio.getDescricao())
                 .tipoAtividadeSimultanea(convenio.getTipoAtividadeSimultanea())
                 .instituicao(convenio.getInstituicao())
+                .excedido(verificaLimiteHorasConvenios(convenio))
                 .build();
     }
 
-    private List<AlocacaoDto> getAlocacoesSemestral(ConvenioEntity convenio) {
-        return convenio.getDocente().getAlocacao()
-                .stream()
-                .filter(x -> convenio.getAlocacao()
+    private <T extends Atividade> boolean verificaLimiteHorasConvenios(T atividade) {
+        var horasAprovadas = atividade.getDocente().getAlocacao().stream()
+                .filter(alocacoesDocente -> atividade.getAlocacao()
                         .stream()
-                        .map(Alocacao::getAno).collect(Collectors.toList())
-                        .contains(x.getAno()) &&
-                        convenio.getAlocacao()
-                                .stream()
-                                .map(Alocacao::getSemestre).collect(Collectors.toList())
-                                .contains(x.getSemestre()))
+                        .filter(a -> a.getSemestre() == alocacoesDocente.getSemestre())
+                        .filter(a -> a.getAno() == alocacoesDocente.getAno())
+                        .findAny()
+                        .orElse(null) != null
+                )
+                .map(Alocacao::getTotalHorasAprovadas)
+                .reduce(Long::sum)
+                .orElse(0L);
+
+        return horasAprovadas >= 60;
+    }
+
+    private <T extends Atividade> List<AlocacaoDto> getAlocacoesSemestral(T atividade) {
+        return atividade.getDocente().getAlocacao()
+                .stream()
+                .filter(alocacoesDocente -> atividade.getAlocacao()
+                        .stream()
+                        .filter(a -> a.getSemestre() == alocacoesDocente.getSemestre())
+                        .filter(a -> a.getAno() == alocacoesDocente.getAno())
+                        .findAny()
+                        .orElse(null) != null
+                )
                 .map(alocacao -> {
                     var alocacaoDto = new AlocacaoDto();
                     alocacaoDto.setId(alocacao.getId());
+                    alocacaoDto.setAtividadeId(alocacao.getAtividade().getId());
                     alocacaoDto.setAno(alocacao.getAno());
                     alocacaoDto.setSemestre(alocacao.getSemestre());
                     alocacaoDto.setTipoAtividade(alocacao.getAtividade().getTipoAtividade());
@@ -243,15 +260,7 @@ public class AtividadeServiceImpl implements AtividadeService {
                 .tipoAtividade(curso.getTipoAtividade())
                 .revisao(curso.getRevisao() == null ? "Não há itens a revisar" : curso.getRevisao())
                 .observacao(curso.getObservacao())
-                .alocacoes(curso.getAlocacao().stream().map(alocacao -> {
-                    var alocacaoDto = new AlocacaoDto();
-                    alocacaoDto.setId(alocacao.getId());
-                    alocacaoDto.setAno(alocacao.getAno());
-                    alocacaoDto.setSemestre(alocacao.getSemestre());
-                    alocacaoDto.setHorasAprovadas(alocacao.getTotalHorasAprovadas());
-                    alocacaoDto.setHorasSolicitadas(alocacao.getTotalHorasSolicitadas());
-                    return alocacaoDto;
-                }).collect(Collectors.toList()))
+                .alocacoes(getAlocacoesSemestral(curso))
                 .valorBrutoHoraAula(curso.getValorBrutoHoraAula())
                 .valorBrutoOutraAtividade(curso.getValorBrutoOutraAtividade())
                 .cargaHorariaTotal(curso.getCargaHorariaTotalDedicada() + curso.getCargaHorariaTotalMinistrada())
@@ -260,6 +269,7 @@ public class AtividadeServiceImpl implements AtividadeService {
                 .nomeCurso(curso.getProjeto())
                 .instituicaoVinculada(curso.getInstituicaoVinculada())
                 .participacao(curso.getParticipacao().toString())
+                .excedido(verificaLimiteHorasConvenios(curso))
                 .build();
     }
 
@@ -285,15 +295,7 @@ public class AtividadeServiceImpl implements AtividadeService {
                 .tipoAtividade(regencia.getTipoAtividade())
                 .revisao(regencia.getRevisao() == null ? "Não há itens a revisar" : regencia.getRevisao())
                 .observacao(regencia.getObservacao())
-                .alocacoes(regencia.getAlocacao().stream().map(alocacao -> {
-                    var alocacaoDto = new AlocacaoDto();
-                    alocacaoDto.setId(alocacao.getId());
-                    alocacaoDto.setAno(alocacao.getAno());
-                    alocacaoDto.setSemestre(alocacao.getSemestre());
-                    alocacaoDto.setHorasAprovadas(alocacao.getTotalHorasAprovadas());
-                    alocacaoDto.setHorasSolicitadas(alocacao.getTotalHorasSolicitadas());
-                    return alocacaoDto;
-                }).collect(Collectors.toList()))
+                .alocacoes(getAlocacoesSemestral(regencia))
                 .valorBrutoHoraAula(regencia.getValorBrutoHoraAula())
                 .cargaHorariaTotalDedicada(regencia.getCargaHorariaTotalDedicada())
                 .cargaHoraTotalMinistrada(regencia.getCargaHorariaTotalMinistrada())
@@ -309,6 +311,7 @@ public class AtividadeServiceImpl implements AtividadeService {
                 .instituicao(regencia.getInstituicao())
                 .valorBruto(regencia.getValorBruto())
                 .valorBrutoTotalAula(regencia.getValorBrutoHoraAula())
+                .excedido(verificaLimiteHorasConvenios(regencia))
                 .build();
     }
 

@@ -1,7 +1,6 @@
 package com.ftunicamp.tcc.controllers.response;
 
 import com.ftunicamp.tcc.dto.AlocacaoDto;
-import com.ftunicamp.tcc.model.Alocacao;
 import com.ftunicamp.tcc.model.Nivel;
 import lombok.Builder;
 import lombok.Getter;
@@ -28,8 +27,13 @@ public class RegenciaDto extends AtividadeDetalheResponse {
     private final boolean unicoDocente;
 
     @Builder
-    public RegenciaDto(long id, String projeto, Double valorBruto, String docente, int horaMensal, int horaSemanal, long prazo, LocalDateTime dataInicio, LocalDateTime dataFim, String observacao, boolean autorizado, String tipoAtividade, String revisao, List<AlocacaoDto> alocacoes, Nivel nivel, String curso, String coordenador, String disciplinaParticipacao, int cargaHoraTotalMinistrada, int cargaHorariaTotalDedicada, Double valorBrutoHoraAula, Double valorBrutoTotalAula, Double valorBrutoOutraAtividade, String instituicao, String diasTrabalhadosUnicamp, String diasTrabalhadosOutraInstituicao, boolean responsavel, boolean unicoDocente) {
-        super(id, projeto, valorBruto, docente, horaMensal, horaSemanal, prazo, dataInicio, dataFim, observacao, autorizado, tipoAtividade, revisao, alocacoes);
+    public RegenciaDto(long id, String projeto, Double valorBruto, String docente, int horaMensal, int horaSemanal, long prazo,
+                       LocalDateTime dataInicio, LocalDateTime dataFim, String observacao, boolean autorizado, String tipoAtividade,
+                       String revisao, List<AlocacaoDto> alocacoes, boolean excedido, Nivel nivel, String curso, String coordenador, String disciplinaParticipacao,
+                       int cargaHoraTotalMinistrada, int cargaHorariaTotalDedicada, Double valorBrutoHoraAula, Double valorBrutoTotalAula,
+                       Double valorBrutoOutraAtividade, String instituicao, String diasTrabalhadosUnicamp, String diasTrabalhadosOutraInstituicao,
+                       boolean responsavel, boolean unicoDocente) {
+        super(id, projeto, valorBruto, docente, horaMensal, horaSemanal, prazo, dataInicio, dataFim, observacao, autorizado, tipoAtividade, revisao, alocacoes, excedido);
         this.nivel = nivel;
         this.curso = curso;
         this.coordenador = coordenador;

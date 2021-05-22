@@ -24,11 +24,11 @@ public class CursoExtensaoDto extends AtividadeDetalheResponse {
     @Builder
     public CursoExtensaoDto(long id, String projeto, Double valorBruto, String docente, int horaMensal,
                             int horaSemanal, long prazo, LocalDateTime dataInicio, LocalDateTime dataFim, String observacao, boolean autorizado, String tipoAtividade, String revisao,
-                            List<AlocacaoDto> alocacoes, String participacao, String disciplinas, int cargaHorariaTotal,
+                            List<AlocacaoDto> alocacoes, boolean excedido, String participacao, String disciplinas, int cargaHorariaTotal,
                             double valorBrutoHoraAula, double valorBrutoTotalAula, double valorBrutoOutraAtividade,
                             int periodo, String nomeCurso, String instituicaoVinculada, String coordenador) {
         super(id, projeto, valorBruto, docente, horaMensal, horaSemanal, prazo, dataInicio, dataFim,
-                observacao, autorizado, tipoAtividade, revisao, alocacoes);
+                observacao, autorizado, tipoAtividade, revisao, alocacoes, excedido);
         this.participacao = participacao;
         this.disciplinas = disciplinas;
         this.cargaHorariaTotal = cargaHorariaTotal;

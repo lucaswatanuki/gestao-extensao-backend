@@ -88,7 +88,7 @@ public class EmailServiceImpl implements EmailService {
                     .field("o:tracking", "False")
                     .field("v:docente", docente.getNome())
                     .field("v:body", body)
-                    .field("v:observacao", tipoEmail.equals(TipoEmail.NOVA_ATIVIDADE) ? null: observacao == null ? "Nenhuma." : observacao)
+                    .field("v:observacao", (observacao == null || observacao.isEmpty()) ? "-" : observacao)
                     .asJson();
             Logger.getAnonymousLogger().log(Level.INFO, request.getBody().toPrettyString());
         } catch (UnirestException e) {

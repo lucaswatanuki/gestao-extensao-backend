@@ -16,6 +16,7 @@ import com.ftunicamp.tcc.service.EmailService;
 import com.ftunicamp.tcc.utils.TipoEmail;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import javax.mail.MessagingException;
@@ -51,6 +52,7 @@ public class AutorizacaoServiceImpl implements AutorizacaoService {
 
     @Override
     @Transactional
+    @Async
     public void incluirAutorizacao(Long idAtividade, AutorizacaoRequest request) {
         final var autorizacao = autorizacaoRepository.findById(idAtividade);
 
@@ -85,6 +87,7 @@ public class AutorizacaoServiceImpl implements AutorizacaoService {
                 });
     }
 
+    @Async
     private void enviarEmail(Atividade atividade, String observacao) {
         CompletableFuture.runAsync(() -> {
             try {

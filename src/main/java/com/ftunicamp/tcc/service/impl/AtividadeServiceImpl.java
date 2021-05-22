@@ -213,15 +213,8 @@ public class AtividadeServiceImpl implements AtividadeService {
     }
 
     private <T extends Atividade> List<AlocacaoDto> getAlocacoesSemestral(T atividade) {
-        return atividade.getDocente().getAlocacao()
+        return atividade.getAlocacao()
                 .stream()
-                .filter(alocacoesDocente -> atividade.getAlocacao()
-                        .stream()
-                        .filter(a -> a.getSemestre() == alocacoesDocente.getSemestre())
-                        .filter(a -> a.getAno() == alocacoesDocente.getAno())
-                        .findAny()
-                        .orElse(null) != null
-                )
                 .map(alocacao -> {
                     var alocacaoDto = new AlocacaoDto();
                     alocacaoDto.setId(alocacao.getId());
@@ -232,6 +225,30 @@ public class AtividadeServiceImpl implements AtividadeService {
                     alocacaoDto.setHorasAprovadas(alocacao.getTotalHorasAprovadas());
                     alocacaoDto.setHorasSolicitadas(alocacao.getTotalHorasSolicitadas());
                     alocacaoDto.setStatus(alocacao.getAtividade().getAutorizacao().getStatus());
+                    alocacaoDto.setHorasAprovadasConvenio(alocacao.getDocente().getAlocacao()
+                            .stream()
+                            .filter(x -> x.getAtividade().getTipoAtividade().contentEquals(TipoAtividade.CONVENIO.toString()))
+                            .filter(x -> x.getSemestre() == alocacao.getSemestre())
+                            .filter(x -> x.getAno() == alocacao.getAno())
+                            .map(Alocacao::getTotalHorasAprovadas)
+                            .reduce(Long::sum)
+                            .orElse(0L));
+                    alocacaoDto.setHorasAprovadasRegencia(alocacao.getAtividade().getAlocacao()
+                            .stream()
+                            .filter(x -> x.getAtividade().getTipoAtividade().equals(TipoAtividade.REGENCIA.toString()))
+                            .filter(x -> x.getSemestre() == alocacao.getSemestre())
+                            .filter(x -> x.getAno() == alocacao.getAno())
+                            .map(Alocacao::getTotalHorasAprovadas)
+                            .reduce(Long::sum)
+                            .orElse(0L));
+                    alocacaoDto.setHorasAprovadasCurso(alocacao.getAtividade().getAlocacao()
+                            .stream()
+                            .filter(x -> x.getAtividade().getTipoAtividade().equals(TipoAtividade.CURSO.toString()))
+                            .filter(x -> x.getSemestre() == alocacao.getSemestre())
+                            .filter(x -> x.getAno() == alocacao.getAno())
+                            .map(Alocacao::getTotalHorasAprovadas)
+                            .reduce(Long::sum)
+                            .orElse(0L));
 
                     return alocacaoDto;
                 }).collect(Collectors.toList());

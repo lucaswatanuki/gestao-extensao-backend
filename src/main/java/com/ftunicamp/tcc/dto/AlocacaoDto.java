@@ -18,5 +18,8 @@ public class AlocacaoDto {
     private long horasSolicitadas;
     private String tipoAtividade;
     private StatusAutorizacao status;
+    private long horasAprovadasConvenio;
+    private long horasAprovadasRegencia;
+    private long horasAprovadasCurso;
 
 }

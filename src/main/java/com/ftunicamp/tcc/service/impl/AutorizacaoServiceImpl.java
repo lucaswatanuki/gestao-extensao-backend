@@ -52,7 +52,6 @@ public class AutorizacaoServiceImpl implements AutorizacaoService {
 
     @Override
     @Transactional
-    @Async
     public void incluirAutorizacao(Long idAtividade, AutorizacaoRequest request) {
         final var autorizacao = autorizacaoRepository.findById(idAtividade);
 
@@ -62,6 +61,8 @@ public class AutorizacaoServiceImpl implements AutorizacaoService {
 
                     if (!request.isAutorizado()) {
                         autorizacaoEntity.setStatus(StatusAutorizacao.REVISAO);
+                        alocacoes.forEach(alocacao -> alocacao.setTotalHorasAprovadas(0L));
+                        alocacaoRepository.saveAll(alocacoes);
                         autorizacaoRepository.save(autorizacaoEntity);
                         atividade.setStatus(StatusAtividade.EM_REVISAO);
                         atividade.setRevisao(request.getObservacao());

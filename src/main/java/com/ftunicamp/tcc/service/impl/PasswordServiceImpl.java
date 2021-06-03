@@ -59,7 +59,7 @@ public class PasswordServiceImpl implements PasswordService {
         var userToken = new PasswordResetToken();
         var usuario = new UsuarioEntity();
 
-        if (jwtUtils.getSessao().getUsername().isEmpty()){
+        if (jwtUtils.getSessao() == null){
             userToken = tokenRepository.findByToken(dto.getToken());
             if (userToken == null) {
                 throw new NoSuchElementException("Usuario nao encontrado");

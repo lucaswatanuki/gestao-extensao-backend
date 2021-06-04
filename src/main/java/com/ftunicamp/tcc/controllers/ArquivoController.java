@@ -1,11 +1,8 @@
 package com.ftunicamp.tcc.controllers;
 
-import com.ftunicamp.tcc.controllers.request.RelatorioRequest;
-import com.ftunicamp.tcc.controllers.response.RelatorioResponse;
 import com.ftunicamp.tcc.controllers.response.Response;
 import com.ftunicamp.tcc.dto.ArquivoDto;
 import com.ftunicamp.tcc.service.ArquivoService;
-import com.ftunicamp.tcc.service.impl.RelatorioServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -14,11 +11,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
 
 @CrossOrigin(origins = "*", maxAge = 3600)

@@ -1,6 +1,5 @@
 package com.ftunicamp.tcc.controllers;
 
-import com.ftunicamp.tcc.controllers.response.Response;
 import com.ftunicamp.tcc.dto.PasswordDto;
 import com.ftunicamp.tcc.dto.PasswordTokenDto;
 import com.ftunicamp.tcc.service.PasswordService;

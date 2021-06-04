@@ -1,7 +1,7 @@
 package com.ftunicamp.tcc.utils;
 
 import com.ftunicamp.tcc.controllers.request.SignUpRequest;
-import com.ftunicamp.tcc.model.DocenteEntity;
+import com.ftunicamp.tcc.model.Docente;
 import com.ftunicamp.tcc.model.UsuarioEntity;
 import org.springframework.stereotype.Component;
 
@@ -11,9 +11,9 @@ public class DocenteFactory {
     private DocenteFactory() {
     }
 
-    public static DocenteEntity criarDocente(SignUpRequest request, UsuarioEntity user) {
+    public static Docente criarDocente(SignUpRequest request, UsuarioEntity user) {
 
-        var docente = new DocenteEntity();
+        var docente = new Docente();
         docente.setNome(request.getNome());
         docente.setCpf(request.getCpf().replaceAll("[^0-9]",""));
         docente.setEmail(request.getEmail());

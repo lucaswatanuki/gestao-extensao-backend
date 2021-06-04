@@ -47,7 +47,7 @@ public class PasswordServiceImpl implements PasswordService {
             throw new NoSuchElementException("User not found");
         }
 
-        String token = UUID.randomUUID().toString();
+        var token = UUID.randomUUID().toString();
         createPasswordResetTokenForUser(user, token);
         var baseUrl = Utilities.getBaseUrl(request);
 
@@ -73,10 +73,8 @@ public class PasswordServiceImpl implements PasswordService {
             throw new NoSuchElementException("Usuário não encontrado");
         }
 
-        if (dto.getSenhaAtual() != null) {
-            if (!passwordEncoder.matches(dto.getSenhaAtual(), usuario.getPassword())) {
+        if (dto.getSenhaAtual() != null && !passwordEncoder.matches(dto.getSenhaAtual(), usuario.getPassword())) {
                 throw new NegocioException("Verificar senha");
-            }
         }
         usuario.setPassword(passwordEncoder.encode(dto.getSenha()));
 
@@ -91,7 +89,7 @@ public class PasswordServiceImpl implements PasswordService {
     }
 
     public void createPasswordResetTokenForUser(UsuarioEntity user, String token) {
-        PasswordResetToken myToken = new PasswordResetToken(token, user);
+        var myToken = new PasswordResetToken(token, user);
         tokenRepository.save(myToken);
     }
 

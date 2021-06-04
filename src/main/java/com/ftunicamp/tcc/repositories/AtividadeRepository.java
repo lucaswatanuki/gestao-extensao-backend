@@ -1,7 +1,7 @@
 package com.ftunicamp.tcc.repositories;
 
 import com.ftunicamp.tcc.model.Atividade;
-import com.ftunicamp.tcc.model.DocenteEntity;
+import com.ftunicamp.tcc.model.Docente;
 import com.ftunicamp.tcc.model.StatusAtividade;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -13,7 +13,7 @@ import java.util.List;
 @Repository
 public interface AtividadeRepository<T extends Atividade> extends JpaRepository<T, Long> {
 
-    List<Atividade> findAllByDocente(DocenteEntity docente);
+    List<Atividade> findAllByDocente(Docente docente);
 
     @Query("from Atividade a where a.docente.id = ?1 and a.status = ?2 and a.dataCriacao between ?3 and ?4")
     List<Atividade> gerarRelatorioAtividadesPorStatusEDocente(long id, StatusAtividade statusAtividade,

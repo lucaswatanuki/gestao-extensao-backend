@@ -25,9 +25,9 @@ import java.util.List;
 public class RelatorioServiceImpl implements RelatorioService, PDFExportService {
 
     @Autowired
-    private AtividadeRepository atividadeRepository;
+    private AtividadeRepository<Atividade> atividadeRepository;
 
-    private List<RelatorioResponse> dadosRelatorio;
+    private final List<RelatorioResponse> dadosRelatorio;
 
     public RelatorioServiceImpl(List<RelatorioResponse> dadosRelatorio) {
         this.dadosRelatorio = dadosRelatorio;
@@ -134,7 +134,7 @@ public class RelatorioServiceImpl implements RelatorioService, PDFExportService 
 
     @Override
     public void export(HttpServletResponse response) throws IOException, DocumentException {
-        Document document = new Document(PageSize.A4);
+        var document = new Document(PageSize.A4);
 
         PdfWriter.getInstance(document, response.getOutputStream());
 
@@ -143,12 +143,12 @@ public class RelatorioServiceImpl implements RelatorioService, PDFExportService 
         var font = FontFactory.getFont(FontFactory.HELVETICA_BOLD);
         font.setColor(Color.RED);
         font.setSize(18);
-        Paragraph titulo = new Paragraph("Relatório de atividades", font);
+        var titulo = new Paragraph("Relatório de atividades", font);
         titulo.setAlignment(Paragraph.ALIGN_CENTER);
 
         document.add(titulo);
 
-        PdfPTable table = new PdfPTable(6);
+        var table = new PdfPTable(6);
         table.setWidthPercentage(100);
         table.setSpacingBefore(15);
 

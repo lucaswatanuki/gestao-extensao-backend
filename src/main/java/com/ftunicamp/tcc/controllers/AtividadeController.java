@@ -18,7 +18,6 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
 
@@ -88,7 +87,7 @@ public class AtividadeController {
                                     @PathVariable("tipoAtividade") TipoAtividade tipoAtividade,
                                     @PathVariable("id") Long id) {
         try {
-            Path file = Paths.get(pdfService.generatePdf(tipoAtividade, id).getAbsolutePath());
+            var file = Paths.get(pdfService.generatePdf(tipoAtividade, id).getAbsolutePath());
             if (Files.exists(file)) {
                 response.setContentType("application/pdf");
                 response.addHeader("Content-Disposition",

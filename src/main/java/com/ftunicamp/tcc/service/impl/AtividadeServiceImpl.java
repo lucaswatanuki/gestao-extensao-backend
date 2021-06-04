@@ -31,9 +31,8 @@ import java.util.stream.Collectors;
 public class AtividadeServiceImpl implements AtividadeService {
 
     private static final String MENSAGEM_SUCESSO = "Atividade cadastrada com sucesso.";
-    private static final String MENSAGEM_ERRO = "Erro ao criar atividade";
-    private static final String ATIVIDADE_ERRO = "Atividade não econtrada.";
-
+    private static final String ATIVIDADE_NOT_FOUND = "Atividade não econtrada.";
+    private static final String ITENS_REVISAO = "Não há itens a revisar";
 
     private final AtividadeRepository<Atividade> atividadeRepository;
     private final AtividadeRepository<ConvenioEntity> convenioRepository;
@@ -44,10 +43,7 @@ public class AtividadeServiceImpl implements AtividadeService {
     private final EmailService emailService;
     private final ArquivosRepository arquivosRepository;
     private final AlocacaoRepository alocacaoRepository;
-
-    @Autowired
-    private JwtUtils jwtUtils;
-
+    private final JwtUtils jwtUtils;
 
     @Autowired
     public AtividadeServiceImpl(AtividadeRepository<Atividade> atividadeRepository,
@@ -56,7 +52,8 @@ public class AtividadeServiceImpl implements AtividadeService {
                                 AtividadeRepository<CursoExtensaoEntity> cursoRepository,
                                 DocenteRepository docenteRepository,
                                 AutorizacaoRepository autorizacaoRepository,
-                                EmailService emailService, ArquivosRepository arquivosRepository, AlocacaoRepository alocacaoRepository) {
+                                EmailService emailService, ArquivosRepository arquivosRepository,
+                                AlocacaoRepository alocacaoRepository, JwtUtils jwtUtils) {
         this.atividadeRepository = atividadeRepository;
         this.convenioRepository = convenioRepository;
         this.regenciaRepository = regenciaRepository;
@@ -66,11 +63,12 @@ public class AtividadeServiceImpl implements AtividadeService {
         this.emailService = emailService;
         this.arquivosRepository = arquivosRepository;
         this.alocacaoRepository = alocacaoRepository;
+        this.jwtUtils = jwtUtils;
     }
 
 
     @Override
-    public AtividadeResponse cadastrarConvenio(ConvenioRequest request) throws UnsupportedEncodingException, MessagingException {
+    public AtividadeResponse cadastrarConvenio(ConvenioRequest request) {
         var docente = (docenteRepository.findByUser_Username(jwtUtils.getSessao().getUsername()));
         var atividade = AtividadeFactory.criarConvenio(request, docente);
         setAlocacao(docente, atividade, request.getAlocacoes());
@@ -171,7 +169,7 @@ public class AtividadeServiceImpl implements AtividadeService {
         var convenio = convenioRepository.findById(id).orElse(null);
 
         if (convenio == null) {
-            throw new NoSuchElementException("Atividade não encontrada.");
+            throw new NoSuchElementException(ATIVIDADE_NOT_FOUND);
         }
 
         return ConvenioDto.builder()
@@ -186,7 +184,7 @@ public class AtividadeServiceImpl implements AtividadeService {
                 .dataFim(convenio.getDataFim())
                 .autorizado(convenio.getStatus().equals(StatusAtividade.EM_ANDAMENTO))
                 .tipoAtividade(convenio.getTipoAtividade())
-                .revisao(convenio.getRevisao() == null ? "Não há itens a revisar" : convenio.getRevisao())
+                .revisao(convenio.getRevisao() == null ? ITENS_REVISAO : convenio.getRevisao())
                 .observacao(convenio.getObservacao())
                 .alocacoes(getAlocacoesSemestral(convenio))
                 .descricao(convenio.getDescricao())
@@ -275,7 +273,7 @@ public class AtividadeServiceImpl implements AtividadeService {
                 .dataFim(curso.getDataFim())
                 .autorizado(curso.getStatus().equals(StatusAtividade.EM_ANDAMENTO))
                 .tipoAtividade(curso.getTipoAtividade())
-                .revisao(curso.getRevisao() == null ? "Não há itens a revisar" : curso.getRevisao())
+                .revisao(curso.getRevisao() == null ? ITENS_REVISAO : curso.getRevisao())
                 .observacao(curso.getObservacao())
                 .alocacoes(getAlocacoesSemestral(curso))
                 .valorBrutoHoraAula(curso.getValorBrutoHoraAula())
@@ -295,7 +293,7 @@ public class AtividadeServiceImpl implements AtividadeService {
         var regencia = regenciaRepository.findById(id).orElse(null);
 
         if (regencia == null) {
-            throw new NoSuchElementException("Atividade não encontrada.");
+            throw new NoSuchElementException(ATIVIDADE_NOT_FOUND);
         }
 
         return RegenciaDto.builder()
@@ -310,7 +308,7 @@ public class AtividadeServiceImpl implements AtividadeService {
                 .dataFim(regencia.getDataFim())
                 .autorizado(regencia.getStatus().equals(StatusAtividade.EM_ANDAMENTO))
                 .tipoAtividade(regencia.getTipoAtividade())
-                .revisao(regencia.getRevisao() == null ? "Não há itens a revisar" : regencia.getRevisao())
+                .revisao(regencia.getRevisao() == null ? ITENS_REVISAO : regencia.getRevisao())
                 .observacao(regencia.getObservacao())
                 .alocacoes(getAlocacoesSemestral(regencia))
                 .valorBrutoHoraAula(regencia.getValorBrutoHoraAula())
@@ -336,7 +334,7 @@ public class AtividadeServiceImpl implements AtividadeService {
     public void updateConvenio(ConvenioDto request) {
         convenioRepository.findById(request.getId())
                 .ifPresentOrElse(convenio -> convenioRepository.save(AtividadeFactory.updateConvenio(request, convenio)), () -> {
-                    throw new NoSuchElementException(ATIVIDADE_ERRO);
+                    throw new NoSuchElementException(ATIVIDADE_NOT_FOUND);
                 });
     }
 
@@ -344,7 +342,7 @@ public class AtividadeServiceImpl implements AtividadeService {
     public void updateCursoExtensao(CursoExtensaoDto request) {
         cursoRepository.findById(request.getId())
                 .ifPresentOrElse(curso -> cursoRepository.save(AtividadeFactory.updateCurso(request, curso)), () -> {
-                    throw new NoSuchElementException(ATIVIDADE_ERRO);
+                    throw new NoSuchElementException(ATIVIDADE_NOT_FOUND);
                 });
     }
 
@@ -352,7 +350,7 @@ public class AtividadeServiceImpl implements AtividadeService {
     public void updateRegencia(RegenciaDto request) {
         regenciaRepository.findById(request.getId())
                 .ifPresentOrElse(regencia -> regenciaRepository.save(AtividadeFactory.updateRegencia(request, regencia)), () -> {
-                    throw new NoSuchElementException(ATIVIDADE_ERRO);
+                    throw new NoSuchElementException(ATIVIDADE_NOT_FOUND);
                 });
     }
 
@@ -365,18 +363,17 @@ public class AtividadeServiceImpl implements AtividadeService {
         autorizacaoRepository.save(autorizacao);
     }
 
-    private void setAlocacao(DocenteEntity docente, Atividade atividade, List<AlocacaoDto> alocacoesDto) {
+    private void setAlocacao(Docente docente, Atividade atividade, List<AlocacaoDto> alocacoesDto) {
         if (!atividade.getStatus().equals(StatusAtividade.CONCLUIDA)) {
             var alocacoes = alocacoesDto.stream()
-                    .map(dto -> {
-                        return Alocacao.builder()
-                                .ano(dto.getAno())
-                                .semestre(dto.getSemestre())
-                                .totalHorasSolicitadas(dto.getHorasSolicitadas())
-                                .atividade(atividade)
-                                .docente(docente)
-                                .build();
-                    }).collect(Collectors.toList());
+                    .map(dto -> Alocacao.builder()
+                            .ano(dto.getAno())
+                            .semestre(dto.getSemestre())
+                            .totalHorasSolicitadas(dto.getHorasSolicitadas())
+                            .atividade(atividade)
+                            .docente(docente)
+                            .build()
+                    ).collect(Collectors.toList());
             atividade.setAlocacao(alocacoes);
         }
     }

@@ -3,11 +3,11 @@ package com.ftunicamp.tcc.service.impl;
 import com.ftunicamp.tcc.controllers.request.LoginRequest;
 import com.ftunicamp.tcc.controllers.request.SignUpRequest;
 import com.ftunicamp.tcc.controllers.response.JwtResponse;
-import com.ftunicamp.tcc.model.DocenteEntity;
+import com.ftunicamp.tcc.exceptions.NegocioException;
+import com.ftunicamp.tcc.model.Docente;
 import com.ftunicamp.tcc.model.Profiles;
 import com.ftunicamp.tcc.model.ProfilesEntity;
 import com.ftunicamp.tcc.model.UsuarioEntity;
-import com.ftunicamp.tcc.exceptions.NegocioException;
 import com.ftunicamp.tcc.repositories.DocenteRepository;
 import com.ftunicamp.tcc.repositories.ProfilesRepository;
 import com.ftunicamp.tcc.repositories.UserRepository;
@@ -20,7 +20,6 @@ import com.ftunicamp.tcc.utils.Utilities;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -66,7 +65,7 @@ public class AutenticacaoServiceImpl implements AutenticacaoService {
             throw new NegocioException("Matricula inválida.");
         }
 
-        Authentication authentication = authenticationManager.authenticate(
+        var authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(docente.get().getUser().getUsername(), loginRequest.getPassword()));
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
@@ -90,20 +89,20 @@ public class AutenticacaoServiceImpl implements AutenticacaoService {
     }
 
     @Override
-    public String registrarUsuario(SignUpRequest signUpRequest, HttpServletRequest request) throws UnsupportedEncodingException, MessagingException {
-        if (userRepository.existsByUsername(signUpRequest.getUsername())) {
+    public String registrarUsuario(SignUpRequest signUpRequest, HttpServletRequest request) {
+        if (userRepository.existsByUsername(signUpRequest.getUsername()).equals(true)) {
             return "Usuário existente";
         }
 
-        if (userRepository.existsByEmail(signUpRequest.getEmail())) {
+        if (userRepository.existsByEmail(signUpRequest.getEmail()).equals(true)) {
             return "Email já está em uso.";
         }
 
-        UsuarioEntity user = new UsuarioEntity(signUpRequest.getUsername(),
+        var user = new UsuarioEntity(signUpRequest.getUsername(),
                 signUpRequest.getEmail(),
                 encoder.encode(signUpRequest.getPassword()));
 
-        Set<String> strProfiles = signUpRequest.getProfile();
+        var strProfiles = signUpRequest.getProfile();
         Set<ProfilesEntity> roles = new HashSet<>();
 
         if (strProfiles == null) {
@@ -177,7 +176,7 @@ public class AutenticacaoServiceImpl implements AutenticacaoService {
         return profilesEntities;
     }
 
-    private DocenteEntity salvarDocente(DocenteEntity docenteEntity) {
-        return docenteRepository.save(docenteEntity);
+    private Docente salvarDocente(Docente docente) {
+        return docenteRepository.save(docente);
     }
 }

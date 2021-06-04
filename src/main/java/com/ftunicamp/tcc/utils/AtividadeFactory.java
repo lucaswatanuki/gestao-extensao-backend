@@ -19,7 +19,7 @@ public class AtividadeFactory {
     private AtividadeFactory() {
     }
 
-    public static Atividade criarConvenio(ConvenioRequest request, DocenteEntity docente) {
+    public static Atividade criarConvenio(ConvenioRequest request, Docente docente) {
         if (request.getDataInicio().isAfter(request.getDataFim())) {
             throw new NegocioException("Verificar datas de inicio e fim!");
         }
@@ -63,7 +63,7 @@ public class AtividadeFactory {
         return convenio;
     }
 
-    public static CursoExtensaoEntity criarCurso(CursoExtensaoRequest request, DocenteEntity docente) {
+    public static CursoExtensaoEntity criarCurso(CursoExtensaoRequest request, Docente docente) {
         var curso = new CursoExtensaoEntity();
         curso.setDocente(docente);
         curso.setCoordenador(request.getCoordenador());
@@ -111,7 +111,7 @@ public class AtividadeFactory {
         return curso;
     }
 
-    public static RegenciaEntity criarRegencia(RegenciaRequest request, DocenteEntity docente) {
+    public static RegenciaEntity criarRegencia(RegenciaRequest request, Docente docente) {
         var regencia = new RegenciaEntity();
         regencia.setDocente(docente);
         regencia.setProjeto(request.getCurso());
@@ -171,7 +171,7 @@ public class AtividadeFactory {
         return regencia;
     }
 
-    public static UnivespEntity criarAtividadeUnivesp(UnivespRequest request, DocenteEntity docente) {
+    public static UnivespEntity criarAtividadeUnivesp(UnivespRequest request, Docente docente) {
         var atividadeUnivesp = new UnivespEntity();
         atividadeUnivesp.setDocente(docente);
 

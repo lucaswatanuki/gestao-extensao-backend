@@ -15,7 +15,6 @@ import com.ftunicamp.tcc.service.AutorizacaoService;
 import com.ftunicamp.tcc.service.EmailService;
 import com.ftunicamp.tcc.utils.TipoEmail;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
@@ -39,7 +38,6 @@ public class AutorizacaoServiceImpl implements AutorizacaoService {
     @Autowired
     public AutorizacaoServiceImpl(AutorizacaoRepository autorizacaoRepository,
                                   JwtUtils jwtUtils,
-                                  JavaMailSender javaMailSender,
                                   EmailService emailService,
                                   AtividadeRepository<Atividade> atividadeRepository,
                                   AlocacaoRepository alocacaoRepository) {
@@ -67,7 +65,6 @@ public class AutorizacaoServiceImpl implements AutorizacaoService {
                         atividade.setStatus(StatusAtividade.EM_REVISAO);
                         atividade.setRevisao(request.getObservacao());
                         atividadeRepository.save(atividade);
-                        enviarEmail(atividade, request.getObservacao());
                     } else {
                         autorizacaoEntity.setStatus(StatusAutorizacao.APROVADO);
                         if (atividade.getStatus().equals(StatusAtividade.PENDENTE)) {

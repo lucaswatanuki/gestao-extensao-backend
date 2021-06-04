@@ -5,7 +5,7 @@ import com.ftunicamp.tcc.dto.AlocacaoDto;
 import com.ftunicamp.tcc.dto.UsuarioDto;
 import com.ftunicamp.tcc.exceptions.NegocioException;
 import com.ftunicamp.tcc.model.Alocacao;
-import com.ftunicamp.tcc.model.DocenteEntity;
+import com.ftunicamp.tcc.model.Docente;
 import com.ftunicamp.tcc.model.StatusAtividade;
 import com.ftunicamp.tcc.model.StatusAutorizacao;
 import com.ftunicamp.tcc.repositories.AlocacaoRepository;
@@ -45,7 +45,7 @@ public class DocenteServiceImpl implements DocenteService, UsuarioService {
 
         List<DocenteResponse> response = new ArrayList<>();
 
-        List<DocenteEntity> docentes = docenteRepository.findAll();
+        List<Docente> docentes = docenteRepository.findAll();
 
         docentes.forEach(docente -> {
             var docenteResponse = new DocenteResponse();

@@ -26,7 +26,7 @@ public class Alocacao {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="docente_id")
-    private DocenteEntity docente;
+    private Docente docente;
 
     @ManyToOne(cascade = {CascadeType.MERGE, CascadeType.PERSIST}, fetch = FetchType.LAZY)
     @JoinColumn(name = "atividade_id", referencedColumnName = "id")

@@ -35,9 +35,9 @@ public class AtividadeServiceImpl implements AtividadeService {
     private static final String ITENS_REVISAO = "Não há itens a revisar";
 
     private final AtividadeRepository<Atividade> atividadeRepository;
-    private final AtividadeRepository<ConvenioEntity> convenioRepository;
-    private final AtividadeRepository<RegenciaEntity> regenciaRepository;
-    private final AtividadeRepository<CursoExtensaoEntity> cursoRepository;
+    private final AtividadeRepository<Convenio> convenioRepository;
+    private final AtividadeRepository<Regencia> regenciaRepository;
+    private final AtividadeRepository<CursoExtensao> cursoRepository;
     private final DocenteRepository docenteRepository;
     private final AutorizacaoRepository autorizacaoRepository;
     private final EmailService emailService;
@@ -47,9 +47,9 @@ public class AtividadeServiceImpl implements AtividadeService {
 
     @Autowired
     public AtividadeServiceImpl(AtividadeRepository<Atividade> atividadeRepository,
-                                AtividadeRepository<ConvenioEntity> convenioRepository,
-                                AtividadeRepository<RegenciaEntity> regenciaRepository,
-                                AtividadeRepository<CursoExtensaoEntity> cursoRepository,
+                                AtividadeRepository<Convenio> convenioRepository,
+                                AtividadeRepository<Regencia> regenciaRepository,
+                                AtividadeRepository<CursoExtensao> cursoRepository,
                                 DocenteRepository docenteRepository,
                                 AutorizacaoRepository autorizacaoRepository,
                                 EmailService emailService, ArquivosRepository arquivosRepository,
@@ -355,7 +355,7 @@ public class AtividadeServiceImpl implements AtividadeService {
     }
 
     private void salvarAutorizacao(Atividade atividadeEntity) {
-        var autorizacao = new AutorizacaoEntity();
+        var autorizacao = new Autorizacao();
         autorizacao.setStatus(StatusAutorizacao.PENDENTE);
         autorizacao.setAtividade(atividadeEntity);
         autorizacao.setData(LocalDate.now());

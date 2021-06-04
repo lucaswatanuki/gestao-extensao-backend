@@ -3,7 +3,7 @@ package com.ftunicamp.tcc.service;
 import br.com.six2six.fixturefactory.loader.FixtureFactoryLoader;
 import com.ftunicamp.tcc.dto.Sessao;
 import com.ftunicamp.tcc.model.Atividade;
-import com.ftunicamp.tcc.model.ConvenioEntity;
+import com.ftunicamp.tcc.model.Convenio;
 import com.ftunicamp.tcc.model.Docente;
 import com.ftunicamp.tcc.repositories.AtividadeRepository;
 import com.ftunicamp.tcc.repositories.DocenteRepository;
@@ -50,7 +50,7 @@ public class AtividadeServiceTest {
 
     @Test
     public void deveListarAtividadesPorDocente() {
-        ConvenioEntity atividadeModel = from(ConvenioEntity.class).gimme(AtividadeTemplate.CONVENIO);
+        Convenio atividadeModel = from(Convenio.class).gimme(AtividadeTemplate.CONVENIO);
         Docente docenteModel = from(Docente.class).gimme(DocenteTemplate.DOCENTE);
 
         when(jwtUtils.getSessao()).thenReturn(sessao);

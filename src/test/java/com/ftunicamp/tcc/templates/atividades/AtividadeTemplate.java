@@ -3,7 +3,7 @@ package com.ftunicamp.tcc.templates.atividades;
 import br.com.six2six.fixturefactory.Fixture;
 import br.com.six2six.fixturefactory.Rule;
 import br.com.six2six.fixturefactory.loader.TemplateLoader;
-import com.ftunicamp.tcc.model.ConvenioEntity;
+import com.ftunicamp.tcc.model.Convenio;
 import com.ftunicamp.tcc.model.StatusAtividade;
 
 import java.time.LocalDate;
@@ -15,7 +15,7 @@ public class AtividadeTemplate implements TemplateLoader {
 
     @Override
     public void load() {
-        Fixture.of(ConvenioEntity.class).addTemplate(CONVENIO, new Rule(){
+        Fixture.of(Convenio.class).addTemplate(CONVENIO, new Rule(){
             {
                 add("id", 1L);
                 add("dataCriacao", LocalDate.now());

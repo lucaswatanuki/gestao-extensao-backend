@@ -1,6 +1,6 @@
 package com.ftunicamp.tcc.repositories;
 
-import com.ftunicamp.tcc.model.AutorizacaoEntity;
+import com.ftunicamp.tcc.model.Autorizacao;
 import com.ftunicamp.tcc.model.StatusAutorizacao;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
@@ -9,11 +9,11 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface AutorizacaoRepository extends JpaRepository<AutorizacaoEntity, Long> {
+public interface AutorizacaoRepository extends JpaRepository<Autorizacao, Long> {
 
-    List<AutorizacaoEntity> findAllByDocente(String docenteUsername);
+    List<Autorizacao> findAllByDocente(String docenteUsername);
 
-    List<AutorizacaoEntity> findAllByStatus(StatusAutorizacao status);
+    List<Autorizacao> findAllByStatus(StatusAutorizacao status);
 
-    Optional<AutorizacaoEntity> findByAtividade_id(long id);
+    Optional<Autorizacao> findByAtividade_id(long id);
 }

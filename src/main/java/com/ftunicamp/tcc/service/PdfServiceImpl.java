@@ -1,8 +1,8 @@
 package com.ftunicamp.tcc.service;
 
-import com.ftunicamp.tcc.model.ConvenioEntity;
-import com.ftunicamp.tcc.model.CursoExtensaoEntity;
-import com.ftunicamp.tcc.model.RegenciaEntity;
+import com.ftunicamp.tcc.model.Convenio;
+import com.ftunicamp.tcc.model.CursoExtensao;
+import com.ftunicamp.tcc.model.Regencia;
 import com.ftunicamp.tcc.model.TipoAtividade;
 import com.ftunicamp.tcc.repositories.ConvenioRepository;
 import com.ftunicamp.tcc.repositories.CursoRepository;
@@ -69,17 +69,17 @@ public class PdfServiceImpl implements PdfService {
         var context = new Context();
         switch (tipoPDF) {
             case CURSO:
-                Optional<CursoExtensaoEntity> curso = cursoRepository.findById(id);
-                curso.ifPresent(cursoExtensaoEntity -> {
-                    context.setVariable("curso", cursoExtensaoEntity);
+                Optional<CursoExtensao> curso = cursoRepository.findById(id);
+                curso.ifPresent(cursoExtensao -> {
+                    context.setVariable("curso", cursoExtensao);
                     context.setVariable("coordenador", nomeCoordenador);
-                    context.setVariable("dia", cursoExtensaoEntity.getDataModificacao().getDayOfMonth());
-                    context.setVariable("mes", nomeDoMes(cursoExtensaoEntity.getDataModificacao().getMonthValue()));
-                    context.setVariable("ano", cursoExtensaoEntity.getDataModificacao().getYear());
+                    context.setVariable("dia", cursoExtensao.getDataModificacao().getDayOfMonth());
+                    context.setVariable("mes", nomeDoMes(cursoExtensao.getDataModificacao().getMonthValue()));
+                    context.setVariable("ano", cursoExtensao.getDataModificacao().getYear());
                 });
                 break;
             case CONVENIO:
-                Optional<ConvenioEntity> convenio = convenioRepository.findById(id);
+                Optional<Convenio> convenio = convenioRepository.findById(id);
                 convenio.ifPresent(convenioEntity -> {
                     context.setVariable("convenio", convenioEntity);
                     context.setVariable("coordenador", nomeCoordenador);
@@ -89,7 +89,7 @@ public class PdfServiceImpl implements PdfService {
                 });
                 break;
             case REGENCIA:
-                Optional<RegenciaEntity> regencia = regenciaRepository.findById(id);
+                Optional<Regencia> regencia = regenciaRepository.findById(id);
                 regencia.ifPresent(regenciaEntity -> {
                     context.setVariable("regencia", regenciaEntity);
                     context.setVariable("coordenador", nomeCoordenador);

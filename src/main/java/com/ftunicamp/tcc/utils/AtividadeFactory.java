@@ -24,7 +24,7 @@ public class AtividadeFactory {
             throw new NegocioException("Verificar datas de inicio e fim!");
         }
 
-        var convenio = new ConvenioEntity();
+        var convenio = new Convenio();
         convenio.setDocente(docente);
         convenio.setHoraMensal(request.getHoraMensal());
         convenio.setHoraSemanal(request.getHoraSemanal());
@@ -45,7 +45,7 @@ public class AtividadeFactory {
         return convenio;
     }
 
-    public static ConvenioEntity updateConvenio(ConvenioDto request, ConvenioEntity convenio) {
+    public static Convenio updateConvenio(ConvenioDto request, Convenio convenio) {
         convenio.setHoraMensal(request.getHoraMensal());
         convenio.setHoraSemanal(request.getHoraSemanal());
         convenio.setValorBruto(request.getValorBruto());
@@ -63,8 +63,8 @@ public class AtividadeFactory {
         return convenio;
     }
 
-    public static CursoExtensaoEntity criarCurso(CursoExtensaoRequest request, Docente docente) {
-        var curso = new CursoExtensaoEntity();
+    public static CursoExtensao criarCurso(CursoExtensaoRequest request, Docente docente) {
+        var curso = new CursoExtensao();
         curso.setDocente(docente);
         curso.setCoordenador(request.getCoordenador());
         curso.setProjeto(request.getNomeCurso());
@@ -89,7 +89,7 @@ public class AtividadeFactory {
         return curso;
     }
 
-    public static CursoExtensaoEntity updateCurso(CursoExtensaoDto request, CursoExtensaoEntity curso) {
+    public static CursoExtensao updateCurso(CursoExtensaoDto request, CursoExtensao curso) {
         curso.setCoordenador(request.getCoordenador());
         curso.setProjeto(request.getNomeCurso());
         curso.setDisciplinaParticipacao(request.getDisciplinas());
@@ -111,8 +111,8 @@ public class AtividadeFactory {
         return curso;
     }
 
-    public static RegenciaEntity criarRegencia(RegenciaRequest request, Docente docente) {
-        var regencia = new RegenciaEntity();
+    public static Regencia criarRegencia(RegenciaRequest request, Docente docente) {
+        var regencia = new Regencia();
         regencia.setDocente(docente);
         regencia.setProjeto(request.getCurso());
         regencia.setInstituicao(request.getInstituicao());
@@ -143,7 +143,7 @@ public class AtividadeFactory {
         return regencia;
     }
 
-    public static RegenciaEntity updateRegencia(RegenciaDto request, RegenciaEntity regencia) {
+    public static Regencia updateRegencia(RegenciaDto request, Regencia regencia) {
         regencia.setProjeto(request.getCurso());
         regencia.setInstituicao(request.getInstituicao());
         regencia.setNivel(request.getNivel());

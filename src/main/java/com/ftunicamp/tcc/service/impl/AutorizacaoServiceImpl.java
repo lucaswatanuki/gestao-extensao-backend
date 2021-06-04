@@ -4,7 +4,7 @@ import com.ftunicamp.tcc.controllers.request.AutorizacaoRequest;
 import com.ftunicamp.tcc.controllers.response.AutorizacaoResponse;
 import com.ftunicamp.tcc.exceptions.NegocioException;
 import com.ftunicamp.tcc.model.Atividade;
-import com.ftunicamp.tcc.model.AutorizacaoEntity;
+import com.ftunicamp.tcc.model.Autorizacao;
 import com.ftunicamp.tcc.model.StatusAtividade;
 import com.ftunicamp.tcc.model.StatusAutorizacao;
 import com.ftunicamp.tcc.repositories.AlocacaoRepository;
@@ -141,7 +141,7 @@ public class AutorizacaoServiceImpl implements AutorizacaoService {
         return autorizacaoResponse;
     }
 
-    private void mapToAutorizacaoResponse(List<AutorizacaoResponse> autorizacaoResponse, AutorizacaoEntity autorizacao) {
+    private void mapToAutorizacaoResponse(List<AutorizacaoResponse> autorizacaoResponse, Autorizacao autorizacao) {
         var response = AutorizacaoResponse.builder()
                 .dataCriacao(autorizacao.getData().toString())
                 .docente(autorizacao.getAtividade().getDocente().getNome())

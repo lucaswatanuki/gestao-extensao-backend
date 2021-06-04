@@ -13,7 +13,7 @@ import javax.persistence.Enumerated;
 @Setter
 @Entity(name = "curso_extensao")
 @DiscriminatorValue("curso")
-public class CursoExtensaoEntity extends Atividade {
+public class CursoExtensao extends Atividade {
 
     private String disciplinaParticipacao;
 

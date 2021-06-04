@@ -9,7 +9,7 @@ import javax.persistence.*;
 @Setter
 @Entity(name = "regencia")
 @DiscriminatorValue("regencia")
-public class RegenciaEntity extends Atividade {
+public class Regencia extends Atividade {
 
     private String instituicao;
 

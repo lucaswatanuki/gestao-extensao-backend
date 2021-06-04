@@ -56,7 +56,7 @@ public abstract class Atividade {
     private List<Alocacao> alocacao;
 
     @OneToOne(mappedBy = "atividade", fetch = FetchType.LAZY)
-    private AutorizacaoEntity autorizacao;
+    private Autorizacao autorizacao;
 
     @Transient
     public String getTipoAtividade() {

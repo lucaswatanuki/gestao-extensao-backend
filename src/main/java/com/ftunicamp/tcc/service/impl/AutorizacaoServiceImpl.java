@@ -15,7 +15,6 @@ import com.ftunicamp.tcc.service.AutorizacaoService;
 import com.ftunicamp.tcc.service.EmailService;
 import com.ftunicamp.tcc.utils.TipoEmail;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import javax.mail.MessagingException;
@@ -85,7 +84,6 @@ public class AutorizacaoServiceImpl implements AutorizacaoService {
                 });
     }
 
-    @Async
     private void enviarEmail(Atividade atividade, String observacao) {
         CompletableFuture.runAsync(() -> {
             try {

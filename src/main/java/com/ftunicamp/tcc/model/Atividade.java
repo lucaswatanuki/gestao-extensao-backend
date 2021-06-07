@@ -24,7 +24,7 @@ public abstract class Atividade {
 
     private String coordenador;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     private Docente docente;
 
     private Integer horaMensal;

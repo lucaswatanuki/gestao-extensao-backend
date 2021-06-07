@@ -2,16 +2,16 @@ package com.ftunicamp.tcc.controllers.response;
 
 import com.ftunicamp.tcc.dto.AlocacaoDto;
 import com.ftunicamp.tcc.model.Nivel;
-import lombok.Builder;
-import lombok.Data;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
 @Builder
-@Data
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
 public class RegenciaDto {
 
     private Nivel nivel;

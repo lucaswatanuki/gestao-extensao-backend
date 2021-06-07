@@ -1,16 +1,17 @@
 package com.ftunicamp.tcc.controllers.response;
 
 import com.ftunicamp.tcc.dto.AlocacaoDto;
-import lombok.Builder;
-import lombok.Data;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
-@Data
+
 @Builder
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
 public class CursoExtensaoDto {
 
     private String participacao;

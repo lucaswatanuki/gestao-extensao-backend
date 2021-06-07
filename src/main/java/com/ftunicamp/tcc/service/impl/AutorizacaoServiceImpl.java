@@ -76,8 +76,8 @@ public class AutorizacaoServiceImpl implements AutorizacaoService {
                         }
 
                         autorizacaoRepository.save(autorizacaoEntity);
-                        enviarEmail(atividade, request.getObservacao());
                     }
+                    enviarEmail(atividade, request.getObservacao());
                 },
                 () -> {
                     throw new NegocioException("Autorização não encontrada!");

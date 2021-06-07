@@ -6,8 +6,9 @@ import lombok.*;
 import java.time.LocalDateTime;
 import java.util.List;
 
-@Data
 @Builder
+@Getter
+@Setter
 public class ConvenioDto {
     private String descricao;
     private String instituicao;

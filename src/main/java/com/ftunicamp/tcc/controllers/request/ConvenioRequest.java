@@ -28,4 +28,5 @@ public class ConvenioRequest {
     private String observacao;
     private String tipoAtividadeSimultanea;
     private List<AlocacaoDto> alocacoes;
+    private boolean urgente;
 }

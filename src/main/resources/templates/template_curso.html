@@ -5,7 +5,7 @@
     <bookmarks>
         <bookmark name="Curso" href="#curso"></bookmark>
     </bookmarks>
-    <link rel="stylesheet" type="text/css" href="css/style.css"/>
+    <link rel="stylesheet" type="text/css" href="css/styles.css"/>
 </head>
 
 <body>
@@ -58,8 +58,32 @@
 </p>
 
 <ul>
-    <li>Quaisquer taxas que devão ser recolhidas para a Faculdade de Tecnologia e Unicamp, assim como descontos
-        legais e encargos sociais, serão realizados pela Funcamp;
+    <li th:if="${ not#lists.isEmpty(alocacoes)}">
+        <p>
+            Estou ciente da Deliberação CONSU-A-02/2001, e já comprometido com as atividades de extensão abaixo:
+        </p>
+        <table style="width: 100%; border: 1px solid black; ">
+            <tr>
+                <th>Atividade</th>
+                <th>Tipo</th>
+                <th>Semestre</th>
+                <th>Ano</th>
+                <th>Horas Aprovadas</th>
+            </tr>
+            <tr th:each="alocacao : ${alocacoes}">
+                <td th:text="${alocacao.atividade.projeto}"></td>
+                <td th:text="${alocacao.atividade.tipo}"></td>
+                <td th:text="${alocacao.semestre}"></td>
+                <td th:text="${alocacao.ano}"></td>
+                <td th:text="${alocacao.totalHorasAprovadas}"></td>
+            </tr>
+        </table>
+    </li>
+    <li>
+        <p>
+            Quaisquer taxas que devão ser recolhidas para a Faculdade de Tecnologia e Unicamp, assim como descontos
+            legais e encargos sociais, serão realizados pela Funcamp;
+        </p>
     </li>
     <li>
         Estou ciente de que para que a atividade aqui descrita tenha continuidade além do prazo especificado acima,

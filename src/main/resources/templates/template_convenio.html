@@ -5,7 +5,7 @@
     <bookmarks>
         <bookmark name="Convenio" href="#convenio"></bookmark>
     </bookmarks>
-    <link rel="stylesheet" type="text/css" href="css/style.css"/>
+    <link rel="stylesheet" type="text/css" href="css/styles.css"/>
 </head>
 
 <body>
@@ -49,10 +49,33 @@
 </p>
 
 <ul>
+    <li th:if="${ not#lists.isEmpty(alocacoes)}">
+        <p>
+            Estou ciente da Deliberação CONSU-A-02/2001, e já comprometido com as atividades de extensão abaixo:
+        </p>
+        <table style="width: 100%; border: 1px solid black; ">
+            <tr>
+                <th>Atividade</th>
+                <th>Tipo</th>
+                <th>Semestre</th>
+                <th>Ano</th>
+                <th>Horas Aprovadas</th>
+            </tr>
+            <tr th:each="alocacao : ${alocacoes}">
+                <td th:text="${alocacao.atividade.projeto}"></td>
+                <td th:text="${alocacao.atividade.tipo}"></td>
+                <td th:text="${alocacao.semestre}"></td>
+                <td th:text="${alocacao.ano}"></td>
+                <td th:text="${alocacao.totalHorasAprovadas}"></td>
+            </tr>
+        </table>
+    </li>
     <li>
-        Recolherei em efetivo à conta Unicamp/Reitoria/Atividades simultâneas (banco Santander, agência 0207,
-        conta 43.011007-7) as devidas taxas sobre o valor bruto total no prazo de até 30 dias após o recebimento dos
-        honorários (PIDS = 8%; FAEPEX = 3%; AIU = 5%);
+        <p>
+            Recolherei em efetivo à conta Unicamp/Reitoria/Atividades simultâneas (banco Santander, agência 0207,
+            conta 43.011007-7) as devidas taxas sobre o valor bruto total no prazo de até 30 dias após o recebimento dos
+            honorários (PIDS = 8%; FAEPEX = 3%; AIU = 5%);
+        </p>
     </li>
 
     <li>

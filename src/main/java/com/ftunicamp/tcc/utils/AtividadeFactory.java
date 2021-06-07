@@ -41,6 +41,7 @@ public class AtividadeFactory {
         convenio.setStatus(verificaStatusAtividade(convenio));
         convenio.setObservacao(request.getObservacao() == null ? "" : request.getObservacao());
         convenio.setTipoAtividadeSimultanea(request.getTipoAtividadeSimultanea());
+        convenio.setUrgente(request.isUrgente());
         //Mapear request para entidade - mapper struct
         return convenio;
     }
@@ -85,6 +86,7 @@ public class AtividadeFactory {
         curso.setDataCriacao(LocalDate.now());
         curso.setDataModificacao(LocalDate.now());
         curso.setInstituicaoVinculada(request.getInstituicaoVinculada());
+        curso.setUrgente(request.isUrgente());
         //Mapear request para entidade - mapper struct
         return curso;
     }
@@ -139,6 +141,7 @@ public class AtividadeFactory {
         regencia.setHoraSemanal(request.getHoraSemanal());
         regencia.setValorBruto(request.getValorBrutoTotalAula() + request.getValorBrutoOutraAtividade());
         regencia.setCurso(request.getCurso());
+        regencia.setUrgente(regencia.isUrgente());
         //Mapear request para entidade - mapper struct
         return regencia;
     }

@@ -30,4 +30,5 @@ public class CursoExtensaoRequest {
     private String observacao;
     private String instituicaoVinculada;
     private List<AlocacaoDto> alocacoes;
+    private boolean urgente;
 }

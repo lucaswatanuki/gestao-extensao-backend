@@ -29,5 +29,6 @@ public class RegenciaRequest {
     private boolean responsavel;
     private boolean unicoDocente;
     private List<AlocacaoDto> alocacoes;
+    private boolean urgente;
 
 }

@@ -59,6 +59,9 @@ public abstract class Atividade {
     private Autorizacao autorizacao;
 
     @Transient
+    private String tipo = getTipoAtividade();
+
+    @Transient
     public String getTipoAtividade() {
         return this.getClass().getAnnotation(DiscriminatorValue.class).value().toUpperCase();
     }

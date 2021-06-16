@@ -72,13 +72,11 @@ public class AtividadeFactory {
         curso.setDisciplinaParticipacao(request.getDisciplinas());
         curso.setDataInicio(request.getDataInicio());
         curso.setDataFim(request.getDataFim());
-        curso.setValorBruto(request.getValorBrutoTotalAula() + request.getValorBrutoOutraAtividade());
-        curso.setValorBrutoOutraAtividade(request.getValorBrutoOutraAtividade());
-        curso.setValorBrutoHoraAula(request.getValorBrutoHoraAula());
-        curso.setValorBrutoTotalAulas(request.getValorBrutoTotalAula());
-        curso.setCargaHorariaTotalMinistrada(request.getCargaHoraTotalMinistrada());
-        curso.setHoraMensal(request.getHoraMensal());
-        curso.setHoraSemanal(request.getHoraSemanal());
+        curso.setValorBruto(request.getValorBrutoTotal());
+        curso.setValorBrutoTotal(request.getValorBrutoTotal());
+        curso.setValorBrutoHora(request.getValorBrutoHora());
+        curso.setTotalHorasMinistradas(request.getTotalHorasMinistradas());
+        curso.setTotalHorasOutrasAtividades(request.getTotalHorasOutrasAtividades());
         curso.setParticipacao(Participacao.valueOf(request.getParticipacao()));
         curso.setStatus(verificaStatusAtividade(curso));
         curso.setObservacao(request.getObservacao() == null ? "" : request.getObservacao());
@@ -97,11 +95,11 @@ public class AtividadeFactory {
         curso.setDisciplinaParticipacao(request.getDisciplinas());
         curso.setDataInicio(request.getDataInicio());
         curso.setDataFim(request.getDataFim());
-        curso.setValorBruto(request.getValorBrutoTotalAula() + request.getValorBrutoOutraAtividade());
-        curso.setValorBrutoOutraAtividade(request.getValorBrutoOutraAtividade());
-        curso.setValorBrutoHoraAula(request.getValorBrutoHoraAula());
-        curso.setValorBrutoTotalAulas(request.getValorBrutoTotalAula());
-        curso.setCargaHorariaTotalMinistrada(request.getCargaHorariaTotal());
+        curso.setValorBruto(request.getValorBrutoTotal());
+        curso.setValorBrutoTotal(request.getValorBrutoTotal());
+        curso.setValorBrutoHora(request.getValorBrutoHora());
+        curso.setTotalHorasMinistradas(request.getTotalHorasMinistradas());
+        curso.setTotalHorasOutrasAtividades(request.getTotalHorasOutrasAtividades());
         curso.setHoraMensal(request.getHoraMensal());
         curso.setHoraSemanal(request.getHoraSemanal());
         curso.setParticipacao(Participacao.valueOf(request.getParticipacao()));
@@ -122,11 +120,11 @@ public class AtividadeFactory {
         regencia.setDisciplinaParticipacao(request.getDisciplinaParticipacao());
         regencia.setResponsavel(request.isResponsavel());
         regencia.setUnicoDocente(request.isUnicoDocente());
-        regencia.setCargaHorariaTotalDedicada(request.getCargaHorariaTotalDedicada());
-        regencia.setCargaHorariaTotalMinistrada(request.getCargaHoraTotalMinistrada());
-        regencia.setValorBrutoOutraAtividade(request.getValorBrutoOutraAtividade());
-        regencia.setValorBrutoHoraAula(request.getValorBrutoHoraAula());
-        regencia.setValorBrutoTotalAulas(request.getValorBrutoTotalAula());
+        regencia.setValorBruto(request.getValorBrutoTotal());
+        regencia.setValorBrutoTotal(regencia.getValorBrutoTotal());
+        regencia.setValorBrutoHora(request.getValorBrutoHora());
+        regencia.setTotalHorasMinistradas(request.getTotalHorasMinistradas());
+        regencia.setTotalHorasOutrasAtividades(request.getTotalHorasOutrasAtividades());
         regencia.setDiasTrabalhadosUnicamp(request.getDiasTrabalhadosUnicamp());
         regencia.setDiasTrabalhadosOutraInstituicao(request.getDiasTrabalhadosOutraInstituicao());
         regencia.setDataFim(request.getDataFim());
@@ -139,7 +137,6 @@ public class AtividadeFactory {
         regencia.setCoordenador(request.getCoordenador());
         regencia.setHoraMensal(request.getHoraMensal());
         regencia.setHoraSemanal(request.getHoraSemanal());
-        regencia.setValorBruto(request.getValorBrutoTotalAula() + request.getValorBrutoOutraAtividade());
         regencia.setCurso(request.getCurso());
         regencia.setUrgente(regencia.isUrgente());
         //Mapear request para entidade - mapper struct
@@ -153,11 +150,11 @@ public class AtividadeFactory {
         regencia.setDisciplinaParticipacao(request.getDisciplinaParticipacao());
         regencia.setResponsavel(request.isResponsavel());
         regencia.setUnicoDocente(request.isUnicoDocente());
-        regencia.setCargaHorariaTotalDedicada(request.getCargaHorariaTotalDedicada());
-        regencia.setCargaHorariaTotalMinistrada(request.getCargaHoraTotalMinistrada());
-        regencia.setValorBrutoOutraAtividade(request.getValorBrutoOutraAtividade());
-        regencia.setValorBrutoHoraAula(request.getValorBrutoHoraAula());
-        regencia.setValorBrutoTotalAulas(request.getValorBrutoTotalAula());
+        regencia.setValorBruto(request.getValorBrutoTotal());
+        regencia.setValorBrutoTotal(request.getValorBrutoTotal());
+        regencia.setValorBrutoHora(request.getValorBrutoHora());
+        regencia.setTotalHorasMinistradas(request.getTotalHorasMinistradas());
+        regencia.setTotalHorasOutrasAtividades(request.getTotalHorasOutrasAtividades());
         regencia.setDiasTrabalhadosUnicamp(request.getDiasTrabalhadosUnicamp());
         regencia.setDiasTrabalhadosOutraInstituicao(request.getDiasTrabalhadosOutraInstituicao());
         regencia.setDataFim(request.getDataFim());
@@ -169,7 +166,6 @@ public class AtividadeFactory {
         regencia.setCoordenador(request.getCoordenador());
         regencia.setHoraMensal(request.getHoraMensal());
         regencia.setHoraSemanal(request.getHoraSemanal());
-        regencia.setValorBruto(request.getValorBrutoTotalAula() + request.getValorBrutoOutraAtividade());
         regencia.setCurso(request.getCurso());
         return regencia;
     }

@@ -16,10 +16,10 @@ public class CursoExtensaoDto {
 
     private String participacao;
     private String disciplinas;
-    private int cargaHorariaTotal;
-    private double valorBrutoHoraAula;
-    private double valorBrutoTotalAula;
-    private double valorBrutoOutraAtividade;
+    private int totalHorasMinistradas;
+    private int totalHorasOutrasAtividades;
+    private Double valorBrutoHora = 0.0;
+    private Double valorBrutoTotal = 0.0;
     private int periodo;
     private String nomeCurso;
     private String instituicaoVinculada;

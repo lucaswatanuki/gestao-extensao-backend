@@ -13,11 +13,10 @@ public class RegenciaRequest {
     private String curso;
     private String coordenador;
     private String disciplinaParticipacao;
-    private int cargaHoraTotalMinistrada;
-    private int cargaHorariaTotalDedicada;
-    private Double valorBrutoHoraAula = 0.0;
-    private Double valorBrutoTotalAula = 0.0;
-    private Double valorBrutoOutraAtividade = 0.0;
+    private int totalHorasMinistradas;
+    private int totalHorasOutrasAtividades;
+    private Double valorBrutoHora = 0.0;
+    private Double valorBrutoTotal = 0.0;
     private LocalDateTime dataInicio;
     private LocalDateTime dataFim;
     private int horaSemanal;

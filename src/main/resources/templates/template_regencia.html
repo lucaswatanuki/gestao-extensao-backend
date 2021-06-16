@@ -38,15 +38,13 @@
 <p>Disciplinas (com carga horária): <span th:text="${regencia.disciplinaParticipacao}"></span></p>
 <p>Será o responsável pela disciplina: <span th:text="${regencia.responsavel} ? 'Sim' : 'Não'"></span></p>
 <p>Será o único docente da disciplina: <span th:text="${regencia.unicoDocente} ? 'Sim' : 'Não'"></span></p>
-<p>Carga horária total das aulas a serem ministradas: <span
-        th:text="${regencia.cargaHorariaTotalMinistrada} ?: '0'"></span></p>
-<p>Carga horária total dedicada (aulas + preparação e outras atividades): <span
-        th:text="${regencia.horaSemanal} ?: '0'"></span> horas (semanal) /
-    <span th:text="${regencia.horaMensal} ?: '0'"></span> horas(mensal)</p>
-<p>Valor bruto recebido por aulas: R$ <span th:text="${regencia.valorBrutoHoraAula} ?: '0'"></span> por hora-aula / R$
-    <span th:text="${regencia.valorBrutoTotalAulas} ?: '0'"></span> pelo total de aulas</p>
-<p>Valor bruto total recebido por outras atividades: R$ <span
-        th:text="${regencia.valorBrutoOutraAtividade} ?: '0'"></span></p>
+<p>Carga horária total das aulas a serem ministradas: <span th:text="${regencia.totalHorasMinistradas?:'0'}"></span> horas</p>
+<p>
+    Carga horária total de outras atividades (preparação): <span
+        th:text="${regencia.totalHorasOutrasAtividades?:'0'}"></span> horas
+</p>
+<p>Valor bruto recebido por hora: R$ <span th:text="${regencia.valorBrutoHora?:'0'}"></span></p>
+<p>Valor bruto total: R$ <span th:text="${regencia.valorBrutoTotal} ?: '0'"></span></p>
 <p>Período de participação: <span th:text="${regencia.prazo} ?: '0'"></span> meses</p>
 <p>Dias e horários semanais que trabalhará na:</p>
 <p>Unicamp: <span th:text="${regencia.diasTrabalhadosUnicamp}?: '-'"></span></p>

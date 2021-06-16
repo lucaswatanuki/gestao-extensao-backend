@@ -18,11 +18,10 @@ public class RegenciaDto {
     private String curso;
     private String coordenador;
     private String disciplinaParticipacao;
-    private int cargaHoraTotalMinistrada;
-    private int cargaHorariaTotalDedicada;
-    private Double valorBrutoHoraAula;
-    private Double valorBrutoTotalAula;
-    private Double valorBrutoOutraAtividade;
+    private int totalHorasMinistradas;
+    private int totalHorasOutrasAtividades;
+    private Double valorBrutoHora = 0.0;
+    private Double valorBrutoTotal = 0.0;
     private String instituicao;
     private String diasTrabalhadosUnicamp;
     private String diasTrabalhadosOutraInstituicao;

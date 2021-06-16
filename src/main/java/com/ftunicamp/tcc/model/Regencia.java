@@ -24,18 +24,16 @@ public class Regencia extends Atividade {
 
     private boolean unicoDocente;
 
-    private int cargaHorariaTotalMinistrada;
-
-    private int cargaHorariaTotalDedicada;
-
-    private Double valorBrutoOutraAtividade;
-
-    private Double valorBrutoHoraAula;
-
-    private Double valorBrutoTotalAulas;
-
     private String diasTrabalhadosUnicamp;
 
     private String diasTrabalhadosOutraInstituicao;
+
+    private int totalHorasMinistradas;
+
+    private int totalHorasOutrasAtividades;
+
+    private Double valorBrutoHora = 0.0;
+
+    private Double valorBrutoTotal = 0.0;
 
 }

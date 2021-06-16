@@ -143,7 +143,6 @@ public class AutorizacaoServiceImpl implements AutorizacaoService {
         var response = AutorizacaoResponse.builder()
                 .dataCriacao(autorizacao.getData().toString())
                 .docente(autorizacao.getAtividade().getDocente().getNome())
-                .horas(autorizacao.getAtividade().getHoraMensal() * autorizacao.getAtividade().getPrazo())
                 .status(autorizacao.getStatus().getStatus())
                 .id(autorizacao.getId())
                 .urgente(autorizacao.getAtividade().isUrgente())

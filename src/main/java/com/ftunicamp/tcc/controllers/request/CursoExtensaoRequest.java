@@ -19,14 +19,12 @@ public class CursoExtensaoRequest {
     private String coordenador;
     private String participacao;
     private String disciplinas;
-    private int cargaHoraTotalMinistrada;
-    private Double valorBrutoHoraAula = 0.0;
-    private Double valorBrutoTotalAula = 0.0;
-    private Double valorBrutoOutraAtividade = 0.0;
+    private int totalHorasMinistradas;
+    private int totalHorasOutrasAtividades;
+    private Double valorBrutoHora = 0.0;
+    private Double valorBrutoTotal = 0.0;
     private LocalDateTime dataInicio;
     private LocalDateTime dataFim;
-    private int horaSemanal;
-    private int horaMensal;
     private String observacao;
     private String instituicaoVinculada;
     private List<AlocacaoDto> alocacoes;

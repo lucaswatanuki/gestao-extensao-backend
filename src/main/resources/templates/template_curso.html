@@ -40,18 +40,13 @@
 <p>Instituição vinculada: <span th:text="${curso.instituicaoVinculada}"></span></p>
 <p>Participação por: <span th:text="${curso.participacao}"></span></p>
 <p>Disciplinas de participação: <span th:text="${curso.disciplinaParticipacao} ?: '-'"></span></p>
-<p>Carga horária total das aulas a serem ministradas: <span th:text="${curso.cargaHorariaTotalMinistrada}"></span> meses
-</p>
+<p>Carga horária total das aulas a serem ministradas: <span th:text="${curso.totalHorasMinistradas?:'0'}"></span> horas</p>
 <p>
-    Carga horária total dedicada (aulas + preparação e outras atividades): <span
-        th:text="${curso.horaSemanal?:'0'}"></span> horas (semanal)
-    / <span th:text="${curso.horaMensal?:'0'}"></span> horas
-    (mensal)
+    Carga horária total de outras atividades (coordenação e/ou preparação): <span
+        th:text="${curso.totalHorasOutrasAtividades?:'0'}"></span> horas
 </p>
-<p>Valor bruto recebido por aulas: R$ <span th:text="${curso.valorBrutoHoraAula?:'0'}"></span> por hora-aula / R$ <span
-        th:text="${curso.valorBrutoTotalAulas?:'0'}"></span> pelo total de aulas </p>
-<p>Valor bruto total recebido por outras atividades: R$ <span th:text="${curso.valorBrutoOutraAtividade} ?: '0'"></span>
-</p>
+<p>Valor bruto recebido por hora: R$ <span th:text="${curso.valorBrutoHora?:'0'}"></span></p>
+<p>Valor bruto total: R$ <span th:text="${curso.valorBrutoTotal} ?: '0'"></span></p>
 <p>Período de participação: <span th:text="${curso.prazo} ?: '0'"></span> meses</p>
 <p>
     Declaro que:

@@ -17,15 +17,13 @@ public class CursoExtensao extends Atividade {
 
     private String disciplinaParticipacao;
 
-    private int cargaHorariaTotalMinistrada;
+    private int totalHorasMinistradas;
 
-    private int cargaHorariaTotalDedicada;
+    private int totalHorasOutrasAtividades;
 
-    private Double valorBrutoOutraAtividade;
+    private Double valorBrutoHora = 0.0;
 
-    private Double valorBrutoHoraAula;
-
-    private Double valorBrutoTotalAulas;
+    private Double valorBrutoTotal = 0.0;
 
     @Enumerated(EnumType.STRING)
     private Participacao participacao;

@@ -39,4 +39,7 @@ public class Docente {
     private String telefone;
 
     private boolean autorizado;
+
+    @Enumerated(EnumType.STRING)
+    private Titulo titulo;
 }

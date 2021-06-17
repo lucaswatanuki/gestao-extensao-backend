@@ -4,10 +4,7 @@ import com.ftunicamp.tcc.controllers.response.DocenteResponse;
 import com.ftunicamp.tcc.dto.AlocacaoDto;
 import com.ftunicamp.tcc.dto.UsuarioDto;
 import com.ftunicamp.tcc.exceptions.NegocioException;
-import com.ftunicamp.tcc.model.Alocacao;
-import com.ftunicamp.tcc.model.Docente;
-import com.ftunicamp.tcc.model.StatusAtividade;
-import com.ftunicamp.tcc.model.StatusAutorizacao;
+import com.ftunicamp.tcc.model.*;
 import com.ftunicamp.tcc.repositories.AlocacaoRepository;
 import com.ftunicamp.tcc.repositories.DocenteRepository;
 import com.ftunicamp.tcc.repositories.UserRepository;
@@ -155,6 +152,7 @@ public class DocenteServiceImpl implements DocenteService, UsuarioService {
                 .email(docente.getEmail())
                 .matricula(docente.getMatricula())
                 .endereco(docente.getEndereco())
+                .titulo(docente.getTitulo().getValue())
                 .build();
     }
 
@@ -168,6 +166,10 @@ public class DocenteServiceImpl implements DocenteService, UsuarioService {
 
         if (request.getTelefone() != null) {
             docente.setTelefone(request.getTelefone());
+        }
+
+        if (request.getTitulo() != null) {
+            docente.setTitulo(Titulo.fromString(request.getTitulo()));
         }
 
         docenteRepository.save(docente);

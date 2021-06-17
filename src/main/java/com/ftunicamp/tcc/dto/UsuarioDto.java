@@ -17,5 +17,6 @@ public class UsuarioDto {
     private String telefone;
     private String matricula;
     private String endereco;
+    private String titulo;
 
 }

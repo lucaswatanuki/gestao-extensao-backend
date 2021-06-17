@@ -77,6 +77,8 @@ public class PdfServiceImpl implements PdfService {
                     context.setVariable("dia", cursoExtensao.getDataModificacao().getDayOfMonth());
                     context.setVariable("mes", nomeDoMes(cursoExtensao.getDataModificacao().getMonthValue()));
                     context.setVariable("ano", cursoExtensao.getDataModificacao().getYear());
+                    context.setVariable("titulo", cursoExtensao.getDocente()
+                            .getTitulo().getValue().equals("Nenhum") ? null : cursoExtensao.getDocente().getTitulo().getValue());
                     context.setVariable(ALOCACOES, getAlocacoesAprovadas(cursoExtensao));
                 });
                 break;
@@ -88,6 +90,8 @@ public class PdfServiceImpl implements PdfService {
                     context.setVariable("dia", convenioEntity.getDataModificacao().getDayOfMonth());
                     context.setVariable("mes", nomeDoMes(convenioEntity.getDataModificacao().getMonthValue()));
                     context.setVariable("ano", convenioEntity.getDataModificacao().getYear());
+                    context.setVariable("titulo", convenioEntity.getDocente()
+                            .getTitulo().getValue().equals("Nenhum") ? null : convenioEntity.getDocente().getTitulo().getValue());
                     context.setVariable(ALOCACOES, getAlocacoesAprovadas(convenioEntity));
                 });
                 break;
@@ -99,6 +103,8 @@ public class PdfServiceImpl implements PdfService {
                     context.setVariable("dia", regenciaEntity.getDataModificacao().getDayOfMonth());
                     context.setVariable("mes", nomeDoMes(regenciaEntity.getDataModificacao().getMonthValue()));
                     context.setVariable("ano", regenciaEntity.getDataModificacao().getYear());
+                    context.setVariable("titulo", regenciaEntity.getDocente()
+                            .getTitulo().getValue().equals("Nenhum") ? null : regenciaEntity.getDocente().getTitulo().getValue());
                     context.setVariable(ALOCACOES, getAlocacoesAprovadas(regenciaEntity));
                 });
         }

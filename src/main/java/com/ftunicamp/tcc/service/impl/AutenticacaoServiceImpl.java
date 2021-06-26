@@ -61,12 +61,22 @@ public class AutenticacaoServiceImpl implements AutenticacaoService {
     public JwtResponse autenticarUsuario(LoginRequest loginRequest) {
         var docente = docenteRepository.findByMatricula(loginRequest.getMatricula());
 
-        if (docente.isEmpty()) {
-            throw new NegocioException("Matricula inválida.");
+        if (docente == null) {
+            docente = docenteRepository.findByUser_Username(loginRequest.getMatricula());
+            if (docente != null) {
+                var profiles = docente.getUser().getProfiles().stream()
+                        .map(ProfilesEntity::getName)
+                        .collect(Collectors.toSet());
+                if (!profiles.contains(Profiles.ROLE_ADMIN)) {
+                    throw new NegocioException("Usuário sem permissão de administrador.");
+                }
+            } else {
+                throw new NegocioException("Matricula inválida.");
+            }
         }
 
         var authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(docente.get().getUser().getUsername(), loginRequest.getPassword()));
+                new UsernamePasswordAuthenticationToken(docente.getUser().getUsername(), loginRequest.getPassword()));
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
         UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
@@ -77,7 +87,7 @@ public class AutenticacaoServiceImpl implements AutenticacaoService {
                 .map(GrantedAuthority::getAuthority)
                 .collect(Collectors.toList());
 
-        if (!docente.get().getUser().isVerificado()) {
+        if (!docente.getUser().isVerificado()) {
             throw new NegocioException("Usuário não verificado.");
         }
 
@@ -107,7 +117,7 @@ public class AutenticacaoServiceImpl implements AutenticacaoService {
 
         if (strProfiles == null) {
             var userRole = profilesRepository.findByName(Profiles.ROLE_USER)
-                    .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
+                    .orElseThrow(() -> new RuntimeException("Erro: Perfil não encontrado."));
             roles.add(userRole);
         } else {
             strProfiles.forEach(profile -> {

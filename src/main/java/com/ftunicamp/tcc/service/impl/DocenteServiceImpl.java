@@ -146,14 +146,15 @@ public class DocenteServiceImpl implements DocenteService, UsuarioService {
     public UsuarioDto getDadosUsuario(long id) {
         var docente = docenteRepository.findByUser_Id(id);
 
-        return UsuarioDto.builder()
-                .nome(docente.getNome())
-                .telefone(docente.getTelefone())
-                .email(docente.getEmail())
-                .matricula(docente.getMatricula())
-                .endereco(docente.getEndereco())
-                .titulo(docente.getTitulo().getValue())
-                .build();
+        var response = new UsuarioDto();
+        response.setNome(docente.getNome());
+        response.setEmail(docente.getEmail());
+        response.setEndereco(docente.getEndereco());
+        response.setMatricula(docente.getMatricula());
+        response.setTitulo(docente.getTitulo().getValue());
+        response.setTelefone(docente.getTelefone());
+
+        return response;
     }
 
     @Override

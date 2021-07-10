@@ -1,7 +1,7 @@
 package com.ftunicamp.tcc.service.impl;
 
-import com.ftunicamp.tcc.controllers.request.AutorizacaoRequest;
 import com.ftunicamp.tcc.controllers.response.AutorizacaoResponse;
+import com.ftunicamp.tcc.dto.AutorizacaoDto;
 import com.ftunicamp.tcc.exceptions.NegocioException;
 import com.ftunicamp.tcc.model.Atividade;
 import com.ftunicamp.tcc.model.Autorizacao;
@@ -49,7 +49,7 @@ public class AutorizacaoServiceImpl implements AutorizacaoService {
 
     @Override
     @Transactional
-    public void incluirAutorizacao(Long idAtividade, AutorizacaoRequest request) {
+    public void incluirAutorizacao(Long idAtividade, AutorizacaoDto request) {
         final var autorizacao = autorizacaoRepository.findById(idAtividade);
 
         autorizacao.ifPresentOrElse(autorizacaoEntity -> {

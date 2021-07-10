@@ -1,8 +1,15 @@
 package com.ftunicamp.tcc.controllers;
 
 
-import com.ftunicamp.tcc.controllers.request.*;
-import com.ftunicamp.tcc.controllers.response.*;
+import com.ftunicamp.tcc.controllers.request.RegenciaRequest;
+import com.ftunicamp.tcc.controllers.request.UnivespRequest;
+import com.ftunicamp.tcc.controllers.response.AtividadeResponse;
+import com.ftunicamp.tcc.controllers.response.AutorizacaoResponse;
+import com.ftunicamp.tcc.controllers.response.RegenciaDto;
+import com.ftunicamp.tcc.controllers.response.Response;
+import com.ftunicamp.tcc.dto.AutorizacaoDto;
+import com.ftunicamp.tcc.dto.ConvenioDto;
+import com.ftunicamp.tcc.dto.CursoExtensaoDto;
 import com.ftunicamp.tcc.model.TipoAtividade;
 import com.ftunicamp.tcc.service.AtividadeService;
 import com.ftunicamp.tcc.service.AutorizacaoService;
@@ -37,13 +44,13 @@ public class AtividadeController {
 
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping(value = "/convenio")
-    public ResponseEntity<AtividadeResponse> incluirAtividadeConvenio(@RequestBody ConvenioRequest request) throws UnsupportedEncodingException, MessagingException {
+    public ResponseEntity<AtividadeResponse> incluirAtividadeConvenio(@RequestBody ConvenioDto request) throws UnsupportedEncodingException, MessagingException {
         return ResponseEntity.ok(atividadeService.cadastrarConvenio(request));
     }
 
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping(value = "/curso")
-    public ResponseEntity<AtividadeResponse> incluirCursoExtensao(@RequestBody CursoExtensaoRequest request) {
+    public ResponseEntity<AtividadeResponse> incluirCursoExtensao(@RequestBody CursoExtensaoDto request) {
         return ResponseEntity.ok(atividadeService.cadastrarCursoExtensao(request));
     }
 
@@ -67,7 +74,7 @@ public class AtividadeController {
 
     @PostMapping(value = "/autorizar/{id}")
     public ResponseEntity<Void> autorizarAtividade(@PathVariable("id") Long id,
-                                                   @RequestBody AutorizacaoRequest request) {
+                                                   @RequestBody AutorizacaoDto request) {
         autorizacaoService.incluirAutorizacao(id, request);
         return ResponseEntity.ok().build();
     }

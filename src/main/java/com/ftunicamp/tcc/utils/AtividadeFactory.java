@@ -1,10 +1,14 @@
 package com.ftunicamp.tcc.utils;
 
-import com.ftunicamp.tcc.controllers.request.*;
-import com.ftunicamp.tcc.controllers.response.ConvenioDto;
-import com.ftunicamp.tcc.controllers.response.CursoExtensaoDto;
+import com.ftunicamp.tcc.controllers.request.Participacao;
+import com.ftunicamp.tcc.controllers.request.RegenciaRequest;
+import com.ftunicamp.tcc.controllers.request.UnivespRequest;
 import com.ftunicamp.tcc.controllers.response.RegenciaDto;
+import com.ftunicamp.tcc.dto.ConvenioDto;
+import com.ftunicamp.tcc.dto.CursoExtensaoDto;
 import com.ftunicamp.tcc.exceptions.NegocioException;
+import com.ftunicamp.tcc.mappers.ConvenioMapper;
+import com.ftunicamp.tcc.mappers.CursoMapper;
 import com.ftunicamp.tcc.model.*;
 import org.springframework.stereotype.Component;
 
@@ -19,30 +23,13 @@ public class AtividadeFactory {
     private AtividadeFactory() {
     }
 
-    public static Atividade criarConvenio(ConvenioRequest request, Docente docente) {
+    public static Atividade criarConvenio(ConvenioDto request, Docente docente) {
         if (request.getDataInicio().isAfter(request.getDataFim())) {
             throw new NegocioException("Verificar datas de inicio e fim!");
         }
 
-        var convenio = new Convenio();
-        convenio.setDocente(docente);
-        convenio.setHoraMensal(request.getHoraMensal());
-        convenio.setHoraSemanal(request.getHoraSemanal());
-        convenio.setValorBruto(request.getValorBruto());
-        convenio.setPrazo(ChronoUnit.MONTHS.between(YearMonth.from(request.getDataInicio()), YearMonth.from(request.getDataFim())));
-        convenio.setCoordenador(request.getCoordenador());
-        convenio.setDescricao(request.getDescricao());
-        convenio.setInstituicao(request.getInstituicao());
-        convenio.setProjeto(request.getProjeto());
-        convenio.setDataInicio(request.getDataInicio());
-        convenio.setDataFim(request.getDataFim());
-        convenio.setDataCriacao(LocalDate.now());
-        convenio.setDataModificacao(LocalDate.now());
+        var convenio = ConvenioMapper.INSTANCE.mapToConvenio(request, docente, LocalDate.now());
         convenio.setStatus(verificaStatusAtividade(convenio));
-        convenio.setObservacao(request.getObservacao() == null ? "" : request.getObservacao());
-        convenio.setTipoAtividadeSimultanea(request.getTipoAtividadeSimultanea());
-        convenio.setUrgente(request.isUrgente());
-        //Mapear request para entidade - mapper struct
         return convenio;
     }
 
@@ -58,34 +45,14 @@ public class AtividadeFactory {
         convenio.setDataInicio(request.getDataInicio());
         convenio.setDataFim(request.getDataFim());
         convenio.setDataModificacao(LocalDate.now());
-        convenio.setStatus(verificaStatusAtividade(convenio));
         convenio.setObservacao(request.getObservacao() == null ? "" : request.getObservacao());
         convenio.setTipoAtividadeSimultanea(request.getTipoAtividadeSimultanea());
         return convenio;
     }
 
-    public static CursoExtensao criarCurso(CursoExtensaoRequest request, Docente docente) {
-        var curso = new CursoExtensao();
-        curso.setDocente(docente);
-        curso.setCoordenador(request.getCoordenador());
-        curso.setProjeto(request.getNomeCurso());
-        curso.setDisciplinaParticipacao(request.getDisciplinas());
-        curso.setDataInicio(request.getDataInicio());
-        curso.setDataFim(request.getDataFim());
-        curso.setValorBruto(request.getValorBrutoTotal());
-        curso.setValorBrutoTotal(request.getValorBrutoTotal());
-        curso.setValorBrutoHora(request.getValorBrutoHora());
-        curso.setTotalHorasMinistradas(request.getTotalHorasMinistradas());
-        curso.setTotalHorasOutrasAtividades(request.getTotalHorasOutrasAtividades());
-        curso.setParticipacao(Participacao.valueOf(request.getParticipacao()));
+    public static CursoExtensao criarCurso(CursoExtensaoDto request, Docente docente) {
+        var curso = CursoMapper.INSTANCE.mapToCursoExtensao(request, docente, LocalDate.now());
         curso.setStatus(verificaStatusAtividade(curso));
-        curso.setObservacao(request.getObservacao() == null ? "" : request.getObservacao());
-        curso.setPrazo(ChronoUnit.MONTHS.between(YearMonth.from(request.getDataInicio()), YearMonth.from(request.getDataFim())));
-        curso.setDataCriacao(LocalDate.now());
-        curso.setDataModificacao(LocalDate.now());
-        curso.setInstituicaoVinculada(request.getInstituicaoVinculada());
-        curso.setUrgente(request.isUrgente());
-        //Mapear request para entidade - mapper struct
         return curso;
     }
 
@@ -103,7 +70,6 @@ public class AtividadeFactory {
         curso.setHoraMensal(request.getHoraMensal());
         curso.setHoraSemanal(request.getHoraSemanal());
         curso.setParticipacao(Participacao.valueOf(request.getParticipacao()));
-        curso.setStatus(verificaStatusAtividade(curso));
         curso.setObservacao(request.getObservacao() == null ? "" : request.getObservacao());
         curso.setPrazo(ChronoUnit.MONTHS.between(YearMonth.from(request.getDataInicio()), YearMonth.from(request.getDataFim())));
         curso.setDataModificacao(LocalDate.now());
@@ -129,7 +95,6 @@ public class AtividadeFactory {
         regencia.setDiasTrabalhadosOutraInstituicao(request.getDiasTrabalhadosOutraInstituicao());
         regencia.setDataFim(request.getDataFim());
         regencia.setDataInicio(request.getDataInicio());
-        regencia.setStatus(verificaStatusAtividade(regencia));
         regencia.setObservacao(request.getObservacao() == null ? "" : request.getObservacao());
         regencia.setPrazo(ChronoUnit.MONTHS.between(YearMonth.from(request.getDataInicio()), YearMonth.from(request.getDataFim())));
         regencia.setDataCriacao(LocalDate.now());
@@ -159,7 +124,6 @@ public class AtividadeFactory {
         regencia.setDiasTrabalhadosOutraInstituicao(request.getDiasTrabalhadosOutraInstituicao());
         regencia.setDataFim(request.getDataFim());
         regencia.setDataInicio(request.getDataInicio());
-        regencia.setStatus(verificaStatusAtividade(regencia));
         regencia.setObservacao(request.getObservacao() == null ? "" : request.getObservacao());
         regencia.setPrazo(ChronoUnit.MONTHS.between(YearMonth.from(request.getDataInicio()), YearMonth.from(request.getDataFim())));
         regencia.setDataModificacao(LocalDate.now());

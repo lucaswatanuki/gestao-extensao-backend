@@ -1,9 +1,9 @@
-package com.ftunicamp.tcc.controllers.request;
+package com.ftunicamp.tcc.dto;
 
 import lombok.Data;
 
 @Data
-public class AutorizacaoRequest {
+public class AutorizacaoDto {
     private String observacao;
     private boolean autorizado;
 }

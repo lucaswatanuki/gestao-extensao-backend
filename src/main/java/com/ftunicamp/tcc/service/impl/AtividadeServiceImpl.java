@@ -1,12 +1,15 @@
 package com.ftunicamp.tcc.service.impl;
 
-import com.ftunicamp.tcc.controllers.request.ConvenioRequest;
-import com.ftunicamp.tcc.controllers.request.CursoExtensaoRequest;
 import com.ftunicamp.tcc.controllers.request.RegenciaRequest;
 import com.ftunicamp.tcc.controllers.request.UnivespRequest;
-import com.ftunicamp.tcc.controllers.response.*;
+import com.ftunicamp.tcc.controllers.response.AtividadeResponse;
+import com.ftunicamp.tcc.controllers.response.RegenciaDto;
+import com.ftunicamp.tcc.controllers.response.Response;
 import com.ftunicamp.tcc.dto.AlocacaoDto;
+import com.ftunicamp.tcc.dto.ConvenioDto;
+import com.ftunicamp.tcc.dto.CursoExtensaoDto;
 import com.ftunicamp.tcc.exceptions.NegocioException;
+import com.ftunicamp.tcc.mappers.ConvenioMapper;
 import com.ftunicamp.tcc.model.*;
 import com.ftunicamp.tcc.repositories.*;
 import com.ftunicamp.tcc.security.jwt.JwtUtils;
@@ -27,12 +30,14 @@ import java.util.NoSuchElementException;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
+import static com.ftunicamp.tcc.utils.AtividadeFactory.verificaStatusAtividade;
+
 @Service
 public class AtividadeServiceImpl implements AtividadeService {
 
     private static final String MENSAGEM_SUCESSO = "Atividade cadastrada com sucesso.";
     private static final String ATIVIDADE_NOT_FOUND = "Atividade não econtrada.";
-    private static final String ITENS_REVISAO = "Não há itens a revisar";
+    public static final String ITENS_REVISAO = "Não há itens a revisar";
 
     private final AtividadeRepository<Atividade> atividadeRepository;
     private final AtividadeRepository<Convenio> convenioRepository;
@@ -68,7 +73,7 @@ public class AtividadeServiceImpl implements AtividadeService {
 
 
     @Override
-    public AtividadeResponse cadastrarConvenio(ConvenioRequest request) {
+    public AtividadeResponse cadastrarConvenio(ConvenioDto request) {
         var docente = (docenteRepository.findByUser_Username(jwtUtils.getSessao().getUsername()));
         var atividade = AtividadeFactory.criarConvenio(request, docente);
         setAlocacao(docente, atividade, request.getAlocacoes());
@@ -81,7 +86,7 @@ public class AtividadeServiceImpl implements AtividadeService {
     }
 
     @Override
-    public AtividadeResponse cadastrarCursoExtensao(CursoExtensaoRequest request) {
+    public AtividadeResponse cadastrarCursoExtensao(CursoExtensaoDto request) {
         var docente = (docenteRepository.findByUser_Username(jwtUtils.getSessao().getUsername()));
         var atividade = AtividadeFactory.criarCurso(request, docente);
         setAlocacao(docente, atividade, request.getAlocacoes());
@@ -153,7 +158,7 @@ public class AtividadeServiceImpl implements AtividadeService {
                     .prazo(atividade.getPrazo())
                     .projeto(atividade.getProjeto())
                     .build();
-            var statusAtividade = AtividadeFactory.verificaStatusAtividade(atividade);
+            var statusAtividade = verificaStatusAtividade(atividade);
             if (!atividade.getStatus().equals(statusAtividade)) {
                 atividade.setStatus(statusAtividade);
                 atividadeRepository.save(atividade);
@@ -172,26 +177,10 @@ public class AtividadeServiceImpl implements AtividadeService {
             throw new NoSuchElementException(ATIVIDADE_NOT_FOUND);
         }
 
-        return ConvenioDto.builder()
-                .id(convenio.getId())
-                .docente(convenio.getDocente().getNome())
-                .projeto(convenio.getProjeto())
-                .valorBruto(convenio.getValorBruto())
-                .prazo(convenio.getPrazo())
-                .horaMensal(convenio.getHoraMensal())
-                .horaSemanal(convenio.getHoraSemanal())
-                .dataInicio(convenio.getDataInicio())
-                .dataFim(convenio.getDataFim())
-                .autorizado(convenio.getStatus().equals(StatusAtividade.EM_ANDAMENTO))
-                .tipoAtividade(convenio.getTipoAtividade())
-                .revisao(convenio.getRevisao() == null ? ITENS_REVISAO : convenio.getRevisao())
-                .observacao(convenio.getObservacao())
-                .alocacoes(getAlocacoesSemestral(convenio))
-                .descricao(convenio.getDescricao())
-                .tipoAtividadeSimultanea(convenio.getTipoAtividadeSimultanea())
-                .instituicao(convenio.getInstituicao())
-                .excedido(verificaLimiteHorasConvenios(convenio))
-                .build();
+        var convenioDto = ConvenioMapper.INSTANCE.mapToConvenioDto(convenio);
+        convenioDto.setAlocacoes(getAlocacoesSemestral(convenio));
+
+        return convenioDto;
     }
 
     private <T extends Atividade> boolean verificaLimiteHorasConvenios(T atividade) {

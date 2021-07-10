@@ -1,10 +1,10 @@
 package com.ftunicamp.tcc.service;
 
-import com.ftunicamp.tcc.controllers.request.ConvenioRequest;
-import com.ftunicamp.tcc.controllers.request.CursoExtensaoRequest;
 import com.ftunicamp.tcc.controllers.request.RegenciaRequest;
 import com.ftunicamp.tcc.controllers.request.UnivespRequest;
 import com.ftunicamp.tcc.controllers.response.*;
+import com.ftunicamp.tcc.dto.ConvenioDto;
+import com.ftunicamp.tcc.dto.CursoExtensaoDto;
 
 import javax.mail.MessagingException;
 import java.io.UnsupportedEncodingException;
@@ -12,9 +12,9 @@ import java.util.List;
 
 public interface AtividadeService {
 
-    AtividadeResponse cadastrarConvenio(ConvenioRequest request) throws UnsupportedEncodingException, MessagingException;
+    AtividadeResponse cadastrarConvenio(ConvenioDto request) throws UnsupportedEncodingException, MessagingException;
 
-    AtividadeResponse cadastrarCursoExtensao(CursoExtensaoRequest request);
+    AtividadeResponse cadastrarCursoExtensao(CursoExtensaoDto request);
 
     AtividadeResponse cadastrarRegencia(RegenciaRequest request);
 

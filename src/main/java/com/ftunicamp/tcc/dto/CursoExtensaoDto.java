@@ -1,32 +1,43 @@
-package com.ftunicamp.tcc.controllers.request;
+package com.ftunicamp.tcc.dto;
 
 import com.ftunicamp.tcc.dto.AlocacaoDto;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
+
+@Builder
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class CursoExtensaoRequest {
+public class CursoExtensaoDto {
 
-    private String nomeCurso;
-    private String coordenador;
     private String participacao;
     private String disciplinas;
     private int totalHorasMinistradas;
     private int totalHorasOutrasAtividades;
     private Double valorBrutoHora = 0.0;
     private Double valorBrutoTotal = 0.0;
+    private int periodo;
+    private String nomeCurso;
+    private String instituicaoVinculada;
+    private String coordenador;
+    private long id;
+    private String projeto;
+    private Double valorBruto;
+    private String docente;
+    private int horaMensal;
+    private int horaSemanal;
+    private long prazo;
     private LocalDateTime dataInicio;
     private LocalDateTime dataFim;
     private String observacao;
-    private String instituicaoVinculada;
+    private boolean autorizado;
+    private String tipoAtividade;
+    private String revisao;
     private List<AlocacaoDto> alocacoes;
+    private boolean excedido;
     private boolean urgente;
 }

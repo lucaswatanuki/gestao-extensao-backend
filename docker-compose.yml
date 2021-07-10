@@ -1,0 +1,12 @@
+version: '2'
+
+services:
+  db:
+    image: postgres
+    restart: always
+    environment:
+      POSTGRES_USER: sag
+      POSTGRES_PASSWORD: develop
+      POSTGRES_DB: sag-extensao
+    ports: 
+      - 5432:5432

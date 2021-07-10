@@ -2,6 +2,7 @@ package com.ftunicamp.tcc.model;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.mapstruct.Named;
 
 import javax.persistence.*;
 import java.time.LocalDate;
@@ -13,6 +14,7 @@ import java.util.List;
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
 @DiscriminatorColumn(name = "TIPO_ATIVIDADE")
+@Named("Atividade")
 public abstract class Atividade {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

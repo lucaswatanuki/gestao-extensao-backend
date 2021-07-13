@@ -1,12 +1,13 @@
 package com.ftunicamp.tcc.dto;
 
-import com.ftunicamp.tcc.dto.AlocacaoDto;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
-@Builder
 @Getter
 @Setter
 @NoArgsConstructor

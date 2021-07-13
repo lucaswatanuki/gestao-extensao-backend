@@ -1,11 +1,9 @@
 package com.ftunicamp.tcc.dto;
 
-import com.ftunicamp.tcc.dto.AlocacaoDto;
 import lombok.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
-
 
 @Builder
 @Getter

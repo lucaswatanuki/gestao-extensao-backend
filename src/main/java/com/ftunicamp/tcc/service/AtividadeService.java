@@ -1,6 +1,5 @@
 package com.ftunicamp.tcc.service;
 
-import com.ftunicamp.tcc.controllers.request.RegenciaRequest;
 import com.ftunicamp.tcc.controllers.request.UnivespRequest;
 import com.ftunicamp.tcc.controllers.response.*;
 import com.ftunicamp.tcc.dto.ConvenioDto;
@@ -16,7 +15,7 @@ public interface AtividadeService {
 
     AtividadeResponse cadastrarCursoExtensao(CursoExtensaoDto request);
 
-    AtividadeResponse cadastrarRegencia(RegenciaRequest request);
+    AtividadeResponse cadastrarRegencia(RegenciaDto request);
 
     Response<String> cadastrarAtividadeUnivesp(UnivespRequest request);
 

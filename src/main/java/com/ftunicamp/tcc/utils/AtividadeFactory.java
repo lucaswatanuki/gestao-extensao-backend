@@ -1,7 +1,6 @@
 package com.ftunicamp.tcc.utils;
 
 import com.ftunicamp.tcc.controllers.request.Participacao;
-import com.ftunicamp.tcc.controllers.request.RegenciaRequest;
 import com.ftunicamp.tcc.controllers.request.UnivespRequest;
 import com.ftunicamp.tcc.controllers.response.RegenciaDto;
 import com.ftunicamp.tcc.dto.ConvenioDto;
@@ -9,6 +8,7 @@ import com.ftunicamp.tcc.dto.CursoExtensaoDto;
 import com.ftunicamp.tcc.exceptions.NegocioException;
 import com.ftunicamp.tcc.mappers.ConvenioMapper;
 import com.ftunicamp.tcc.mappers.CursoMapper;
+import com.ftunicamp.tcc.mappers.RegenciaMapper;
 import com.ftunicamp.tcc.model.*;
 import org.springframework.stereotype.Component;
 
@@ -77,34 +77,9 @@ public class AtividadeFactory {
         return curso;
     }
 
-    public static Regencia criarRegencia(RegenciaRequest request, Docente docente) {
-        var regencia = new Regencia();
-        regencia.setDocente(docente);
-        regencia.setProjeto(request.getCurso());
-        regencia.setInstituicao(request.getInstituicao());
-        regencia.setNivel(request.getNivel());
-        regencia.setDisciplinaParticipacao(request.getDisciplinaParticipacao());
-        regencia.setResponsavel(request.isResponsavel());
-        regencia.setUnicoDocente(request.isUnicoDocente());
-        regencia.setValorBruto(request.getValorBrutoTotal());
-        regencia.setValorBrutoTotal(regencia.getValorBrutoTotal());
-        regencia.setValorBrutoHora(request.getValorBrutoHora());
-        regencia.setTotalHorasMinistradas(request.getTotalHorasMinistradas());
-        regencia.setTotalHorasOutrasAtividades(request.getTotalHorasOutrasAtividades());
-        regencia.setDiasTrabalhadosUnicamp(request.getDiasTrabalhadosUnicamp());
-        regencia.setDiasTrabalhadosOutraInstituicao(request.getDiasTrabalhadosOutraInstituicao());
-        regencia.setDataFim(request.getDataFim());
-        regencia.setDataInicio(request.getDataInicio());
-        regencia.setObservacao(request.getObservacao() == null ? "" : request.getObservacao());
-        regencia.setPrazo(ChronoUnit.MONTHS.between(YearMonth.from(request.getDataInicio()), YearMonth.from(request.getDataFim())));
-        regencia.setDataCriacao(LocalDate.now());
-        regencia.setDataModificacao(LocalDate.now());
-        regencia.setCoordenador(request.getCoordenador());
-        regencia.setHoraMensal(request.getHoraMensal());
-        regencia.setHoraSemanal(request.getHoraSemanal());
-        regencia.setCurso(request.getCurso());
-        regencia.setUrgente(regencia.isUrgente());
-        //Mapear request para entidade - mapper struct
+    public static Regencia criarRegencia(RegenciaDto request, Docente docente) {
+        var regencia = RegenciaMapper.INSTANCE.mapToRegencia(request, docente, LocalDate.now());
+        regencia.setStatus(verificaStatusAtividade(regencia));
         return regencia;
     }
 

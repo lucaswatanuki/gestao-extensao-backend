@@ -42,5 +42,5 @@ public class RegenciaDto {
     private String revisao;
     private List<AlocacaoDto> alocacoes;
     private boolean excedido;
-
+    private boolean urgente;
 }

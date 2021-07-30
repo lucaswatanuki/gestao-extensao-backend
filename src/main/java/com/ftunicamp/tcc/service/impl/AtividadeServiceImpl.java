@@ -1,6 +1,5 @@
 package com.ftunicamp.tcc.service.impl;
 
-import com.ftunicamp.tcc.controllers.request.RegenciaRequest;
 import com.ftunicamp.tcc.controllers.request.UnivespRequest;
 import com.ftunicamp.tcc.controllers.response.AtividadeResponse;
 import com.ftunicamp.tcc.controllers.response.RegenciaDto;
@@ -101,7 +100,7 @@ public class AtividadeServiceImpl implements AtividadeService {
     }
 
     @Override
-    public AtividadeResponse cadastrarRegencia(RegenciaRequest request) {
+    public AtividadeResponse cadastrarRegencia(RegenciaDto request) {
         var docente = (docenteRepository.findByUser_Username(jwtUtils.getSessao().getUsername()));
         var atividade = AtividadeFactory.criarRegencia(request, docente);
         setAlocacao(docente, atividade, request.getAlocacoes());

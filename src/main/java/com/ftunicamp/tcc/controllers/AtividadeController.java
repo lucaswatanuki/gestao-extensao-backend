@@ -1,7 +1,6 @@
 package com.ftunicamp.tcc.controllers;
 
 
-import com.ftunicamp.tcc.controllers.request.RegenciaRequest;
 import com.ftunicamp.tcc.controllers.request.UnivespRequest;
 import com.ftunicamp.tcc.controllers.response.AtividadeResponse;
 import com.ftunicamp.tcc.controllers.response.AutorizacaoResponse;
@@ -56,7 +55,7 @@ public class AtividadeController {
 
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping(value = "/regencia")
-    public ResponseEntity<AtividadeResponse> incluirRegenciaConcomitante(@RequestBody RegenciaRequest request) {
+    public ResponseEntity<AtividadeResponse> incluirRegenciaConcomitante(@RequestBody RegenciaDto request) {
         return ResponseEntity.ok(atividadeService.cadastrarRegencia(request));
     }
 
